@@ -54,8 +54,12 @@ jobs:
           flutter test 2>&1 | tee flutter-test.log
           status=${PIPESTATUS[0]}
           if [ "$status" -ne 0 ]; then
-            sed -n '/Failing tests:/,$p' flutter-test.log \
-              | sed 's/^/::error::/'
+            # The compact reporter marks each failing test with a trailing [E]
+            # and prints the detail after it. Both are echoed as annotations
+            # because reading the raw log needs repository admin rights.
+            grep -F '[E]' flutter-test.log | sed 's/^/::error::/' || true
+            awk '/\[E\]/ { seen = 1 } seen' flutter-test.log \
+              | head -n 60 | sed 's/^/::error::/' || true
           fi
           exit "$status"
 
