@@ -182,6 +182,7 @@ card changes.
 | 2 | `StateProvider` no longer exists outside Riverpod 3's legacy import | Replaced with a `Notifier`; the view choice belongs in a provider anyway, so switching language does not throw the reader back to "upcoming" |
 | 3 | Two of my own recurrence tests asserted the wrong count | The premise was wrong, not the code: a window that closes at midnight legitimately excludes that evening's occurrence. Expectations corrected and the boundary documented in the test |
 | 4 | A test fixture used the title "आगामी", which is also the Upcoming button's label | Renamed, so the assertion is about the list rather than the buttons |
+| 5 | **Event times were shown in the reader's timezone, not the temple's.** `toLocal()` turned 6:30 pm at the temple into 1:00 pm for a reader in London, and made "does this run past midnight?" depend on where the page was opened — a 5 pm to 1 am festival spans two days in India and one in UTC | Times are read as the temple's wall clock from the offset the server already sends. Found by CI, which runs in UTC while this machine runs in IST — see §11 |
 
 ---
 
@@ -202,7 +203,33 @@ card changes.
 
 ---
 
-## 11. Next phase
+## 11. The red build, and what it was hiding
+
+CI failed on this phase saying only "1 test failed". The raw log needs
+repository admin rights to read, so that was all there was to go on — and the
+suite passed on the development machine.
+
+Three things came out of chasing it, in order of how much they matter:
+
+1. **A real defect.** The calendar rendered every time in the *reader's*
+   timezone. CI runs in UTC and this machine in IST, so the same page said
+   different things in the two places — which is exactly what the red build was
+   reporting. Times now come from the temple's clock, which is what a devotee
+   anywhere actually needs.
+2. **The suite was not hermetic.** Five test files pump `HomeScreen`, which
+   since this phase reads the calendar, and nothing overrode the repository — so
+   they issued real HTTP requests that a running development server was quietly
+   answering. The harness now supplies stubs and installs an `ApiClient` that
+   refuses to connect, naming the repository nobody faked.
+3. **Two tests tapped translated text.** A text finder is only as wide as the
+   glyphs actually render, and the CI runner has no Devanagari font, so those
+   taps landed outside the widget. Taps now target an icon or a key.
+
+The diagnosis came from running the suite on Linux under UTC, not from guessing
+across further pushes. CI now echoes the failing test names as annotations, so
+the next red build says what broke.
+
+## 12. Next phase
 
 **Phase 5 — Gallery & Video Darshan.** Planned but **not started**. It brings
 the first real file uploads, which `poster_url`, `photo_url` and `logo_url` are
