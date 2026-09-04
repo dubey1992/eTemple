@@ -4,7 +4,7 @@
   "@appTitle": {
     "description": "Application shell fallback for the temple name. Since Phase 3 the real name comes from temple_profile; this is shown only while that request is in flight or has failed."
   },
-  "invocation": "॥ राधे कृष्ण ॥",
+  "invocation": "राधे राधे · जय श्री कृष्ण",
   "@invocation": {
     "description": "Devotional invocation displayed above the temple name"
   },
@@ -608,5 +608,7 @@
   "pickTime": "समय चुनें",
   "@pickTime": {},
   "clearEndTime": "समाप्ति हटाएँ",
-  "@clearEndTime": {}
+  "@clearEndTime": {},
+  "viewEvents": "कार्यक्रम देखें",
+  "@viewEvents": {}
 }

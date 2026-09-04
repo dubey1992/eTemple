@@ -209,7 +209,7 @@ TempleProfile testProfile({
   String? village = 'Amarpur Pankhoriya',
   String? panchayat = 'Kurma',
   String? history,
-  String? mission,
+  String? mission = 'ग्रामवासियों की आस्था और सेवा का केंद्र।',
 }) {
   return TempleProfile(
     requestedLanguage: 'hi',

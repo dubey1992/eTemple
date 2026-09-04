@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
   "appTitle": "Radha Krishna Thakurbari",
-  "invocation": "|| Radhe Krishna ||",
+  "invocation": "Radhe Radhe · Jai Shri Krishna",
   "languageLabel": "Language",
   "languageHindi": "हिन्दी",
   "languageEnglish": "English",
@@ -431,5 +431,7 @@
   "pickTime": "Pick a time",
   "@pickTime": {},
   "clearEndTime": "Clear the end time",
-  "@clearEndTime": {}
+  "@clearEndTime": {},
+  "viewEvents": "View Events",
+  "@viewEvents": {}
 }

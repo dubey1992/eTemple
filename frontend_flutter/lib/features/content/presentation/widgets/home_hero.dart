@@ -53,6 +53,11 @@ class _HeroCopy extends StatelessWidget {
   final SiteSettings settings;
   final TempleProfile profile;
 
+  /// The hero paragraph is the profile's mission and nothing else. Falling
+  /// back to the tagline would repeat the strip directly above it on any
+  /// site that has a tagline and no mission yet.
+  String? get _intro => profile.mission.value;
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -107,12 +112,12 @@ class _HeroCopy extends StatelessWidget {
           ),
         ],
 
-        // The devotional tagline is CMS-managed; it simply does not appear
-        // until the committee writes one.
-        if (settings.tagline.isNotEmpty) ...[
+        // The prototype's hero paragraph, from the temple profile. CMS content,
+        // so it simply does not appear until the committee writes it.
+        if (_intro != null) ...[
           const SizedBox(height: AppSpacing.md),
           Text(
-            settings.tagline.value!,
+            _intro!,
             key: const Key('hero-tagline'),
             style: theme.textTheme.titleMedium?.copyWith(
               color: Colors.white.withValues(alpha: 0.88),
@@ -131,7 +136,7 @@ class _HeroCopy extends StatelessWidget {
               key: const Key('hero-events'),
               onPressed: () => context.go(RoutePaths.events),
               icon: const Icon(Icons.event_outlined, size: 18),
-              label: Text(l10n.viewAllEvents),
+              label: Text(l10n.viewEvents),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.gold,
                 foregroundColor: AppColors.onGold,

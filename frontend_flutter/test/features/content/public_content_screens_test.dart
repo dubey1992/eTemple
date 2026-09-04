@@ -51,7 +51,14 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('hero-title')), findsOneWidget);
-      expect(find.text('भक्ति और सेवा का केंद्र'), findsOneWidget);
+      // The hero paragraph is the temple profile's mission. The site tagline
+      // belongs to the strip in the shell, so it is deliberately not here.
+      expect(find.byKey(const Key('hero-tagline')), findsOneWidget);
+      expect(
+        find.text('ग्रामवासियों की आस्था और सेवा का केंद्र।'),
+        findsOneWidget,
+      );
+      expect(find.text('भक्ति और सेवा का केंद्र'), findsNothing);
       // Only the first paragraph is excerpted on the home page.
       expect(find.text('पहला अनुच्छेद।'), findsOneWidget);
       expect(find.text('दूसरा अनुच्छेद।'), findsNothing);

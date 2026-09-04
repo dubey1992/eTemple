@@ -13,7 +13,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Radha Krishna Thakurbari';
 
   @override
-  String get invocation => '|| Radhe Krishna ||';
+  String get invocation => 'Radhe Radhe · Jai Shri Krishna';
 
   @override
   String get languageLabel => 'Language';
@@ -871,4 +871,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get clearEndTime => 'Clear the end time';
+
+  @override
+  String get viewEvents => 'View Events';
 }

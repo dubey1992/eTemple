@@ -107,7 +107,7 @@ abstract class AppLocalizations {
   /// Devotional invocation displayed above the temple name
   ///
   /// In hi, this message translates to:
-  /// **'॥ राधे कृष्ण ॥'**
+  /// **'राधे राधे · जय श्री कृष्ण'**
   String get invocation;
 
   /// No description provided for @languageLabel.
@@ -1723,6 +1723,12 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'समाप्ति हटाएँ'**
   String get clearEndTime;
+
+  /// No description provided for @viewEvents.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यक्रम देखें'**
+  String get viewEvents;
 }
 
 class _AppLocalizationsDelegate

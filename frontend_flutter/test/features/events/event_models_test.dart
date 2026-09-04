@@ -4,9 +4,10 @@ import 'package:rkt_web/features/events/domain/event_repository.dart';
 
 void main() {
   group('EventOccurrence', () {
-    test('parses an occurrence and keeps the offset the server sent', () {
-      // The API sends the temple's offset precisely so the device shows the
-      // right local time; parsing must not discard it.
+    test('reads the time on the temple clock, not the reader clock', () {
+      // The aarti is at 6:30 pm at the temple. Someone reading this in London
+      // needs to know that, not that it is 1:00 pm where they are, so the wall
+      // clock the server sent is kept exactly as sent.
       final occurrence = EventOccurrence.fromJson({
         'id': 7,
         'occurrence_key': '7@2026-10-12',
@@ -38,8 +39,30 @@ void main() {
       expect(occurrence.occurrenceKey, '7@2026-10-12');
       expect(occurrence.title.value, 'संध्या आरती');
       expect(occurrence.isRecurring, isTrue);
-      expect(occurrence.startAt.toUtc(), DateTime.utc(2026, 10, 12, 13, 0));
+      expect(occurrence.startAt.year, 2026);
+      expect(occurrence.startAt.month, 10);
+      expect(occurrence.startAt.day, 12);
+      expect(occurrence.startAt.hour, 18);
+      expect(occurrence.startAt.minute, 30);
       expect(occurrence.endAt!.difference(occurrence.startAt).inMinutes, 45);
+    });
+
+    test('the temple clock does not move with the reader timezone', () {
+      // This is what a red CI build cost us: toLocal() made a 5 pm to 1 am
+      // festival span two days in India and one day in UTC, so the same
+      // page said different things depending on where it was opened.
+      final occurrence = EventOccurrence.fromJson({
+        'id': 1,
+        'start_at': '2026-10-12T18:30:00+05:30',
+      });
+
+      expect(occurrence.startAt.hour, 18);
+      expect(occurrence.occurrenceDate, '2026-10-12');
+      expect(
+        occurrence.startAt.isUtc,
+        isFalse,
+        reason: 'it is a wall clock, not an instant',
+      );
     });
 
     test('an occurrence with no end parses without one', () {
@@ -53,6 +76,9 @@ void main() {
     });
 
     test('recognises an event that runs past midnight', () {
+      // Past midnight *at the temple*. In UTC these two instants fall on
+      // the same day, which is exactly why the device zone must not be
+      // used here.
       final occurrence = EventOccurrence.fromJson({
         'id': 1,
         'start_at': '2026-10-12T17:00:00+05:30',

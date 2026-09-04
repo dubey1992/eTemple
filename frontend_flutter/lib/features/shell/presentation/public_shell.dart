@@ -156,14 +156,13 @@ class _BrandMark extends StatelessWidget {
   }
 }
 
-/// The dark strip above the page: where the temple is, and how to reach it.
+/// The dark strip above the page, carrying the prototype's two lines: what this
+/// place is on the left, where it is on the right.
 ///
-/// Deliberately *not* the tagline: that already leads the hero directly below,
-/// and saying it twice on one screen reads as a mistake. What a visitor cannot
-/// get from the hero is the address and the phone number, so those go here.
-///
-/// Both halves are CMS content, so the strip disappears entirely on a site the
-/// committee has not configured rather than showing invented copy.
+/// Distinct from the hero paragraph directly below it, which is the temple
+/// profile's mission. Both halves are CMS content, so the strip disappears
+/// entirely on a site the committee has not configured rather than showing
+/// invented copy.
 class _InfoStrip extends ConsumerWidget {
   const _InfoStrip();
 
@@ -171,6 +170,8 @@ class _InfoStrip extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
+
+    final tagline = ref.watch(siteSettingsProvider).value?.tagline.value;
 
     final address = ref
         .watch(templeProfileProvider)
@@ -181,10 +182,7 @@ class _InfoStrip extends ConsumerWidget {
         ? null
         : address.join(', ');
 
-    final contact = ref.watch(siteSettingsProvider).value?.contact;
-    final reach = [?contact?.phone, ?contact?.email].join('  ·  ');
-
-    if (where == null && reach.isEmpty) return const SizedBox.shrink();
+    if (tagline == null && where == null) return const SizedBox.shrink();
 
     final style = theme.textTheme.bodySmall?.copyWith(
       color: Colors.white.withValues(alpha: 0.86),
@@ -197,22 +195,22 @@ class _InfoStrip extends ConsumerWidget {
         verticalPadding: AppSpacing.sm,
         child: Row(
           children: [
-            if (where != null)
+            if (tagline != null)
               Expanded(
                 child: Text(
-                  where,
-                  key: const Key('info-strip-address'),
+                  tagline,
+                  key: const Key('info-strip-tagline'),
                   style: style,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-            if (reach.isNotEmpty) ...[
+            if (where != null) ...[
               const SizedBox(width: AppSpacing.md),
               Flexible(
                 child: Text(
-                  reach,
-                  key: const Key('info-strip-contact'),
+                  where,
+                  key: const Key('info-strip-address'),
                   style: style,
                   textAlign: TextAlign.right,
                   maxLines: 1,

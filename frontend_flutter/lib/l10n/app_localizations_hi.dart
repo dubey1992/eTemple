@@ -13,7 +13,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get appTitle => 'राधा कृष्ण ठाकुरबाड़ी';
 
   @override
-  String get invocation => '॥ राधे कृष्ण ॥';
+  String get invocation => 'राधे राधे · जय श्री कृष्ण';
 
   @override
   String get languageLabel => 'भाषा';
@@ -867,4 +867,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get clearEndTime => 'समाप्ति हटाएँ';
+
+  @override
+  String get viewEvents => 'कार्यक्रम देखें';
 }

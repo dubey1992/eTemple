@@ -79,18 +79,31 @@ class EventOccurrence {
       title: LocalizedValue.fromJson(json['title']),
       description: LocalizedValue.fromJson(json['description']),
       venue: LocalizedValue.fromJson(json['venue']),
-      // Parsed to local time so the device shows what the temple means; the
-      // server sends the offset explicitly for exactly this reason.
-      startAt: start == null ? DateTime.now() : DateTime.parse(start).toLocal(),
-      endAt: read('end_at') == null
-          ? null
-          : DateTime.parse(read('end_at')!).toLocal(),
+      startAt: start == null ? DateTime.now() : templeClock(start),
+      endAt: read('end_at') == null ? null : templeClock(read('end_at')!),
       isRecurring: json['is_recurring'] == true,
       recurrence: read('recurrence') ?? Recurrences.none,
       isFeatured: json['is_featured'] == true,
       isCancelled: json['is_cancelled'] == true,
       posterUrl: read('poster_url'),
     );
+  }
+
+  /// Reads an ISO-8601 instant as the **temple's** wall clock.
+  ///
+  /// Deliberately not `toLocal()`. The aarti is at 6:30 pm at the temple, and
+  /// that is what everyone should be told — a relative reading this from London
+  /// wants to know when it happens there, not that it is 1:00 pm for them.
+  ///
+  /// Converting to the device's zone also made "does this event run past
+  /// midnight?" depend on where the reader was standing: a 5 pm to 1 am
+  /// festival spans two days in the temple's zone and one day in UTC.
+  ///
+  /// The server sends the offset, so the components before it are already the
+  /// temple's clock; dropping the designator keeps them.
+  static DateTime templeClock(String iso) {
+    final withoutZone = iso.replaceFirst(RegExp(r'(Z|[+-]\d{2}:?\d{2})$'), '');
+    return DateTime.parse(withoutZone);
   }
 
   final int id;
@@ -172,12 +185,13 @@ class AdminEvent {
       descriptionEn: read('description_en'),
       venueHi: read('venue_hi'),
       venueEn: read('venue_en'),
+      // The temple's clock, not the reader's — see EventOccurrence.templeClock.
       startAt: read('start_at') == null
           ? DateTime.now()
-          : DateTime.parse(read('start_at')!).toLocal(),
+          : EventOccurrence.templeClock(read('start_at')!),
       endAt: read('end_at') == null
           ? null
-          : DateTime.parse(read('end_at')!).toLocal(),
+          : EventOccurrence.templeClock(read('end_at')!),
       recurrence: read('recurrence') ?? Recurrences.none,
       recurrenceDays: days is List
           ? days.map(EventOccurrence._asInt).whereType<int>().toList()
