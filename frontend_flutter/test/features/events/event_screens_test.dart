@@ -5,7 +5,6 @@ import 'package:rkt_web/core/errors/app_exception.dart';
 import 'package:rkt_web/core/errors/error_code.dart';
 import 'package:rkt_web/features/auth/data/auth_providers.dart';
 import 'package:rkt_web/features/content/data/content_providers.dart';
-import 'package:rkt_web/features/events/data/event_providers.dart';
 import 'package:rkt_web/features/events/domain/event.dart';
 import 'package:rkt_web/features/events/domain/event_repository.dart';
 import 'package:rkt_web/features/events/presentation/admin_event_editor_screen.dart';
@@ -29,12 +28,12 @@ Future<void> pumpEvents(
     tester,
     Scaffold(body: screen),
     surfaceSize: surfaceSize,
+    events: events,
     overrides: [
       authRepositoryProvider.overrideWithValue(
         FakeAuthRepository(session: testUser(permissions: permissions)),
       ),
       contentRepositoryProvider.overrideWithValue(FakeContentRepository()),
-      eventRepositoryProvider.overrideWithValue(events),
     ],
   );
   await tester.pumpAndSettle();

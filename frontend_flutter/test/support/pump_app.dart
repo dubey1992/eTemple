@@ -8,10 +8,13 @@ import 'package:go_router/go_router.dart';
 import 'package:rkt_web/app/localization/locale_controller.dart';
 import 'package:rkt_web/app/routing/route_paths.dart';
 import 'package:rkt_web/app/theme/app_theme.dart';
+import 'package:rkt_web/features/events/data/event_providers.dart';
 import 'package:rkt_web/features/temple/data/temple_providers.dart';
 import 'package:rkt_web/l10n/app_localizations.dart';
 
+import 'fake_event_repository.dart';
 import 'fake_temple_repository.dart';
+import 'no_network.dart';
 
 /// Key on the stand-in screen the admin route renders in these tests.
 const adminPlaceholderKey = Key('test-admin-placeholder');
@@ -27,10 +30,14 @@ const committeeListPlaceholderKey = Key('test-committee-placeholder');
 /// A minimal router is provided so screens that navigate (the login screen, for
 /// example) behave as they do in the application instead of throwing.
 ///
-/// Since Phase 3 the temple's own name is CMS content read by the header, the
-/// hero and even the sign-in page, so a stub temple repository is always
-/// supplied — otherwise every widget test would attempt a real HTTP request.
-/// Pass [temple] to script that profile, including making it fail.
+/// The temple profile (Phase 3) and the calendar (Phase 4) are read by shared
+/// chrome — the header, the hero, even the sign-in page — so stubs for both are
+/// always supplied. Pass [temple] or [events] to script them, including making
+/// them fail.
+///
+/// An [ApiClient] that refuses every request is installed as well, so a
+/// repository nobody remembered to fake fails loudly instead of quietly
+/// succeeding against whatever development server happens to be running.
 Future<void> pumpScreen(
   WidgetTester tester,
   Widget child, {
@@ -38,6 +45,7 @@ Future<void> pumpScreen(
   Locale locale = AppLocales.hindi,
   Size? surfaceSize,
   FakeTempleRepository? temple,
+  FakeEventRepository? events,
 }) async {
   if (surfaceSize != null) {
     // Set the logical size directly: devicePixelRatio 1.0 makes the physical
@@ -86,8 +94,12 @@ Future<void> pumpScreen(
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
+        noNetworkOverride,
         templeRepositoryProvider.overrideWithValue(
           temple ?? FakeTempleRepository(profile: testProfile()),
+        ),
+        eventRepositoryProvider.overrideWithValue(
+          events ?? FakeEventRepository(),
         ),
         ...overrides,
       ],

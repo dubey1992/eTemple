@@ -17,9 +17,14 @@ import 'package:rkt_web/features/shell/presentation/not_found_screen.dart';
 import 'package:rkt_web/l10n/app_localizations.dart';
 
 import 'package:rkt_web/features/content/data/content_providers.dart';
+import 'package:rkt_web/features/events/data/event_providers.dart';
+import 'package:rkt_web/features/temple/data/temple_providers.dart';
 
 import '../support/fake_auth_repository.dart';
 import '../support/fake_content_repository.dart';
+import '../support/fake_event_repository.dart';
+import '../support/fake_temple_repository.dart';
+import '../support/no_network.dart';
 
 /// Boots the real router against a scripted repository and returns both so a
 /// test can navigate and then assert on what the guard did.
@@ -27,8 +32,12 @@ Future<(GoRouter, ProviderContainer)> bootRouter(
   WidgetTester tester,
   FakeAuthRepository repository,
 ) async {
+  // The real router builds the real screens, and those read the temple profile
+  // and the calendar. Every repository is faked and the HTTP client refuses to
+  // connect, so booting the router cannot reach the network.
   final container = ProviderContainer.test(
     overrides: [
+      noNetworkOverride,
       authRepositoryProvider.overrideWithValue(repository),
       contentRepositoryProvider.overrideWithValue(
         FakeContentRepository(
@@ -36,6 +45,10 @@ Future<(GoRouter, ProviderContainer)> bootRouter(
           settings: testSettings(),
         ),
       ),
+      templeRepositoryProvider.overrideWithValue(
+        FakeTempleRepository(profile: testProfile()),
+      ),
+      eventRepositoryProvider.overrideWithValue(FakeEventRepository()),
     ],
   );
 
