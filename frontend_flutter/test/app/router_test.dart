@@ -11,7 +11,7 @@ import 'package:rkt_web/features/auth/data/auth_providers.dart';
 import 'package:rkt_web/features/auth/domain/auth_user.dart';
 import 'package:rkt_web/features/auth/presentation/auth_controller.dart';
 import 'package:rkt_web/features/auth/presentation/login_screen.dart';
-import 'package:rkt_web/features/shell/presentation/admin_overview_screen.dart';
+import 'package:rkt_web/features/admin/presentation/admin_dashboard_screen.dart';
 import 'package:rkt_web/features/content/presentation/home_screen.dart';
 import 'package:rkt_web/features/shell/presentation/not_found_screen.dart';
 import 'package:rkt_web/l10n/app_localizations.dart';
@@ -88,7 +88,7 @@ void main() {
 
     expect(currentLocation(router), RoutePaths.login);
     expect(find.byType(LoginScreen), findsOneWidget);
-    expect(find.byType(AdminOverviewScreen), findsNothing);
+    expect(find.byType(AdminDashboardScreen), findsNothing);
   });
 
   testWidgets('an active user reaches the admin area', (tester) async {
@@ -101,7 +101,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(currentLocation(router), RoutePaths.admin);
-    expect(find.byType(AdminOverviewScreen), findsOneWidget);
+    expect(find.byType(AdminDashboardScreen), findsOneWidget);
   });
 
   testWidgets('an inactive account is treated as a guest by the guard', (

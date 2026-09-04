@@ -30,6 +30,10 @@ class UserResource extends JsonResource
             'status' => $this->status,
             'last_login_at' => $this->last_login_at?->toIso8601String(),
             'role' => $this->whenLoaded('role', fn () => new RoleResource($this->role)),
+            // The client uses these to hide what the server would refuse. It is a
+            // courtesy for the operator, never the access control - every
+            // protected endpoint checks the same permissions independently.
+            'permissions' => $this->effectivePermissions(),
         ];
     }
 }

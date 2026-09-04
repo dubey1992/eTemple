@@ -7,9 +7,11 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\Auth\AuthService;
+use App\Support\ApiErrorCode;
 use App\Support\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -52,6 +54,33 @@ class AuthController extends Controller
         $user = $request->user();
 
         return ApiResponse::success(new UserResource($user->load('role')));
+    }
+
+    /**
+     * POST /api/auth/reset-password
+     *
+     * Completes the flow the Phase 0 forgot-password endpoint starts. An invalid
+     * or already-used token is refused with the same generic message as an
+     * expired one, so the endpoint cannot be used to probe which tokens exist.
+     */
+    public function resetPassword(ResetPasswordRequest $request): JsonResponse
+    {
+        $succeeded = $this->auth->resetPassword(
+            (string) $request->validated('email'),
+            (string) $request->validated('token'),
+            (string) $request->validated('password'),
+        );
+
+        if (! $succeeded) {
+            return ApiResponse::error(
+                ApiErrorCode::VALIDATION_FAILED,
+                'This password reset link is invalid or has expired.',
+                422,
+                ['token' => ['This password reset link is invalid or has expired.']],
+            );
+        }
+
+        return ApiResponse::message('Your password has been reset. Please sign in.');
     }
 
     /**

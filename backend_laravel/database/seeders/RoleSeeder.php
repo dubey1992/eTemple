@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Role;
+use App\Support\Permission;
 use Illuminate\Database\Seeder;
 
 /**
- * Production-safe, idempotent seed of the five roles named by the specification.
+ * Production-safe, idempotent seed of the five roles named by the specification,
+ * with the Phase 2 default permission matrix.
  *
- * Permission keys are deliberately left null — the permission matrix is Phase 2.
+ * Re-running this **does not** overwrite permissions that the committee has
+ * since customised through the admin UI — defaults are applied only when a role
+ * has never been configured. Otherwise a routine deploy would silently undo
+ * their access decisions.
  */
 class RoleSeeder extends Seeder
 {
@@ -45,15 +50,26 @@ class RoleSeeder extends Seeder
 
     public function run(): void
     {
-        foreach (self::ROLES as $role) {
-            Role::query()->updateOrCreate(
-                ['slug' => $role['slug']],
-                [
-                    'name' => $role['name'],
-                    'description' => $role['description'],
-                    'status' => Role::STATUS_ACTIVE,
-                ],
-            );
+        $defaults = Permission::defaultsByRole();
+
+        foreach (self::ROLES as $definition) {
+            /** @var Role $role */
+            $role = Role::query()->firstOrNew(['slug' => $definition['slug']]);
+
+            $isNew = ! $role->exists;
+
+            $role->name = $definition['name'];
+            $role->description = $definition['description'];
+            $role->status = Role::STATUS_ACTIVE;
+
+            // Super Admin's set is computed, never stored (see Role::effectivePermissions).
+            if ($definition['slug'] === Role::SUPER_ADMIN) {
+                $role->permissions = null;
+            } elseif ($isNew || $role->permissions === null) {
+                $role->permissions = $defaults[$definition['slug']] ?? [];
+            }
+
+            $role->save();
         }
     }
 }

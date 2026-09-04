@@ -29,6 +29,25 @@ class ApiEndpoints {
 
   static const String adminSiteSettings = '/admin/site-settings';
 
+  // Committee accounts, roles and the permission matrix (Phase 2)
+  static const String adminUsers = '/admin/users';
+
+  static String adminUser(int id) => '/admin/users/$id';
+
+  static String adminUserLoginHistory(int id) =>
+      '/admin/users/$id/login-history';
+
+  static String adminUserPasswordReset(int id) =>
+      '/admin/users/$id/send-password-reset';
+
+  static const String adminRoles = '/admin/roles';
+
+  static const String adminPermissions = '/admin/permissions';
+
+  static String adminRolePermissions(int id) => '/admin/roles/$id/permissions';
+
+  static const String resetPassword = '/auth/reset-password';
+
   /// Served from the application root, not from under `/api`.
   static const String csrfCookie = '/sanctum/csrf-cookie';
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Models\Role;
 use App\Models\User;
 use App\Support\ApiErrorCode;
 use App\Support\ApiResponse;
+use App\Support\Permission;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
@@ -73,26 +73,37 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Content-management authorization.
+     * Permission-matrix authorization (spec Phase 2).
      *
-     * Phase 2 introduces the permission matrix and will replace this gate. Until
-     * then the check is on the baseline role slug, which is deliberately
-     * narrower than "any authenticated user": a Treasurer or a Viewer has no
-     * business editing public pages, and the server must be the one saying so.
+     * Every catalogue key becomes an ability, so a route declares what it needs
+     * (`can:users.manage`) and the answer comes from the role's stored
+     * permissions. This replaces the Phase 1 `manage-content` role-slug gate;
+     * that ability is kept as an alias of `content.manage` so Phase 1's routes
+     * and tests keep working unchanged, which is the check that the swap was
+     * faithful (PHASE_2_PLAN assumption C6).
      */
     private function configureGates(): void
     {
-        Gate::define('manage-content', static function (User $user): bool {
-            // Explicit load: Model::shouldBeStrict() forbids lazy loading and the
-            // session guard hydrates the user without its role.
+        // Super Admin is granted everything before any individual check runs, so
+        // no edit to the matrix can lock the temple out of its own administration.
+        Gate::before(static function (User $user): ?bool {
             $user->loadMissing('role');
 
-            return in_array($user->role?->slug, [
-                Role::SUPER_ADMIN,
-                Role::ADMIN,
-                Role::CONTENT_MANAGER,
-            ], true);
+            return ($user->isActive() && $user->isSuperAdmin()) ? true : null;
         });
+
+        foreach (Permission::all() as $permission) {
+            Gate::define(
+                $permission,
+                static fn (User $user): bool => $user->hasPermission($permission),
+            );
+        }
+
+        // Phase 1 compatibility alias.
+        Gate::define(
+            'manage-content',
+            static fn (User $user): bool => $user->hasPermission(Permission::CONTENT_MANAGE),
+        );
     }
 
     /**

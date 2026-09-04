@@ -76,6 +76,27 @@ class ContentRepositoryImpl implements ContentRepository {
     return envelope.data;
   }
 
+  @override
+  Future<EditableSiteSettings> adminSiteSettings() async {
+    final envelope = await _api.get<EditableSiteSettings>(
+      ApiEndpoints.adminSiteSettings,
+      decode: (data) =>
+          EditableSiteSettings.fromJson(_object(data, 'site settings')),
+    );
+    return envelope.data;
+  }
+
+  @override
+  Future<EditableSiteSettings> saveSiteSettings(SiteSettingsDraft draft) async {
+    final envelope = await _api.put<EditableSiteSettings>(
+      ApiEndpoints.adminSiteSettings,
+      body: draft.toJson(),
+      decode: (data) =>
+          EditableSiteSettings.fromJson(_object(data, 'site settings')),
+    );
+    return envelope.data;
+  }
+
   static Map<String, dynamic> _object(Object? data, String what) {
     final json = ApiEnvelopeParser.asMap(data);
     if (json == null) {

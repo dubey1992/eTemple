@@ -37,6 +37,9 @@ class FakeContentRepository implements ContentRepository {
   int pageCalls = 0;
   int settingsCalls = 0;
   int saveCalls = 0;
+  int saveSettingsCalls = 0;
+  SiteSettingsDraft? lastSettingsDraft;
+  EditableSiteSettings editableSettings = const EditableSiteSettings();
   String? lastLanguage;
   EditablePageDraft? lastDraft;
 
@@ -81,6 +84,22 @@ class FakeContentRepository implements ContentRepository {
       (p) => p.id == id,
       orElse: () => throw const AppException(code: ErrorCode.notFound),
     );
+  }
+
+  @override
+  Future<EditableSiteSettings> adminSiteSettings() async {
+    if (delay > Duration.zero) await Future<void>.delayed(delay);
+    if (adminError != null) throw adminError!;
+    return editableSettings;
+  }
+
+  @override
+  Future<EditableSiteSettings> saveSiteSettings(SiteSettingsDraft draft) async {
+    saveSettingsCalls++;
+    lastSettingsDraft = draft;
+    if (delay > Duration.zero) await Future<void>.delayed(delay);
+    if (saveError != null) throw saveError!;
+    return editableSettings;
   }
 
   @override

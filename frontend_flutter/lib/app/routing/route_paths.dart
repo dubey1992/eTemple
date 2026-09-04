@@ -22,6 +22,20 @@ class RoutePaths {
 
   static String adminPageEditor(int id) => '/admin/pages/$id';
 
+  static const String adminSiteSettings = '/admin/site-settings';
+
+  static const String adminUsers = '/admin/users';
+  static const String adminUserNew = '/admin/users/new';
+
+  static String adminUserEditor(int id) => '/admin/users/$id';
+
+  static const String adminRoles = '/admin/roles';
+
+  static String adminRolePermissions(int id) => '/admin/roles/$id';
+
+  // --- Public (completes the Phase 0 password-reset flow) -------------------
+  static const String resetPassword = '/reset-password';
+
   /// True for any route inside the protected admin group.
   static bool isAdmin(String location) =>
       location == admin || location.startsWith('$admin/');
@@ -37,4 +51,10 @@ class RouteNames {
   static const String adminPages = 'admin-pages';
   static const String adminPageEditor = 'admin-page-editor';
   static const String page = 'cms-page';
+  static const String adminSiteSettings = 'admin-site-settings';
+  static const String adminUsers = 'admin-users';
+  static const String adminUserEditor = 'admin-user-editor';
+  static const String adminRoles = 'admin-roles';
+  static const String adminRolePermissions = 'admin-role-permissions';
+  static const String resetPassword = 'reset-password';
 }

@@ -2,14 +2,25 @@ openapi: 3.1.0
 
 info:
   title: Radha Krishna Thakurbari API
-  version: 0.2.0
+  version: 0.3.0
   description: |
     REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
     admin console.
 
-    **Scope: Phases 0-1.** Endpoints for events, media, donations, enquiries,
+    **Scope: Phases 0-2.** Endpoints for events, media, donations, enquiries,
     announcements, accounts and reports are added in their own phases and must
     be documented here in the same change that implements them.
+
+    ## Authorization
+
+    Admin endpoints require an authenticated, active account **and** a
+    permission key from the matrix (`module.action`, e.g. `users.manage`).
+    `GET /api/auth/me` returns the caller's effective keys so the client can
+    hide what would be refused — a courtesy only. Every request is authorized
+    again on the server.
+
+    Super Admin passes every check and its permission set cannot be edited, so
+    no change to the matrix can leave the temple without an administrator.
 
     ## Bilingual content
 
@@ -64,6 +75,8 @@ tags:
   - name: Public content
   - name: Admin
   - name: Content management
+  - name: User management
+  - name: Roles and permissions
 
 paths:
   /api/health:
@@ -496,6 +509,246 @@ paths:
         '403': { description: FORBIDDEN }
         '422': { description: VALIDATION_FAILED }
 
+  /api/auth/reset-password:
+    post:
+      tags: [Authentication]
+      summary: Complete a password reset
+      description: |
+        Finishes the flow the forgot-password endpoint starts. An invalid,
+        expired or already-used token is refused with the same generic message,
+        so the endpoint cannot be used to probe which tokens exist. A successful
+        reset rotates the remember token, ending other sessions.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, email, password, password_confirmation]
+              properties:
+                token: { type: string }
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8 }
+                password_confirmation: { type: string }
+      responses:
+        '200': { description: Password changed }
+        '422': { description: VALIDATION_FAILED - weak password, or invalid/expired token }
+        '429': { description: TOO_MANY_REQUESTS }
+
+  /api/admin/users:
+    get:
+      tags: [User management]
+      summary: List committee accounts
+      description: Requires `users.view`.
+      parameters:
+        - { name: search, in: query, schema: { type: string } }
+        - { name: role, in: query, schema: { type: string } }
+        - { name: status, in: query, schema: { type: string, enum: [active, inactive, blocked] } }
+        - { name: per_page, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 25 } }
+      responses:
+        '200':
+          description: Paginated accounts
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/AdminUser' }
+                      meta: { $ref: '#/components/schemas/PageMeta' }
+        '403': { description: FORBIDDEN }
+    post:
+      tags: [User management]
+      summary: Create a committee account
+      description: |
+        Requires `users.manage`. **No password is accepted**: the account is
+        stored with an unusable hash and a reset link is mailed, so a plaintext
+        password never passes through the committee.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [first_name, email, role_id]
+              properties:
+                first_name: { type: string, maxLength: 100 }
+                last_name: { type: [string, 'null'], maxLength: 100 }
+                email: { type: string, format: email, maxLength: 191 }
+                mobile: { type: [string, 'null'], maxLength: 20 }
+                role_id: { type: integer, description: Must be an active role }
+                status: { type: string, enum: [active, inactive, blocked], default: active }
+      responses:
+        '201':
+          description: Account created and a reset link sent
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/AdminUser' }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED - duplicate e-mail, unknown or inactive role }
+
+  /api/admin/users/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [User management]
+      summary: One account
+      description: Requires `users.view`.
+      responses:
+        '200': { description: The account }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+    put:
+      tags: [User management]
+      summary: Update an account
+      description: |
+        Requires `users.manage`. Four refusals protect the administration itself
+        and all surface as 422 against the named field:
+
+        * the last active Super Admin cannot be demoted (`role_id`);
+        * the last active Super Admin cannot be deactivated or blocked (`status`);
+        * you cannot change your own role (`role_id`);
+        * you cannot deactivate or block your own account (`status`).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [first_name, email, role_id, status]
+              properties:
+                first_name: { type: string, maxLength: 100 }
+                last_name: { type: [string, 'null'], maxLength: 100 }
+                email: { type: string, format: email }
+                mobile: { type: [string, 'null'], maxLength: 20 }
+                role_id: { type: integer }
+                status: { type: string, enum: [active, inactive, blocked] }
+      responses:
+        '200': { description: The updated account }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+        '422': { description: VALIDATION_FAILED, including the four safety refusals }
+
+  /api/admin/users/{id}/login-history:
+    get:
+      tags: [User management]
+      summary: Sign-in history for one account
+      description: |
+        Requires `security.view` — deliberately a different key from
+        `users.manage`, so administering accounts and reading who tried to sign
+        in to them can be granted separately. Records successes **and** failures.
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+        - { name: per_page, in: query, schema: { type: integer, maximum: 100, default: 25 } }
+      responses:
+        '200':
+          description: Paginated attempts, newest first
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/LoginAttempt' }
+                      meta: { $ref: '#/components/schemas/PageMeta' }
+        '403': { description: FORBIDDEN }
+
+  /api/admin/users/{id}/send-password-reset:
+    post:
+      tags: [User management]
+      summary: Re-send a password reset link
+      description: Requires `users.manage`.
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200': { description: Link sent }
+        '403': { description: FORBIDDEN }
+
+  /api/admin/roles:
+    get:
+      tags: [Roles and permissions]
+      summary: Roles with their effective permissions
+      description: |
+        Requires `roles.view`. Super Admin is reported with the whole catalogue
+        and `is_editable: false`.
+      responses:
+        '200':
+          description: The roles
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/ManagedRole' }
+        '403': { description: FORBIDDEN }
+
+  /api/admin/permissions:
+    get:
+      tags: [Roles and permissions]
+      summary: The permission catalogue, grouped by module
+      description: |
+        Requires `roles.view`. Includes keys for modules that later phases build;
+        `phase` says which, so the UI can mark a toggle as not yet enforced.
+      responses:
+        '200':
+          description: The catalogue
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          modules:
+                            type: array
+                            items: { $ref: '#/components/schemas/PermissionModule' }
+        '403': { description: FORBIDDEN }
+
+  /api/admin/roles/{id}/permissions:
+    put:
+      tags: [Roles and permissions]
+      summary: Replace a role's permission set
+      description: |
+        Requires `roles.manage`. Unknown keys are rejected **by name** rather
+        than stored, and Super Admin cannot be restricted at all.
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [permissions]
+              properties:
+                permissions:
+                  type: array
+                  maxItems: 100
+                  items: { type: string, example: content.manage }
+      responses:
+        '200': { description: The updated role }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED - unknown keys, or an attempt to restrict Super Admin }
+
 components:
   securitySchemes:
     sessionCookie:
@@ -584,6 +837,12 @@ components:
           enum: [active, inactive, blocked]
         last_login_at: { type: [string, 'null'], format: date-time }
         role: { $ref: '#/components/schemas/Role' }
+        permissions:
+          type: array
+          description: >
+            The caller's effective permission keys. The client uses these to hide
+            actions the server would refuse; it is never the access control.
+          items: { type: string }
 
     LocalizedText:
       type: object
@@ -667,6 +926,66 @@ components:
         navigation:
           type: array
           items: { $ref: '#/components/schemas/NavigationItem' }
+
+    AdminUser:
+      type: object
+      description: The password hash is never exposed.
+      properties:
+        id: { type: integer }
+        first_name: { type: string }
+        last_name: { type: [string, 'null'] }
+        full_name: { type: string }
+        email: { type: string, format: email }
+        mobile: { type: [string, 'null'] }
+        status: { type: string, enum: [active, inactive, blocked] }
+        last_login_at: { type: [string, 'null'], format: date-time }
+        created_at: { type: [string, 'null'], format: date-time }
+        role: { $ref: '#/components/schemas/Role' }
+
+    ManagedRole:
+      type: object
+      properties:
+        id: { type: integer }
+        slug: { type: string }
+        name: { type: string }
+        description: { type: [string, 'null'] }
+        status: { type: string, enum: [active, inactive] }
+        permissions:
+          type: array
+          items: { type: string }
+        is_editable:
+          type: boolean
+          description: False for Super Admin, whose set is computed and fixed.
+        user_count: { type: [integer, 'null'] }
+
+    PermissionModule:
+      type: object
+      properties:
+        module: { type: string }
+        label: { type: string }
+        phase:
+          type: integer
+          description: The phase that builds this module; keys beyond the delivered phases are grantable but not yet enforced.
+        permissions:
+          type: array
+          items:
+            type: object
+            properties:
+              key: { type: string }
+              label: { type: string }
+
+    LoginAttempt:
+      type: object
+      properties:
+        id: { type: integer }
+        email: { type: string }
+        outcome:
+          type: string
+          enum: [success, invalid_credentials, inactive, blocked]
+        successful: { type: boolean }
+        ip_address: { type: [string, 'null'] }
+        user_agent: { type: [string, 'null'] }
+        created_at: { type: [string, 'null'], format: date-time }
 
     Health:
       type: object

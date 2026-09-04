@@ -607,6 +607,366 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'अंग्रेज़ी अनुपलब्ध'**
   String get englishMissingBadge;
+
+  /// No description provided for @dashboardWelcome.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रबंधन डैशबोर्ड'**
+  String get dashboardWelcome;
+
+  /// No description provided for @dashboardSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'अपनी अनुमति के अनुसार उपलब्ध विकल्प नीचे दिए गए हैं।'**
+  String get dashboardSubtitle;
+
+  /// No description provided for @dashboardNoAccess.
+  ///
+  /// In hi, this message translates to:
+  /// **'आपके खाते को अभी किसी प्रबंधन सुविधा की अनुमति नहीं है।'**
+  String get dashboardNoAccess;
+
+  /// No description provided for @navUsers.
+  ///
+  /// In hi, this message translates to:
+  /// **'सदस्य खाते'**
+  String get navUsers;
+
+  /// No description provided for @navUsersDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'समिति सदस्यों के खाते बनाएँ और प्रबंधित करें'**
+  String get navUsersDesc;
+
+  /// No description provided for @navRoles.
+  ///
+  /// In hi, this message translates to:
+  /// **'भूमिका एवं अनुमति'**
+  String get navRoles;
+
+  /// No description provided for @navRolesDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रत्येक भूमिका क्या कर सकती है, यह निर्धारित करें'**
+  String get navRolesDesc;
+
+  /// No description provided for @navPagesDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'सार्वजनिक वेबसाइट की सामग्री संपादित करें'**
+  String get navPagesDesc;
+
+  /// No description provided for @navSiteSettings.
+  ///
+  /// In hi, this message translates to:
+  /// **'साइट सेटिंग्स'**
+  String get navSiteSettings;
+
+  /// No description provided for @navSiteSettingsDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'टैगलाइन, पता, मेन्यू और फुटर'**
+  String get navSiteSettingsDesc;
+
+  /// No description provided for @usersTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'सदस्य खाते'**
+  String get usersTitle;
+
+  /// No description provided for @usersSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'समिति सदस्यों के खाते यहाँ से प्रबंधित करें।'**
+  String get usersSubtitle;
+
+  /// No description provided for @userNew.
+  ///
+  /// In hi, this message translates to:
+  /// **'नया खाता'**
+  String get userNew;
+
+  /// No description provided for @userEdit.
+  ///
+  /// In hi, this message translates to:
+  /// **'खाता संपादित करें'**
+  String get userEdit;
+
+  /// No description provided for @userCreate.
+  ///
+  /// In hi, this message translates to:
+  /// **'खाता बनाएँ'**
+  String get userCreate;
+
+  /// No description provided for @userNeverSignedIn.
+  ///
+  /// In hi, this message translates to:
+  /// **'कभी साइन इन नहीं किया'**
+  String get userNeverSignedIn;
+
+  /// No description provided for @userLastLogin.
+  ///
+  /// In hi, this message translates to:
+  /// **'अंतिम लॉगिन'**
+  String get userLastLogin;
+
+  /// No description provided for @fieldFirstName.
+  ///
+  /// In hi, this message translates to:
+  /// **'नाम'**
+  String get fieldFirstName;
+
+  /// No description provided for @fieldLastName.
+  ///
+  /// In hi, this message translates to:
+  /// **'उपनाम'**
+  String get fieldLastName;
+
+  /// No description provided for @fieldMobile.
+  ///
+  /// In hi, this message translates to:
+  /// **'मोबाइल'**
+  String get fieldMobile;
+
+  /// No description provided for @fieldRole.
+  ///
+  /// In hi, this message translates to:
+  /// **'भूमिका'**
+  String get fieldRole;
+
+  /// No description provided for @fieldStatus.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्थिति'**
+  String get fieldStatus;
+
+  /// No description provided for @statusActive.
+  ///
+  /// In hi, this message translates to:
+  /// **'सक्रिय'**
+  String get statusActive;
+
+  /// No description provided for @statusInactive.
+  ///
+  /// In hi, this message translates to:
+  /// **'निष्क्रिय'**
+  String get statusInactive;
+
+  /// No description provided for @statusBlocked.
+  ///
+  /// In hi, this message translates to:
+  /// **'अवरुद्ध'**
+  String get statusBlocked;
+
+  /// No description provided for @userPasswordHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'नया सदस्य ईमेल पर भेजे गए लिंक से अपना पासवर्ड स्वयं बनाएगा।'**
+  String get userPasswordHint;
+
+  /// No description provided for @userSendReset.
+  ///
+  /// In hi, this message translates to:
+  /// **'पासवर्ड लिंक भेजें'**
+  String get userSendReset;
+
+  /// No description provided for @userResetSent.
+  ///
+  /// In hi, this message translates to:
+  /// **'पासवर्ड लिंक भेज दिया गया।'**
+  String get userResetSent;
+
+  /// No description provided for @userCreated.
+  ///
+  /// In hi, this message translates to:
+  /// **'खाता बना दिया गया और पासवर्ड लिंक भेज दिया गया।'**
+  String get userCreated;
+
+  /// No description provided for @rolesTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'भूमिका एवं अनुमति'**
+  String get rolesTitle;
+
+  /// No description provided for @rolesSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रत्येक भूमिका किन मॉड्यूल तक पहुँच सकती है।'**
+  String get rolesSubtitle;
+
+  /// No description provided for @roleMembers.
+  ///
+  /// In hi, this message translates to:
+  /// **'{count} खाते'**
+  String roleMembers(int count);
+
+  /// No description provided for @rolePermissionCount.
+  ///
+  /// In hi, this message translates to:
+  /// **'{count} अनुमतियाँ'**
+  String rolePermissionCount(int count);
+
+  /// No description provided for @roleFixed.
+  ///
+  /// In hi, this message translates to:
+  /// **'सुपर एडमिन को सदैव सभी अनुमतियाँ रहती हैं।'**
+  String get roleFixed;
+
+  /// No description provided for @rolePermissionsTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'अनुमतियाँ'**
+  String get rolePermissionsTitle;
+
+  /// No description provided for @permissionsSaved.
+  ///
+  /// In hi, this message translates to:
+  /// **'अनुमतियाँ सहेज ली गईं।'**
+  String get permissionsSaved;
+
+  /// No description provided for @modulePhasePending.
+  ///
+  /// In hi, this message translates to:
+  /// **'चरण {phase} में उपलब्ध होगा'**
+  String modulePhasePending(int phase);
+
+  /// No description provided for @loginHistoryTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'लॉगिन इतिहास'**
+  String get loginHistoryTitle;
+
+  /// No description provided for @loginHistoryEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी कोई लॉगिन दर्ज नहीं है।'**
+  String get loginHistoryEmpty;
+
+  /// No description provided for @loginSuccess.
+  ///
+  /// In hi, this message translates to:
+  /// **'सफल'**
+  String get loginSuccess;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In hi, this message translates to:
+  /// **'असफल'**
+  String get loginFailed;
+
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'नया पासवर्ड बनाएँ'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @resetPasswordSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'अपने खाते के लिए नया पासवर्ड दर्ज करें।'**
+  String get resetPasswordSubtitle;
+
+  /// No description provided for @fieldNewPassword.
+  ///
+  /// In hi, this message translates to:
+  /// **'नया पासवर्ड'**
+  String get fieldNewPassword;
+
+  /// No description provided for @fieldConfirmPassword.
+  ///
+  /// In hi, this message translates to:
+  /// **'पासवर्ड दोबारा दर्ज करें'**
+  String get fieldConfirmPassword;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In hi, this message translates to:
+  /// **'दोनों पासवर्ड एक जैसे नहीं हैं'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @resetPasswordDone.
+  ///
+  /// In hi, this message translates to:
+  /// **'पासवर्ड बदल दिया गया। अब साइन इन करें।'**
+  String get resetPasswordDone;
+
+  /// No description provided for @resetLinkInvalid.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह लिंक अमान्य है या समाप्त हो चुका है।'**
+  String get resetLinkInvalid;
+
+  /// No description provided for @siteSettingsTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'साइट सेटिंग्स'**
+  String get siteSettingsTitle;
+
+  /// No description provided for @siteSettingsSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मुख पृष्ठ की पंक्ति, पता और फुटर।'**
+  String get siteSettingsSubtitle;
+
+  /// No description provided for @fieldTagline.
+  ///
+  /// In hi, this message translates to:
+  /// **'टैगलाइन'**
+  String get fieldTagline;
+
+  /// No description provided for @fieldFooter.
+  ///
+  /// In hi, this message translates to:
+  /// **'फुटर पंक्ति'**
+  String get fieldFooter;
+
+  /// No description provided for @fieldVillage.
+  ///
+  /// In hi, this message translates to:
+  /// **'गाँव'**
+  String get fieldVillage;
+
+  /// No description provided for @fieldPanchayat.
+  ///
+  /// In hi, this message translates to:
+  /// **'पंचायत'**
+  String get fieldPanchayat;
+
+  /// No description provided for @fieldPoliceStation.
+  ///
+  /// In hi, this message translates to:
+  /// **'थाना'**
+  String get fieldPoliceStation;
+
+  /// No description provided for @fieldDistrict.
+  ///
+  /// In hi, this message translates to:
+  /// **'जिला'**
+  String get fieldDistrict;
+
+  /// No description provided for @fieldState.
+  ///
+  /// In hi, this message translates to:
+  /// **'राज्य'**
+  String get fieldState;
+
+  /// No description provided for @fieldPostalCode.
+  ///
+  /// In hi, this message translates to:
+  /// **'पिन कोड'**
+  String get fieldPostalCode;
+
+  /// No description provided for @fieldContactPhone.
+  ///
+  /// In hi, this message translates to:
+  /// **'संपर्क दूरभाष'**
+  String get fieldContactPhone;
+
+  /// No description provided for @fieldContactEmail.
+  ///
+  /// In hi, this message translates to:
+  /// **'संपर्क ईमेल'**
+  String get fieldContactEmail;
 }
 
 class _AppLocalizationsDelegate

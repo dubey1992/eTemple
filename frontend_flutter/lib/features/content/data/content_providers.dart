@@ -52,6 +52,11 @@ final adminPagesProvider = FutureProvider<List<EditablePage>>(
   (ref) => ref.watch(contentRepositoryProvider).adminPages(),
 );
 
+/// Site settings loaded raw for the settings editor.
+final adminSiteSettingsProvider = FutureProvider<EditableSiteSettings>(
+  (ref) => ref.watch(contentRepositoryProvider).adminSiteSettings(),
+);
+
 /// One page loaded raw for editing.
 final adminPageProvider = FutureProvider.family<EditablePage, int>(
   (ref, id) => ref.watch(contentRepositoryProvider).adminPage(id),

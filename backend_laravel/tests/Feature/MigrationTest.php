@@ -95,4 +95,16 @@ class MigrationTest extends TestCase
             );
         }
     }
+
+    public function test_login_attempts_table_records_the_history(): void
+    {
+        $this->assertTrue(Schema::hasTable('login_attempts'));
+
+        foreach (['id', 'user_id', 'email', 'outcome', 'ip_address', 'user_agent', 'created_at'] as $column) {
+            $this->assertTrue(
+                Schema::hasColumn('login_attempts', $column),
+                "login_attempts table is missing the [{$column}] column."
+            );
+        }
+    }
 }

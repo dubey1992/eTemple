@@ -82,12 +82,16 @@ Explicitly **out** of Phase 0: CMS pages, home/about content, user CRUD screens,
 
 ## Phase 2 — Admin, Users & Role Management
 
-- [ ] `roles` extended with permission keys / pivot; permission matrix by module
-- [ ] `GET|POST /api/admin/users`, `PUT /api/admin/users/{id}`
-- [ ] `GET /api/admin/roles`, `PUT /api/admin/roles/{id}/permissions`
-- [ ] Admin dashboard, user create/deactivate, role management, password reset, login history
-- [ ] Optional two-factor authentication for Super Admin
-- [ ] Flutter route guards and permission-aware menus (server-side authorization remains mandatory)
+- [x] `roles.permissions` populated from a code-defined catalogue; permission matrix by module
+- [x] `GET|POST /api/admin/users`, `PUT /api/admin/users/{id}`
+- [x] `GET /api/admin/roles`, `PUT /api/admin/roles/{id}/permissions`, `GET /api/admin/permissions`
+- [x] Admin dashboard, user create/deactivate, role management, password reset, login history
+- [ ] Optional two-factor authentication for Super Admin — **deferred** (`phase-reports/PHASE_2_COMPLETION.md` §7)
+- [x] Flutter route guards and permission-aware menus (server-side authorization remains mandatory)
+- [x] Carried from Phase 1: the site-settings admin editor
+
+**Phase 2 is COMPLETE** apart from the optional 2FA item. 199 Flutter tests,
+164 Laravel tests; see `phase-reports/PHASE_2_COMPLETION.md`.
 
 ## Phase 3 — Temple Profile & Committee
 

@@ -1,4 +1,5 @@
 import '../../../core/api/api_envelope.dart';
+import '../../../core/auth/permissions.dart';
 
 /// A role as returned by the API.
 ///
@@ -63,6 +64,7 @@ class AuthUser {
     this.mobile,
     this.lastLoginAt,
     this.role,
+    this.permissions = PermissionSet.empty,
   });
 
   factory AuthUser.fromJson(Map<String, dynamic> json) {
@@ -78,6 +80,7 @@ class AuthUser {
       status: AccountStatus.fromWire(json['status'] as String?),
       lastLoginAt: DateTime.tryParse(json['last_login_at'] as String? ?? ''),
       role: roleJson == null ? null : UserRole.fromJson(roleJson),
+      permissions: PermissionSet.fromJson(json['permissions']),
     );
   }
 
@@ -90,6 +93,12 @@ class AuthUser {
   final AccountStatus status;
   final DateTime? lastLoginAt;
   final UserRole? role;
+
+  /// What this account may do, as the server computed it.
+  ///
+  /// Used to decide what the admin UI offers. It is never the access control —
+  /// every protected request is authorized again on the server.
+  final PermissionSet permissions;
 
   /// Prefers the name the server composed, falling back to the parts.
   String get displayName {
@@ -104,4 +113,6 @@ class AuthUser {
   bool get isActive => status == AccountStatus.active;
 
   bool hasRole(String slug) => role?.slug == slug;
+
+  bool can(String permission) => isActive && permissions.can(permission);
 }

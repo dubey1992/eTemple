@@ -73,6 +73,26 @@ class AuthRepositoryImpl implements AuthRepository {
     );
   }
 
+  @override
+  Future<void> resetPassword({
+    required String token,
+    required String email,
+    required String password,
+  }) async {
+    await _api.ensureCsrfCookie();
+
+    await _api.post<void>(
+      ApiEndpoints.resetPassword,
+      body: {
+        'token': token,
+        'email': email.trim(),
+        'password': password,
+        'password_confirmation': password,
+      },
+      decode: (_) {},
+    );
+  }
+
   static AuthUser _decodeUser(Object? data) {
     final json = ApiEnvelopeParser.asMap(data);
     if (json == null) {

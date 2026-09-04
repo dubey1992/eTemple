@@ -280,4 +280,195 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get englishMissingBadge => 'English missing';
+
+  @override
+  String get dashboardWelcome => 'Administration dashboard';
+
+  @override
+  String get dashboardSubtitle =>
+      'The options below reflect what your account is permitted to do.';
+
+  @override
+  String get dashboardNoAccess =>
+      'Your account has not been granted any administration features yet.';
+
+  @override
+  String get navUsers => 'Committee accounts';
+
+  @override
+  String get navUsersDesc => 'Create and manage committee member accounts';
+
+  @override
+  String get navRoles => 'Roles and permissions';
+
+  @override
+  String get navRolesDesc => 'Decide what each role is allowed to do';
+
+  @override
+  String get navPagesDesc => 'Edit the public website content';
+
+  @override
+  String get navSiteSettings => 'Site settings';
+
+  @override
+  String get navSiteSettingsDesc => 'Tagline, address, menu and footer';
+
+  @override
+  String get usersTitle => 'Committee accounts';
+
+  @override
+  String get usersSubtitle => 'Manage the accounts of committee members here.';
+
+  @override
+  String get userNew => 'New account';
+
+  @override
+  String get userEdit => 'Edit account';
+
+  @override
+  String get userCreate => 'Create account';
+
+  @override
+  String get userNeverSignedIn => 'Never signed in';
+
+  @override
+  String get userLastLogin => 'Last sign-in';
+
+  @override
+  String get fieldFirstName => 'First name';
+
+  @override
+  String get fieldLastName => 'Last name';
+
+  @override
+  String get fieldMobile => 'Mobile';
+
+  @override
+  String get fieldRole => 'Role';
+
+  @override
+  String get fieldStatus => 'Status';
+
+  @override
+  String get statusActive => 'Active';
+
+  @override
+  String get statusInactive => 'Inactive';
+
+  @override
+  String get statusBlocked => 'Blocked';
+
+  @override
+  String get userPasswordHint =>
+      'The new member sets their own password using a link sent to their e-mail.';
+
+  @override
+  String get userSendReset => 'Send password link';
+
+  @override
+  String get userResetSent => 'Password link sent.';
+
+  @override
+  String get userCreated =>
+      'Account created and a password link has been sent.';
+
+  @override
+  String get rolesTitle => 'Roles and permissions';
+
+  @override
+  String get rolesSubtitle => 'Which modules each role can reach.';
+
+  @override
+  String roleMembers(int count) {
+    return '$count accounts';
+  }
+
+  @override
+  String rolePermissionCount(int count) {
+    return '$count permissions';
+  }
+
+  @override
+  String get roleFixed => 'Super Admin always holds every permission.';
+
+  @override
+  String get rolePermissionsTitle => 'Permissions';
+
+  @override
+  String get permissionsSaved => 'Permissions saved.';
+
+  @override
+  String modulePhasePending(int phase) {
+    return 'Available in phase $phase';
+  }
+
+  @override
+  String get loginHistoryTitle => 'Sign-in history';
+
+  @override
+  String get loginHistoryEmpty => 'No sign-ins recorded yet.';
+
+  @override
+  String get loginSuccess => 'Successful';
+
+  @override
+  String get loginFailed => 'Failed';
+
+  @override
+  String get resetPasswordTitle => 'Set a new password';
+
+  @override
+  String get resetPasswordSubtitle => 'Enter a new password for your account.';
+
+  @override
+  String get fieldNewPassword => 'New password';
+
+  @override
+  String get fieldConfirmPassword => 'Repeat the password';
+
+  @override
+  String get passwordsDoNotMatch => 'The two passwords do not match';
+
+  @override
+  String get resetPasswordDone =>
+      'Your password has been changed. Please sign in.';
+
+  @override
+  String get resetLinkInvalid => 'This link is invalid or has expired.';
+
+  @override
+  String get siteSettingsTitle => 'Site settings';
+
+  @override
+  String get siteSettingsSubtitle => 'Home page tagline, address and footer.';
+
+  @override
+  String get fieldTagline => 'Tagline';
+
+  @override
+  String get fieldFooter => 'Footer line';
+
+  @override
+  String get fieldVillage => 'Village';
+
+  @override
+  String get fieldPanchayat => 'Panchayat';
+
+  @override
+  String get fieldPoliceStation => 'Police station';
+
+  @override
+  String get fieldDistrict => 'District';
+
+  @override
+  String get fieldState => 'State';
+
+  @override
+  String get fieldPostalCode => 'Postal code';
+
+  @override
+  String get fieldContactPhone => 'Contact phone';
+
+  @override
+  String get fieldContactEmail => 'Contact e-mail';
 }

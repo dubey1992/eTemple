@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Services\Auth;
 
 use App\Exceptions\AuthenticationFailedException;
+use App\Models\LoginAttempt;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 /**
  * All authentication business rules live here; the controller stays thin.
@@ -38,19 +40,19 @@ class AuthService
                 Hash::make($password);
             }
 
-            $this->logAttempt($request, $email, 'invalid_credentials');
+            $this->logAttempt($request, $email, LoginAttempt::OUTCOME_INVALID_CREDENTIALS, $user);
 
             throw AuthenticationFailedException::invalidCredentials();
         }
 
         if ($user->isBlocked()) {
-            $this->logAttempt($request, $email, 'blocked');
+            $this->logAttempt($request, $email, LoginAttempt::OUTCOME_BLOCKED, $user);
 
             throw AuthenticationFailedException::blocked();
         }
 
         if (! $user->isActive()) {
-            $this->logAttempt($request, $email, 'inactive');
+            $this->logAttempt($request, $email, LoginAttempt::OUTCOME_INACTIVE, $user);
 
             throw AuthenticationFailedException::inactive();
         }
@@ -63,7 +65,7 @@ class AuthService
 
         $user->forceFill(['last_login_at' => now()])->save();
 
-        $this->logAttempt($request, $email, 'success');
+        $this->logAttempt($request, $email, LoginAttempt::OUTCOME_SUCCESS, $user);
 
         return $user->refresh()->load('role');
     }
@@ -99,13 +101,61 @@ class AuthService
         Password::broker()->sendResetLink(['email' => $email]);
     }
 
-    private function logAttempt(Request $request, string $email, string $outcome): void
+    /**
+     * Record an attempt to the log and to the login history.
+     *
+     * Failures are recorded too: a trail of failed attempts against an account
+     * is the point of the history (spec Phase 2, "Login history").
+     */
+    /**
+     * Complete a password reset (spec Phase 2, "Password reset").
+     *
+     * Every other session is invalidated by rotating the remember token, so a
+     * reset triggered because an account was compromised actually ends the
+     * intruder's session rather than leaving it alive.
+     *
+     * @return bool true when the token was valid and the password was changed
+     */
+    public function resetPassword(string $email, string $token, string $password): bool
     {
+        $status = Password::broker()->reset(
+            [
+                'email' => $email,
+                'password' => $password,
+                'password_confirmation' => $password,
+                'token' => $token,
+            ],
+            static function (User $user) use ($password): void {
+                $user->forceFill([
+                    'password' => $password,
+                    'remember_token' => Str::random(60),
+                ])->save();
+            },
+        );
+
+        return $status === Password::PASSWORD_RESET;
+    }
+
+    private function logAttempt(
+        Request $request,
+        string $email,
+        string $outcome,
+        ?User $user = null,
+    ): void {
         Log::channel(config('logging.default'))->info('auth.login_attempt', [
             'email' => $email,
             'outcome' => $outcome,
             'ip' => $request->ip(),
             'user_agent' => $request->userAgent(),
+        ]);
+
+        LoginAttempt::query()->create([
+            'user_id' => $user?->id,
+            'email' => $email,
+            'outcome' => $outcome,
+            'ip_address' => $request->ip(),
+            // Trimmed to the column width; a forged header must not break a login.
+            'user_agent' => mb_substr((string) $request->userAgent(), 0, 500) ?: null,
         ]);
     }
 }

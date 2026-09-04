@@ -27,4 +27,14 @@ abstract interface class AuthRepository {
   /// Completes normally whether or not the address is registered — the server
   /// deliberately gives the same answer either way.
   Future<void> requestPasswordReset(String email);
+
+  /// Completes a password reset using the token from the e-mailed link.
+  ///
+  /// Throws `AppException(ErrorCode.validationFailed)` with a `token` field
+  /// error when the link is invalid, already used or expired.
+  Future<void> resetPassword({
+    required String token,
+    required String email,
+    required String password,
+  });
 }

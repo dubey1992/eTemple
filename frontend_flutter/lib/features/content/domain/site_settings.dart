@@ -196,3 +196,71 @@ class SiteSettings {
 
   bool get hasNavigation => navigation.isNotEmpty;
 }
+
+/// Site settings as the editor sees them: both languages raw, no fallback.
+class EditableSiteSettings {
+  const EditableSiteSettings({
+    this.taglineHi,
+    this.taglineEn,
+    this.footerHi,
+    this.footerEn,
+    this.village,
+    this.panchayat,
+    this.policeStation,
+    this.district,
+    this.state,
+    this.postalCode,
+    this.contactPhone,
+    this.contactEmail,
+  });
+
+  factory EditableSiteSettings.fromJson(Map<String, dynamic> json) {
+    String? read(String key) {
+      final value = json[key];
+      return value is String && value.trim().isNotEmpty ? value : null;
+    }
+
+    return EditableSiteSettings(
+      taglineHi: read('tagline_hi'),
+      taglineEn: read('tagline_en'),
+      footerHi: read('footer_text_hi'),
+      footerEn: read('footer_text_en'),
+      village: read('village'),
+      panchayat: read('panchayat'),
+      policeStation: read('police_station'),
+      district: read('district'),
+      state: read('state'),
+      postalCode: read('postal_code'),
+      contactPhone: read('contact_phone'),
+      contactEmail: read('contact_email'),
+    );
+  }
+
+  final String? taglineHi;
+  final String? taglineEn;
+  final String? footerHi;
+  final String? footerEn;
+  final String? village;
+  final String? panchayat;
+  final String? policeStation;
+  final String? district;
+  final String? state;
+  final String? postalCode;
+  final String? contactPhone;
+  final String? contactEmail;
+}
+
+/// The settings an editor is submitting.
+///
+/// Blank fields are sent as null so the server stores "not configured" rather
+/// than an empty string — which is what the public empty states key on.
+class SiteSettingsDraft {
+  const SiteSettingsDraft(this.values);
+
+  final Map<String, String> values;
+
+  Map<String, Object?> toJson() => {
+    for (final entry in values.entries)
+      entry.key: entry.value.trim().isEmpty ? null : entry.value.trim(),
+  };
+}

@@ -93,4 +93,39 @@ class User extends Authenticatable
     {
         return $this->role?->slug === $slug;
     }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole(Role::SUPER_ADMIN);
+    }
+
+    /**
+     * Whether this user's role grants a permission.
+     *
+     * An inactive or blocked account grants nothing regardless of its role —
+     * the middleware already refuses such requests, and this keeps the answer
+     * consistent anywhere else the check is made.
+     */
+    public function hasPermission(string $permission): bool
+    {
+        if (! $this->isActive()) {
+            return false;
+        }
+
+        $this->loadMissing('role');
+
+        return $this->role?->grants($permission) ?? false;
+    }
+
+    /** @return list<string> */
+    public function effectivePermissions(): array
+    {
+        if (! $this->isActive()) {
+            return [];
+        }
+
+        $this->loadMissing('role');
+
+        return $this->role?->effectivePermissions() ?? [];
+    }
 }

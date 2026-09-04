@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Support\Permission;
 use Database\Factories\RoleFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -75,5 +76,39 @@ class Role extends Model
     public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->slug === self::SUPER_ADMIN;
+    }
+
+    /**
+     * The permission keys this role actually grants.
+     *
+     * Super Admin is computed, never stored: its set is the whole catalogue and
+     * cannot be edited, so the temple can never be locked out of its own
+     * administration (PHASE_2_PLAN assumption C3).
+     *
+     * Unknown keys left over from an older catalogue are filtered out rather
+     * than trusted.
+     *
+     * @return list<string>
+     */
+    public function effectivePermissions(): array
+    {
+        if ($this->isSuperAdmin()) {
+            return Permission::all();
+        }
+
+        return array_values(array_filter(
+            $this->permissions ?? [],
+            static fn (mixed $key) => is_string($key) && Permission::exists($key),
+        ));
+    }
+
+    public function grants(string $permission): bool
+    {
+        return in_array($permission, $this->effectivePermissions(), true);
     }
 }

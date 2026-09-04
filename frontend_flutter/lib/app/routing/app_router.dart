@@ -6,9 +6,15 @@ import '../../features/auth/domain/auth_user.dart';
 import '../../features/auth/presentation/auth_controller.dart';
 import '../../features/auth/presentation/forgot_password_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
-import '../../features/shell/presentation/admin_overview_screen.dart';
 import '../../features/shell/presentation/admin_shell.dart';
+import '../../features/admin/presentation/admin_dashboard_screen.dart';
+import '../../features/admin/presentation/admin_role_permissions_screen.dart';
+import '../../features/admin/presentation/admin_roles_screen.dart';
+import '../../features/admin/presentation/admin_user_editor_screen.dart';
+import '../../features/admin/presentation/admin_users_screen.dart';
+import '../../features/auth/presentation/reset_password_screen.dart';
 import '../../features/content/presentation/admin_page_editor_screen.dart';
+import '../../features/content/presentation/admin_site_settings_screen.dart';
 import '../../features/content/presentation/admin_pages_screen.dart';
 import '../../features/content/presentation/home_screen.dart';
 import '../../features/content/presentation/page_screen.dart';
@@ -65,6 +71,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         return RoutePaths.login;
       }
 
+      // A reset link is deliberately not bounced: someone may be signed in on
+      // one device and resetting because another was compromised.
       if (isSignedIn &&
           (location == RoutePaths.login ||
               location == RoutePaths.forgotPassword)) {
@@ -98,6 +106,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: RouteNames.forgotPassword,
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
+      GoRoute(
+        path: RoutePaths.resetPassword,
+        name: RouteNames.resetPassword,
+        builder: (context, state) => ResetPasswordScreen(
+          token: state.uri.queryParameters['token'] ?? '',
+          email: state.uri.queryParameters['email'] ?? '',
+        ),
+      ),
 
       // --- Protected admin branch ---------------------------------------
       ShellRoute(
@@ -106,7 +122,45 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: RoutePaths.admin,
             name: RouteNames.adminOverview,
-            builder: (context, state) => const AdminOverviewScreen(),
+            builder: (context, state) => const AdminDashboardScreen(),
+          ),
+          GoRoute(
+            path: RoutePaths.adminSiteSettings,
+            name: RouteNames.adminSiteSettings,
+            builder: (context, state) => const AdminSiteSettingsScreen(),
+          ),
+          GoRoute(
+            path: RoutePaths.adminUsers,
+            name: RouteNames.adminUsers,
+            builder: (context, state) => const AdminUsersScreen(),
+          ),
+          GoRoute(
+            // Declared before /admin/users/:id so "new" is not read as an id.
+            path: RoutePaths.adminUserNew,
+            builder: (context, state) => const AdminUserEditorScreen(),
+          ),
+          GoRoute(
+            path: '${RoutePaths.adminUsers}/:id',
+            name: RouteNames.adminUserEditor,
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '');
+              if (id == null) return const NotFoundScreen();
+              return AdminUserEditorScreen(userId: id);
+            },
+          ),
+          GoRoute(
+            path: RoutePaths.adminRoles,
+            name: RouteNames.adminRoles,
+            builder: (context, state) => const AdminRolesScreen(),
+          ),
+          GoRoute(
+            path: '${RoutePaths.adminRoles}/:id',
+            name: RouteNames.adminRolePermissions,
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '');
+              if (id == null) return const NotFoundScreen();
+              return AdminRolePermissionsScreen(roleId: id);
+            },
           ),
           GoRoute(
             path: RoutePaths.adminPages,

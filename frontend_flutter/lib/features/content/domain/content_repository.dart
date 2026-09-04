@@ -22,6 +22,13 @@ abstract interface class ContentRepository {
 
   /// Saves an edit. Hindi fields are required by the server.
   Future<EditablePage> savePage(int id, EditablePageDraft draft);
+
+  /// Site settings with both languages raw, for the editor.
+  Future<EditableSiteSettings> adminSiteSettings();
+
+  /// Saves the site-wide settings. Navigation is left untouched when the draft
+  /// does not include it.
+  Future<EditableSiteSettings> saveSiteSettings(SiteSettingsDraft draft);
 }
 
 /// The values an editor can change on a page.
