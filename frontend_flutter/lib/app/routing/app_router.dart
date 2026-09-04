@@ -1,0 +1,144 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../features/auth/domain/auth_user.dart';
+import '../../features/auth/presentation/auth_controller.dart';
+import '../../features/auth/presentation/forgot_password_screen.dart';
+import '../../features/auth/presentation/login_screen.dart';
+import '../../features/shell/presentation/admin_overview_screen.dart';
+import '../../features/shell/presentation/admin_shell.dart';
+import '../../features/content/presentation/admin_page_editor_screen.dart';
+import '../../features/content/presentation/admin_pages_screen.dart';
+import '../../features/content/presentation/home_screen.dart';
+import '../../features/content/presentation/page_screen.dart';
+import '../../features/shell/presentation/not_found_screen.dart';
+import '../../features/shell/presentation/public_shell.dart';
+import 'route_paths.dart';
+
+/// Bridges the Riverpod session state to go_router's [Listenable] API so the
+/// guard re-evaluates the moment a sign-in or sign-out changes the session.
+class _AuthRefreshNotifier extends ChangeNotifier {
+  _AuthRefreshNotifier(this._ref) {
+    _subscription = _ref.listen<AsyncValue<AuthUser?>>(
+      authControllerProvider,
+      (_, _) => notifyListeners(),
+    );
+  }
+
+  final Ref _ref;
+  late final ProviderSubscription<AsyncValue<AuthUser?>> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.close();
+    super.dispose();
+  }
+}
+
+/// The application router.
+///
+/// Public and admin routes are separate branches with separate shells. The
+/// redirect below is a convenience for the visitor — every protected API call is
+/// independently authorized on the server, so bypassing this guard gains nothing.
+final routerProvider = Provider<GoRouter>((ref) {
+  final refresh = _AuthRefreshNotifier(ref);
+  ref.onDispose(refresh.dispose);
+
+  return GoRouter(
+    initialLocation: RoutePaths.home,
+    refreshListenable: refresh,
+    debugLogDiagnostics: kDebugMode,
+    errorBuilder: (context, state) => const NotFoundScreen(),
+    redirect: (context, state) {
+      final session = ref.read(authControllerProvider);
+
+      // The session is still being restored (page load or hard refresh). Hold
+      // the current URL rather than bouncing a signed-in user to /login.
+      if (session.isLoading) return null;
+
+      final user = session.value;
+      final isSignedIn = user != null && user.isActive;
+      final location = state.matchedLocation;
+
+      if (RoutePaths.isAdmin(location) && !isSignedIn) {
+        return RoutePaths.login;
+      }
+
+      if (isSignedIn &&
+          (location == RoutePaths.login ||
+              location == RoutePaths.forgotPassword)) {
+        return RoutePaths.admin;
+      }
+
+      return null;
+    },
+    routes: [
+      // --- Public branch ------------------------------------------------
+      ShellRoute(
+        builder: (context, state, child) => PublicShell(child: child),
+        routes: [
+          GoRoute(
+            path: RoutePaths.home,
+            name: RouteNames.home,
+            builder: (context, state) => const HomeScreen(),
+          ),
+        ],
+      ),
+
+      // Sign-in and password reset sit outside the public shell so the header
+      // navigation cannot lead a visitor in circles mid-authentication.
+      GoRoute(
+        path: RoutePaths.login,
+        name: RouteNames.login,
+        builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.forgotPassword,
+        name: RouteNames.forgotPassword,
+        builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+
+      // --- Protected admin branch ---------------------------------------
+      ShellRoute(
+        builder: (context, state, child) => AdminShell(child: child),
+        routes: [
+          GoRoute(
+            path: RoutePaths.admin,
+            name: RouteNames.adminOverview,
+            builder: (context, state) => const AdminOverviewScreen(),
+          ),
+          GoRoute(
+            path: RoutePaths.adminPages,
+            name: RouteNames.adminPages,
+            builder: (context, state) => const AdminPagesScreen(),
+          ),
+          GoRoute(
+            path: '${RoutePaths.adminPages}/:id',
+            name: RouteNames.adminPageEditor,
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '');
+              if (id == null) return const NotFoundScreen();
+              return AdminPageEditorScreen(pageId: id);
+            },
+          ),
+        ],
+      ),
+
+      // Declared last: go_router matches in order, so every specific route
+      // above wins and only a genuinely unknown path reaches the CMS lookup.
+      // This is what makes /about a clean, shareable URL.
+      ShellRoute(
+        builder: (context, state, child) => PublicShell(child: child),
+        routes: [
+          GoRoute(
+            path: RoutePaths.pagePattern,
+            name: RouteNames.page,
+            builder: (context, state) =>
+                PageScreen(slug: state.pathParameters['slug'] ?? ''),
+          ),
+        ],
+      ),
+    ],
+  );
+});

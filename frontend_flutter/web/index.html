@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+  lang="hi" because Hindi is the product's default language. The Flutter app
+  updates document.title per the visitor's chosen language once it boots; the
+  static values below are what a crawler or a link preview sees first.
+
+  Per-route SEO and social preview metadata is a Phase 1 deliverable and needs a
+  pre-render/static metadata strategy on top of this shell.
+-->
+<html lang="hi">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="राधा कृष्ण ठाकुरबाड़ी, अमरपुर पंखोरिया — गाँव का मंदिर। Radha Krishna Thakurbari, Amarpur Pankhoriya, Bhagalpur, Bihar.">
+  <meta name="theme-color" content="#B5426B">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="राधा कृष्ण ठाकुरबाड़ी | Radha Krishna Thakurbari">
+  <meta property="og:description" content="राधा कृष्ण ठाकुरबाड़ी, अमरपुर पंखोरिया, कुर्मा पंचायत, भागलपुर, बिहार।">
+  <meta property="og:locale" content="hi_IN">
+  <meta property="og:locale:alternate" content="en_IN">
+  <meta name="twitter:card" content="summary">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="राधा कृष्ण ठाकुरबाड़ी">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <link rel="icon" type="image/png" sizes="128x128" href="favicon.png"/>
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/Icon-192.png"/>
+
+  <title>राधा कृष्ण ठाकुरबाड़ी | Radha Krishna Thakurbari</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    /* Shown only until the Flutter bundle boots; keeps a slow village
+       connection from staring at a blank white page. */
+    html, body { margin: 0; padding: 0; height: 100%; background: #FFF7F4; }
+    #boot {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: #8E2F52; gap: 8px;
+    }
+    #boot small { color: #6b555d; }
+  </style>
+</head>
+<body>
+  <div id="boot" aria-live="polite">
+    <strong>॥ राधे कृष्ण ॥</strong>
+    <small>लोड हो रहा है… / Loading…</small>
+  </div>
+
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

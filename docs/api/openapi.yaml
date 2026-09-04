@@ -1,0 +1,685 @@
+openapi: 3.1.0
+
+info:
+  title: Radha Krishna Thakurbari API
+  version: 0.2.0
+  description: |
+    REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
+    admin console.
+
+    **Scope: Phases 0-1.** Endpoints for events, media, donations, enquiries,
+    announcements, accounts and reports are added in their own phases and must
+    be documented here in the same change that implements them.
+
+    ## Bilingual content
+
+    Public content endpoints take `?lang=hi|en` and answer with resolved text
+    blocks rather than raw columns:
+
+    ```json
+    { "value": "…", "language": "hi", "fallback_used": true }
+    ```
+
+    Hindi is the source language. When the requested language has no value the
+    Hindi one is served and `fallback_used` is true, so the client can tell the
+    visitor instead of silently showing the wrong language. Neither stored
+    language is ever merged or overwritten.
+
+    ## Envelope
+
+    Every response uses one of two shapes.
+
+    Success:
+    ```json
+    { "success": true, "data": {}, "meta": null }
+    ```
+    Error:
+    ```json
+    { "success": false, "error": { "code": "…", "message": "…", "details": {} } }
+    ```
+
+    ## Authentication
+
+    Browser clients use Sanctum stateful (cookie/session) authentication:
+
+    1. `GET /sanctum/csrf-cookie` — sets the `XSRF-TOKEN` cookie.
+    2. `POST /api/auth/login` — sets the HttpOnly session cookie.
+    3. Every subsequent unsafe request echoes the cookie value in the
+       `X-XSRF-TOKEN` header.
+
+    The session cookie is HttpOnly, so no credential is readable from browser
+    storage. The client must send credentials with every request
+    (`withCredentials`), and the API's CORS allow-list must name the exact
+    frontend origin.
+
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://api.thakurbari.example
+    description: Production (placeholder)
+
+tags:
+  - name: System
+  - name: Authentication
+  - name: Public content
+  - name: Admin
+  - name: Content management
+
+paths:
+  /api/health:
+    get:
+      tags: [System]
+      summary: Liveness and configuration probe
+      security: []
+      responses:
+        '200':
+          description: Service is reachable
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Health'
+
+  /sanctum/csrf-cookie:
+    get:
+      tags: [Authentication]
+      summary: Issue the CSRF cookie
+      description: Must be called before the first unsafe request from a browser.
+      security: []
+      responses:
+        '204':
+          description: Cookie issued
+
+  /api/auth/login:
+    post:
+      tags: [Authentication]
+      summary: Sign in
+      description: |
+        Rate limited to 5 attempts per minute per e-mail + IP.
+
+        Credentials are verified before account status, so an unknown address and
+        a wrong password are indistinguishable to the caller.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  maxLength: 191
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 255
+                remember:
+                  type: boolean
+                  default: false
+      responses:
+        '200':
+          description: Signed in; the session cookie is set
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+        '401':
+          description: INVALID_CREDENTIALS
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+        '403':
+          description: ACCOUNT_INACTIVE or ACCOUNT_BLOCKED
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+        '422':
+          description: VALIDATION_FAILED
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+        '429':
+          description: TOO_MANY_REQUESTS
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+
+  /api/auth/logout:
+    post:
+      tags: [Authentication]
+      summary: Sign out and invalidate the session
+      responses:
+        '200':
+          description: Signed out
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          message: { type: string }
+        '401':
+          description: UNAUTHENTICATED
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+
+  /api/auth/me:
+    get:
+      tags: [Authentication]
+      summary: The signed-in user
+      description: |
+        Used by the Flutter client to restore a session on page load or refresh.
+        Returns 403 when the account has been deactivated or blocked since the
+        session began.
+      responses:
+        '200':
+          description: The current user
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/User'
+        '401':
+          description: UNAUTHENTICATED
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+        '403':
+          description: ACCOUNT_INACTIVE or ACCOUNT_BLOCKED
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+
+  /api/auth/forgot-password:
+    post:
+      tags: [Authentication]
+      summary: Request a password reset link
+      description: |
+        Always answers 200 with the same message, whether or not the address is
+        registered, so the endpoint cannot be used to enumerate accounts. A link
+        is only ever mailed to an active account. Rate limited to 3 requests per
+        minute per e-mail + IP.
+
+        The reset form itself is delivered in Phase 2.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email, maxLength: 191 }
+      responses:
+        '200':
+          description: Generic acknowledgement
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          message: { type: string }
+        '422':
+          description: VALIDATION_FAILED
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+        '429':
+          description: TOO_MANY_REQUESTS
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+
+  /api/admin/ping:
+    get:
+      tags: [Admin]
+      summary: Protected-group probe
+      description: |
+        Proves that the admin route group is closed on the server. Replaced by
+        the real dashboard endpoints in Phase 2.
+      responses:
+        '200':
+          description: Reachable by an authenticated, active user
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status: { type: string, const: ok }
+                          user: { $ref: '#/components/schemas/User' }
+        '401':
+          description: UNAUTHENTICATED
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+        '403':
+          description: ACCOUNT_INACTIVE or ACCOUNT_BLOCKED
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+
+  /api/public/pages/{slug}:
+    get:
+      tags: [Public content]
+      summary: A published CMS page
+      description: |
+        Only published pages are reachable. A draft and an unknown slug both
+        return 404 with the same body, so a draft cannot be detected.
+      security: []
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string, pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' }
+        - name: lang
+          in: query
+          required: false
+          schema: { type: string, enum: [hi, en], default: hi }
+      responses:
+        '200':
+          description: The page, resolved for the requested language
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/PublicPage' }
+        '404':
+          description: NOT_FOUND - unknown slug, or the page is a draft
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+
+  /api/public/site-settings:
+    get:
+      tags: [Public content]
+      summary: Site-wide content and the public navigation menu
+      description: |
+        Answers on a freshly installed site too, with empty values, so the client
+        can render its empty states rather than an error.
+      security: []
+      parameters:
+        - name: lang
+          in: query
+          required: false
+          schema: { type: string, enum: [hi, en], default: hi }
+      responses:
+        '200':
+          description: Settings, contact block and visible navigation
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/PublicSiteSettings' }
+
+  /api/admin/pages:
+    get:
+      tags: [Content management]
+      summary: Every page including drafts
+      description: Requires the `manage-content` ability (Super Admin, Admin, Content Manager).
+      parameters:
+        - name: per_page
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 25 }
+      responses:
+        '200':
+          description: Paginated list, using the shared pagination meta
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/AdminPage' }
+                      meta: { $ref: '#/components/schemas/PageMeta' }
+        '401': { description: UNAUTHENTICATED }
+        '403': { description: FORBIDDEN, ACCOUNT_INACTIVE or ACCOUNT_BLOCKED }
+
+  /api/admin/pages/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    get:
+      tags: [Content management]
+      summary: One page with both languages raw
+      description: No fallback is applied, so the editor can see that English is empty.
+      responses:
+        '200':
+          description: The page
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/AdminPage' }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+    put:
+      tags: [Content management]
+      summary: Update a page
+      description: |
+        Hindi fields are required; English fields are optional and a blank one is
+        stored as absent, which is what the fallback rule keys on.
+
+        `slug` is not accepted - it is the page's public URL. `published_at` is
+        stamped by the server on the first draft-to-published transition and is
+        never moved or cleared afterwards.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title_hi, content_hi, status]
+              properties:
+                title_hi: { type: string, maxLength: 200 }
+                title_en: { type: [string, 'null'], maxLength: 200 }
+                content_hi: { type: string, maxLength: 100000 }
+                content_en: { type: [string, 'null'], maxLength: 100000 }
+                meta_title_hi: { type: [string, 'null'], maxLength: 200 }
+                meta_title_en: { type: [string, 'null'], maxLength: 200 }
+                meta_description_hi: { type: [string, 'null'], maxLength: 320 }
+                meta_description_en: { type: [string, 'null'], maxLength: 320 }
+                status: { type: string, enum: [draft, published] }
+      responses:
+        '200':
+          description: The updated page
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/AdminPage' }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+        '422': { description: VALIDATION_FAILED }
+
+  /api/admin/site-settings:
+    get:
+      tags: [Content management]
+      summary: Settings and the full navigation menu, both languages raw
+      responses:
+        '200':
+          description: Settings including hidden navigation items
+        '403': { description: FORBIDDEN }
+    put:
+      tags: [Content management]
+      summary: Update settings, and optionally replace the navigation menu
+      description: |
+        Every settings field is optional. When `navigation` is present it
+        **replaces** the entire menu inside a transaction; omit it to leave the
+        menu untouched.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tagline_hi: { type: [string, 'null'], maxLength: 200 }
+                tagline_en: { type: [string, 'null'], maxLength: 200 }
+                footer_text_hi: { type: [string, 'null'], maxLength: 400 }
+                footer_text_en: { type: [string, 'null'], maxLength: 400 }
+                village: { type: [string, 'null'] }
+                panchayat: { type: [string, 'null'] }
+                police_station: { type: [string, 'null'] }
+                district: { type: [string, 'null'] }
+                state: { type: [string, 'null'] }
+                postal_code: { type: [string, 'null'] }
+                country: { type: [string, 'null'] }
+                contact_phone: { type: [string, 'null'] }
+                contact_email: { type: [string, 'null'], format: email }
+                map_url: { type: [string, 'null'], format: uri }
+                social_links:
+                  type: object
+                  additionalProperties: { type: string, format: uri }
+                navigation:
+                  type: array
+                  maxItems: 20
+                  items:
+                    type: object
+                    required: [label_hi, route]
+                    properties:
+                      label_hi: { type: string, maxLength: 120 }
+                      label_en: { type: [string, 'null'], maxLength: 120 }
+                      route: { type: string, maxLength: 300 }
+                      sort_order: { type: integer, minimum: 0 }
+                      is_visible: { type: boolean, default: true }
+      responses:
+        '200': { description: The updated settings and menu }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED }
+
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: radha_krishna_thakurbari_session
+      description: HttpOnly session cookie issued by the login endpoint.
+
+  schemas:
+    SuccessEnvelope:
+      type: object
+      required: [success, data]
+      properties:
+        success: { type: boolean, const: true }
+        data: {}
+        meta:
+          oneOf:
+            - $ref: '#/components/schemas/PageMeta'
+            - type: 'null'
+
+    ErrorEnvelope:
+      type: object
+      required: [success, error]
+      properties:
+        success: { type: boolean, const: false }
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              description: Stable machine-readable code; mirrored by the Flutter client.
+              enum:
+                - VALIDATION_FAILED
+                - UNAUTHENTICATED
+                - INVALID_CREDENTIALS
+                - ACCOUNT_INACTIVE
+                - ACCOUNT_BLOCKED
+                - FORBIDDEN
+                - NOT_FOUND
+                - METHOD_NOT_ALLOWED
+                - TOO_MANY_REQUESTS
+                - CSRF_TOKEN_MISMATCH
+                - SERVER_ERROR
+            message:
+              type: string
+              description: Human-readable detail. Clients render their own localized text.
+            details:
+              type: object
+              description: Field-keyed validation messages, or extra context.
+              additionalProperties:
+                type: array
+                items: { type: string }
+
+    PageMeta:
+      type: object
+      description: Pagination convention, reused by every paginated endpoint.
+      properties:
+        current_page: { type: integer }
+        per_page: { type: integer }
+        total: { type: integer }
+        last_page: { type: integer }
+        has_more: { type: boolean }
+
+    Role:
+      type: object
+      properties:
+        id: { type: integer }
+        slug:
+          type: string
+          enum: [super-admin, admin, treasurer, content-manager, viewer]
+        name: { type: string }
+
+    User:
+      type: object
+      description: The password hash and remember token are never exposed.
+      properties:
+        id: { type: integer }
+        first_name: { type: string }
+        last_name: { type: [string, 'null'] }
+        full_name: { type: string }
+        email: { type: string, format: email }
+        mobile: { type: [string, 'null'] }
+        status:
+          type: string
+          enum: [active, inactive, blocked]
+        last_login_at: { type: [string, 'null'], format: date-time }
+        role: { $ref: '#/components/schemas/Role' }
+
+    LocalizedText:
+      type: object
+      description: |
+        One piece of bilingual content resolved for the requested language.
+        `language` is what was actually served, which may differ from what was
+        asked for; `fallback_used` says so explicitly.
+      properties:
+        value: { type: [string, 'null'] }
+        language: { type: string, enum: [hi, en] }
+        fallback_used: { type: boolean }
+
+    PublicPage:
+      type: object
+      properties:
+        id: { type: integer }
+        slug: { type: string }
+        requested_language: { type: string, enum: [hi, en] }
+        title: { $ref: '#/components/schemas/LocalizedText' }
+        content: { $ref: '#/components/schemas/LocalizedText' }
+        meta_title: { $ref: '#/components/schemas/LocalizedText' }
+        meta_description: { $ref: '#/components/schemas/LocalizedText' }
+        published_at: { type: [string, 'null'], format: date-time }
+        updated_at: { type: [string, 'null'], format: date-time }
+
+    AdminPage:
+      type: object
+      description: Both languages raw, no fallback applied. Admin surface only.
+      properties:
+        id: { type: integer }
+        slug: { type: string }
+        title_hi: { type: string }
+        title_en: { type: [string, 'null'] }
+        content_hi: { type: string }
+        content_en: { type: [string, 'null'] }
+        meta_title_hi: { type: [string, 'null'] }
+        meta_title_en: { type: [string, 'null'] }
+        meta_description_hi: { type: [string, 'null'] }
+        meta_description_en: { type: [string, 'null'] }
+        status: { type: string, enum: [draft, published] }
+        published_at: { type: [string, 'null'], format: date-time }
+        updated_at: { type: [string, 'null'], format: date-time }
+
+    NavigationItem:
+      type: object
+      properties:
+        id: { type: integer }
+        label: { $ref: '#/components/schemas/LocalizedText' }
+        route: { type: string, description: Internal path such as /about, or an absolute URL }
+        sort_order: { type: integer }
+
+    PublicSiteSettings:
+      type: object
+      properties:
+        requested_language: { type: string, enum: [hi, en] }
+        tagline: { $ref: '#/components/schemas/LocalizedText' }
+        footer_text: { $ref: '#/components/schemas/LocalizedText' }
+        contact:
+          type: object
+          description: |
+            Phase 1's source of truth for the temple address. Phase 3 introduces
+            the authoritative temple_profile and these fields move there.
+          properties:
+            address_line1: { type: [string, 'null'] }
+            address_line2: { type: [string, 'null'] }
+            village: { type: [string, 'null'] }
+            panchayat: { type: [string, 'null'] }
+            police_station: { type: [string, 'null'] }
+            district: { type: [string, 'null'] }
+            state: { type: [string, 'null'] }
+            postal_code: { type: [string, 'null'] }
+            country: { type: [string, 'null'] }
+            phone: { type: [string, 'null'] }
+            email: { type: [string, 'null'] }
+            map_url: { type: [string, 'null'] }
+        social_links:
+          type: object
+          additionalProperties: { type: string }
+        default_meta_title: { $ref: '#/components/schemas/LocalizedText' }
+        default_meta_description: { $ref: '#/components/schemas/LocalizedText' }
+        navigation:
+          type: array
+          items: { $ref: '#/components/schemas/NavigationItem' }
+
+    Health:
+      type: object
+      properties:
+        status: { type: string }
+        application: { type: string }
+        environment: { type: string }
+        timezone: { type: string }
+        locale: { type: string }
+        database:
+          type: string
+          enum: [connected, unavailable]
+        time: { type: string, format: date-time }
+
+security:
+  - sessionCookie: []

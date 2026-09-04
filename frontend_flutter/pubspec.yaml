@@ -1,0 +1,39 @@
+name: rkt_web
+description: "Radha Krishna Thakurbari - Flutter Web public site and admin console"
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  # Provides the path-based URL strategy used for clean, refreshable web URLs.
+  flutter_web_plugins:
+    sdk: flutter
+
+  # State management and dependency injection.
+  flutter_riverpod: ^3.4.3
+  # Declarative routing, deep links and public/admin route separation.
+  go_router: ^18.0.1
+  # Typed HTTP client for the Laravel REST API.
+  dio: ^5.11.1
+  # Localization message formatting (Hindi default, English secondary).
+  intl: ^0.20.3
+  # Browser interop, used only to read the non-HttpOnly XSRF-TOKEN cookie.
+  web: ^1.1.1
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  mocktail: ^1.0.5
+
+flutter:
+  uses-material-design: true
+  # Generates the localization delegates from lib/l10n/*.arb (see l10n.yaml).
+  generate: true

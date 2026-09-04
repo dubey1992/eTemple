@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         cacheDirectory=".phpunit.cache"
+         failOnWarning="true"
+         failOnRisky="true"
+         beStrictAboutOutputDuringTests="true">
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory>tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>app</directory>
+        </include>
+    </source>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="APP_KEY" value="base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="/>
+        <env name="APP_DEBUG" value="false"/>
+        <env name="APP_MAINTENANCE_DRIVER" value="file"/>
+        <env name="APP_URL" value="http://localhost:8000"/>
+        <env name="FRONTEND_URL" value="http://localhost:5000"/>
+        <env name="CORS_ALLOWED_ORIGINS" value="http://localhost:5000"/>
+        <env name="SANCTUM_STATEFUL_DOMAINS" value="localhost:5000"/>
+        <!-- The suite runs on in-memory SQLite so it needs no MySQL server.
+             Schema parity with MySQL is asserted by tests/Feature/MigrationTest.php. -->
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value=":memory:"/>
+        <env name="BCRYPT_ROUNDS" value="4"/>
+        <env name="CACHE_STORE" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="MAIL_MAILER" value="array"/>
+        <env name="LOG_CHANNEL" value="null"/>
+        <env name="LOG_STACK" value="null"/>
+        <env name="TELESCOPE_ENABLED" value="false"/>
+        <env name="DEV_ADMIN_EMAIL" value=""/>
+        <env name="DEV_ADMIN_PASSWORD" value=""/>
+    </php>
+</phpunit>

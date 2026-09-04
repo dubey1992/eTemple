@@ -1,0 +1,31 @@
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# --- Secrets: never commit a populated environment file ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Flutter ---
+frontend_flutter/.dart_tool/
+frontend_flutter/.flutter-plugins-dependencies
+frontend_flutter/build/
+frontend_flutter/.packages
+
+# --- Laravel ---
+backend_laravel/vendor/
+backend_laravel/node_modules/
+backend_laravel/public/build/
+backend_laravel/public/storage/
+backend_laravel/storage/*.key
+backend_laravel/bootstrap/cache/*.php
+backend_laravel/.phpunit.result.cache
+backend_laravel/.phpunit.cache/
+*.sqlite
+*.sqlite-journal

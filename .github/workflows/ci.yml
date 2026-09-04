@@ -1,0 +1,113 @@
+name: CI
+
+# Runs the exact checks the specification requires before a phase can be marked
+# complete: flutter pub get / analyze / test / build web --release on the
+# frontend, and lint + php artisan test + migration verification on the backend.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Flutter Web
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend_flutter
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Verify generated localizations are current
+        run: |
+          flutter gen-l10n
+          git diff --exit-code -- lib/l10n
+
+      - name: Static analysis
+        run: flutter analyze
+
+      - name: Tests
+        run: flutter test
+
+      - name: Release web build
+        run: flutter build web --release --dart-define=APP_ENV=staging
+
+      # The pre-render tool needs a live API, so CI only checks that it compiles
+      # and that its arguments are wired correctly. Running it for real is a
+      # deploy step (see docs/DEPLOYMENT_CHECKLIST.md).
+      - name: Pre-render tool compiles
+        run: dart analyze tool/generate_static_meta.dart
+
+  backend:
+    name: Laravel API
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend_laravel
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: thakurbari_ci
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo, pdo_mysql, pdo_sqlite, bcmath, intl
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Code style
+        run: ./vendor/bin/pint --test
+
+      - name: Tests (in-memory SQLite)
+        run: php artisan test
+
+      - name: Migration verification against MySQL
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: thakurbari_ci
+          DB_USERNAME: root
+          DB_PASSWORD: root
+        run: |
+          php artisan migrate --force
+          php artisan db:seed --class=RoleSeeder --force
+          php artisan migrate:rollback --force
+          php artisan migrate --force
