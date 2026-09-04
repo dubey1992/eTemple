@@ -10,6 +10,7 @@ import '../../../core/auth/permissions.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../../core/errors/error_code.dart';
 import '../../../core/widgets/page_container.dart';
+import '../../media/presentation/widgets/media_picker_field.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../admin/data/admin_providers.dart';
 import '../data/temple_providers.dart';
@@ -200,11 +201,13 @@ class _ProfileFormState extends ConsumerState<_ProfileForm> {
                 canEdit,
                 keyboardType: TextInputType.number,
               ),
-              _field(
-                'logo_url',
-                '${l10n.fieldLogoUrl} · ${l10n.fieldOptional}',
-                canEdit,
-                keyboardType: TextInputType.url,
+              MediaPickerField(
+                fieldKey: const ValueKey('profile-logo_url'),
+                controller: _fields['logo_url']!,
+                label: '${l10n.fieldLogoUrl} · ${l10n.fieldOptional}',
+                enabled: canEdit,
+                errorText: _error?.firstErrorFor('logo_url'),
+                onChanged: () => setState(() {}),
               ),
 
               _sectionHeading(l10n.sectionAddress),

@@ -34,17 +34,52 @@ acceptance and handover are Phase 12.
 - [ ] `SESSION_SAME_SITE=lax`, `SESSION_HTTP_ONLY=true`
 - [ ] `MAIL_MAILER` pointed at a real SMTP service (not `log`)
 - [ ] `DEV_ADMIN_EMAIL` / `DEV_ADMIN_PASSWORD` **unset**
+- [ ] `MEDIA_DISK` names a disk that exists on this host (`public`, or `s3`
+      with its credentials set); `MEDIA_MAX_UPLOAD_KB` is not larger than PHP's
+      own `upload_max_filesize` **and** `post_max_size`, which are the second
+      wall and silently truncate a request that exceeds them
 
 ## Backend server
 
 - [ ] Document root is `backend_laravel/public`, never the project root
 - [ ] HTTPS enforced; HTTP redirects to HTTPS
+- [ ] **The `gd` PHP extension is installed.** It is a hard dependency from
+      Phase 5: uploaded photographs are stripped of location and camera data by
+      being re-encoded through it, and without it `MediaService` refuses every
+      upload rather than storing an unstripped original. `exif` is optional and
+      only affects auto-rotation of portrait photographs; install it too.
+      Verify with `php -r "var_dump(extension_loaded('gd'));"` **as the web
+      user**, not just on the CLI — the two often load different `php.ini`
+      files
+- [ ] `php artisan storage:link` (once per environment, when `MEDIA_DISK=public`)
+      — without it every uploaded photograph 404s while the database insists it
+      exists
+- [ ] The uploads directory (`storage/app/public/media`) is included in the
+      backup, and **excluded from the deployment artefact** so a release never
+      overwrites or removes the committee's photographs
+- [ ] **`Access-Control-Allow-Origin` is set on `/storage/`** when the site and
+      the API are on different origins, which they are by default here. Uploads
+      are static files: the web server answers them without running Laravel, so
+      `config/cors.php` cannot do this. In nginx:
+      ```nginx
+      location /storage/ {
+          add_header Access-Control-Allow-Origin "https://<site-domain>" always;
+          add_header Cross-Origin-Resource-Policy "cross-origin" always;
+      }
+      ```
+      Without it the client falls back to plain `<img>` elements — the gallery
+      still renders, but the bounded decode that keeps a phone alive is lost
 - [ ] `php artisan migrate --force`
 - [ ] `php artisan db:seed --class=RoleSeeder --force` (reference data only —
       never `DatabaseSeeder`, which also calls the development seeder)
 - [ ] `php artisan config:cache route:cache` after each release
 - [ ] `storage/` and `bootstrap/cache/` writable by the web user only
 - [ ] Scheduled database backup configured and its first run verified
+- [ ] The web server does **not** execute anything under the uploads directory.
+      Files are re-encoded images with server-generated names, so nothing
+      executable can be stored there — but a misconfigured host that runs `.php`
+      from a writable directory is one mistake away from a shell, and the
+      cheapest place to close that is here
 
 ## Frontend build
 

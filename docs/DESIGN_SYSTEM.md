@@ -110,4 +110,28 @@ Phases 6 and 9. A gold "Donate" call to action that led nowhere would be worse
 than none, so the hero offers the two destinations that exist — the calendar and
 the committee.
 
-The prototype's photo gallery is Phase 5.
+The prototype's **photo gallery** arrived in Phase 5 and is described below.
+
+---
+
+## 6. The gallery mosaic
+
+The prototype's gallery is a CSS grid — `2fr 1fr 1fr`, 180-pixel rows, the first
+child spanning two rows — and `GalleryMosaic` rebuilds exactly that rather than
+approximating it with a uniform grid. The uneven rhythm is what makes the block
+read as a gallery instead of a contact sheet.
+
+It narrows the way the prototype's own media queries do: two columns on a
+tablet, one on a phone, and the feature tile stops spanning once there is no
+second row beside it.
+
+**The empty state is the prototype, unchanged.** With nothing published the
+block renders the design's five emoji tiles on their gold gradient, under the
+caption that says the photographs "will appear here" — which is what that design
+already is. Seeding five invented photographs so a demo looks full would put
+fabricated temple content in the database.
+
+Every tile requests the 480-pixel variant and passes `cacheWidth`, so the
+decoded bitmap matches the size on screen rather than the size of the file. A
+1920-pixel image in a 300-pixel tile costs about 15 MB of RAM; twenty of those
+is the end of the page on a village phone.

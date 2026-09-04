@@ -70,6 +70,28 @@ List<Crumb> adminTrail(String location, AppLocalizations l10n) {
         Crumb(rest.first == 'new' ? l10n.eventNew : l10n.eventEdit),
       ];
 
+    case 'media':
+      final media = Crumb(l10n.navMedia, RoutePaths.adminMedia);
+      if (rest.isEmpty) return [dashboard, Crumb(l10n.navMedia)];
+      return [
+        dashboard,
+        media,
+        Crumb(rest.first == 'new' ? l10n.mediaNew : l10n.mediaEdit),
+      ];
+
+    case 'albums':
+      // The library, not the dashboard, is the parent: albums are reached from
+      // it and that is where "back" should land.
+      final media = Crumb(l10n.navMedia, RoutePaths.adminMedia);
+      final albums = Crumb(l10n.navAlbums, RoutePaths.adminAlbums);
+      if (rest.isEmpty) return [dashboard, media, Crumb(l10n.navAlbums)];
+      return [
+        dashboard,
+        media,
+        albums,
+        Crumb(rest.first == 'new' ? l10n.albumNew : l10n.albumEdit),
+      ];
+
     case 'users':
       final users = Crumb(l10n.navUsers, RoutePaths.adminUsers);
       if (rest.isEmpty) return [dashboard, Crumb(l10n.navUsers)];

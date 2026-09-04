@@ -72,6 +72,32 @@ void main() {
       expect(trail[1].route, RoutePaths.adminEvents);
     });
 
+    test('the media editor trail goes back to the library', () {
+      final trail = adminTrail(RoutePaths.adminMediaEditor(4), hi);
+
+      expect(trail.map((c) => c.label), [
+        hi.adminDashboardTitle,
+        hi.navMedia,
+        hi.mediaEdit,
+      ]);
+      expect(trail[1].route, RoutePaths.adminMedia);
+    });
+
+    test('an album editor goes back through the library, not to the top', () {
+      // Albums are reached from the library, so that is where back should
+      // land — one step, not all the way home.
+      final trail = adminTrail(RoutePaths.adminAlbumEditor(2), hi);
+
+      expect(trail.map((c) => c.label), [
+        hi.adminDashboardTitle,
+        hi.navMedia,
+        hi.navAlbums,
+        hi.albumEdit,
+      ]);
+      expect(trail.last.route, isNull);
+      expect(trail[2].route, RoutePaths.adminAlbums);
+    });
+
     test('every admin route produces a trail', () {
       final routes = <String>[
         RoutePaths.admin,
@@ -90,6 +116,12 @@ void main() {
         RoutePaths.adminEvents,
         RoutePaths.adminEventNew,
         RoutePaths.adminEventEditor(1),
+        RoutePaths.adminMedia,
+        RoutePaths.adminMediaNew,
+        RoutePaths.adminMediaEditor(1),
+        RoutePaths.adminAlbums,
+        RoutePaths.adminAlbumNew,
+        RoutePaths.adminAlbumEditor(1),
       ];
 
       for (final route in routes) {

@@ -610,5 +610,102 @@
   "clearEndTime": "समाप्ति हटाएँ",
   "@clearEndTime": {},
   "viewEvents": "कार्यक्रम देखें",
-  "@viewEvents": {}
+  "@viewEvents": {},
+  "navGallery": "गैलरी",
+  "galleryTitle": "फोटो गैलरी",
+  "gallerySubtitle": "मंदिर, पूजा, त्योहार और ग्राम कार्यक्रमों की तस्वीरें यहाँ दिखाई जाएंगी।",
+  "sectionGallery": "फोटो गैलरी",
+  "viewGallery": "पूरी गैलरी देखें",
+  "galleryPhotos": "तस्वीरें",
+  "galleryVideos": "वीडियो दर्शन",
+  "galleryAllAlbums": "सभी",
+  "noPhotos": "अभी कोई तस्वीर प्रकाशित नहीं हुई है।",
+  "noVideos": "अभी कोई वीडियो दर्शन उपलब्ध नहीं है।",
+  "galleryLoadMore": "और तस्वीरें दिखाएँ",
+  "imageUnavailable": "चित्र लोड नहीं हो सका",
+  "actionClose": "बंद करें",
+  "openInYoutube": "यूट्यूब पर देखें",
+  "videoDarshanNotice": "वीडियो यूट्यूब पर होस्ट है; चलाने पर यूट्यूब की शर्तें लागू होंगी।",
+  "navMedia": "गैलरी एवं वीडियो",
+  "navMediaDesc": "तस्वीरें और वीडियो अपलोड, प्रकाशित और क्रमबद्ध करें",
+  "mediaAdminTitle": "गैलरी एवं वीडियो",
+  "mediaAdminSubtitle": "तस्वीरें यहाँ अपलोड करें और वीडियो लिंक जोड़ें। अपलोड की गई हर तस्वीर से स्थान एवं कैमरा जानकारी स्वतः हटा दी जाती है।",
+  "mediaEmpty": "अभी कोई मीडिया नहीं जोड़ा गया है।",
+  "mediaNew": "नया मीडिया",
+  "mediaEdit": "मीडिया संपादित करें",
+  "mediaUploadPhoto": "तस्वीर अपलोड करें",
+  "mediaAddVideo": "वीडियो लिंक जोड़ें",
+  "mediaChooseFile": "फ़ाइल चुनें",
+  "mediaFileHint": "JPEG, PNG या WebP · अधिकतम {size} MB",
+  "@mediaFileHint": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "mediaNoFileChosen": "कोई फ़ाइल नहीं चुनी गई",
+  "mediaFileSelected": "{name} · {size}",
+  "@mediaFileSelected": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaFileRequired": "अपलोड करने के लिए एक तस्वीर चुनें।",
+  "mediaChooserUnavailable": "फ़ाइल चयन केवल ब्राउज़र में उपलब्ध है।",
+  "mediaTypePhoto": "तस्वीर",
+  "mediaTypeVideo": "वीडियो",
+  "mediaDelete": "मीडिया हटाएँ",
+  "mediaDeleteConfirmTitle": "यह मीडिया हटाएँ?",
+  "mediaDeleteConfirmBody": "फ़ाइल स्थायी रूप से मिट जाएगी। यदि इसे केवल छिपाना है तो प्रकाशन हटाएँ।",
+  "mediaDeleted": "मीडिया हटा दिया गया।",
+  "mediaInUseTitle": "यह फ़ाइल अभी उपयोग में है",
+  "mediaInUseBody": "नीचे दिए गए स्थानों से हटाने के बाद ही इसे मिटाया जा सकता है। तब तक इसका प्रकाशन हटाया जा सकता है।",
+  "mediaReferenceEventPoster": "कार्यक्रम पोस्टर",
+  "mediaReferenceCommitteeMember": "समिति सदस्य",
+  "mediaReferenceTempleLogo": "मंदिर का लोगो",
+  "mediaReferenceAlbumCover": "एल्बम कवर",
+  "mediaReferencePage": "पृष्ठ",
+  "mediaMoveUp": "ऊपर ले जाएँ",
+  "mediaMoveDown": "नीचे ले जाएँ",
+  "mediaOrderSaved": "क्रम सहेजा गया।",
+  "fieldCaptionHindi": "कैप्शन (हिन्दी)",
+  "fieldCaptionEnglish": "कैप्शन (अंग्रेज़ी)",
+  "fieldVideoUrl": "यूट्यूब लिंक",
+  "videoUrlHint": "केवल यूट्यूब लिंक जोड़े जा सकते हैं।",
+  "navAlbums": "एल्बम",
+  "navAlbumsDesc": "तस्वीरों को त्योहार या अवसर के अनुसार समूह में रखें",
+  "albumsAdminTitle": "एल्बम",
+  "albumsAdminSubtitle": "तस्वीरों को त्योहार या अवसर के अनुसार समूह में रखें। एल्बम हटाने पर तस्वीरें बनी रहती हैं।",
+  "albumsEmpty": "अभी कोई एल्बम नहीं बनाया गया है।",
+  "albumNew": "नया एल्बम",
+  "albumEdit": "एल्बम संपादित करें",
+  "albumDelete": "एल्बम हटाएँ",
+  "albumDeleteConfirmTitle": "यह एल्बम हटाएँ?",
+  "albumDeleteConfirmBody": "एल्बम हट जाएगा, पर उसकी तस्वीरें बनी रहेंगी।",
+  "albumDeleted": "एल्बम हटा दिया गया।",
+  "albumNone": "किसी एल्बम में नहीं",
+  "albumItemCount": "{count} तस्वीरें",
+  "@albumItemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fieldAlbum": "एल्बम",
+  "fieldSlug": "यूआरएल नाम",
+  "slugHint": "खाली छोड़ने पर स्वतः बना दिया जाएगा।",
+  "fieldDescriptionHindi": "विवरण (हिन्दी)",
+  "fieldDescriptionEnglish": "विवरण (अंग्रेज़ी)",
+  "fieldCoverPhoto": "कवर तस्वीर",
+  "mediaPickerChoose": "गैलरी से चुनें",
+  "mediaPickerClear": "हटाएँ",
+  "mediaPickerEmpty": "गैलरी में अभी कोई प्रकाशित तस्वीर नहीं है।",
+  "mediaPickerHint": "गैलरी से चुनें, या नीचे कोई बाहरी यूआरएल लिखें।"
 }

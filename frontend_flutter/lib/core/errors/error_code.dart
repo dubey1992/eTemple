@@ -15,6 +15,12 @@ enum ErrorCode {
   methodNotAllowed('METHOD_NOT_ALLOWED'),
   tooManyRequests('TOO_MANY_REQUESTS'),
   csrfTokenMismatch('CSRF_TOKEN_MISMATCH'),
+
+  /// A media file cannot be deleted because something still points at it
+  /// (Phase 5 deletion guard). Distinct from a validation failure: the request
+  /// was well formed, the state of the site refuses it — and the UI answers it
+  /// differently, by listing what is in the way.
+  mediaInUse('MEDIA_IN_USE'),
   serverError('SERVER_ERROR'),
 
   // --- Client-only ----------------------------------------------------------

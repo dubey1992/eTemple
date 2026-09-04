@@ -11,14 +11,31 @@ Legend: `NOT STARTED` · `IN PROGRESS` · `PARTIAL` · `BLOCKED` · `COMPLETE`
 | 2 | Admin, Users & Roles | **COMPLETE** | Permission matrix, user management, login history, password reset, plus the site-settings editor carried from Phase 1. Two-factor auth (marked *optional* in the spec) deliberately deferred — `phase-reports/PHASE_2_COMPLETION.md` §7. |
 | 3 | Temple Profile & Committee | **COMPLETE** | Profile, committee and the consent gate on members' personal details. The address **moved** out of `site_settings` (columns dropped) and the temple name and village were **taken over** from the ARB files — `phase-reports/PHASE_3_COMPLETION.md`. |
 | 4 | Puja, Events & Calendar | **COMPLETE** | Recurring events stored as a rule and expanded on read; past/upcoming views; cancelled events kept visible and flagged. Also fixed two Phase 3 findings: admin breadcrumbs and equal-height cards — `phase-reports/PHASE_4_COMPLETION.md`. |
-| 5 | Gallery & Video Darshan | NOT STARTED | Key `media.manage` exists. Brings the first real uploads, which `poster_url`, `photo_url` and `logo_url` are all waiting on. |
-| 6 | Donations & Receipts | NOT STARTED | Keys `donations.*` exist. |
+| 5 | Gallery & Video Darshan | **COMPLETE** | Uploads validated by their bytes, stripped of location/camera data by re-encoding, and stored as three responsive variants; albums; a deletion guard that names what still points at a file. `logo_url`, `photo_url` and `poster_url` are now filled from the library — `phase-reports/PHASE_5_COMPLETION.md`. |
+| 6 | Donations & Receipts | NOT STARTED | Keys `donations.*` exist. The prototype's `दान` section. |
 | 7 | Devotee Contact & Enquiries | NOT STARTED | Key `enquiries.manage` exists. |
 | 8 | Announcements & Notifications | NOT STARTED | Key `announcements.manage` exists. |
 | 9 | Accounts & Transparency | NOT STARTED | Keys `accounts.*` exist. |
 | 10 | Reports & Analytics | NOT STARTED | Keys `reports.*` exist. |
 | 11 | Security, Backup & Audit | NOT STARTED | |
 | 12 | Testing, Deployment & Handover | NOT STARTED | |
+
+## Verification log — Phase 5 (2026-09-09)
+
+| Check | Result |
+|---|---|
+| `flutter analyze` | ✅ No issues found |
+| `dart format --set-exit-if-changed` | ✅ 0 of 156 files changed |
+| `flutter test` | ✅ **394/394** passed |
+| `flutter build web --release` | ✅ built |
+| `./vendor/bin/pint --test` | ✅ passed |
+| `php artisan test` | ✅ **362** passed (1387 assertions) |
+| migrate → rollback → migrate → seed (MariaDB) | ✅ reversible, including the two mutually referential tables |
+| EXIF stripped, verified **through the running API** | ✅ a real EXIF block uploaded over HTTP, absent from all three stored variants |
+| Upload refusals against real bytes | ✅ non-image, SVG, truncated, oversized, undersized |
+| Deletion guard | ✅ refuses for the logo, a member photo, an event poster, an album cover and a page body; allows once the reference is removed, and the files leave disk |
+| Phase 0–4 tests | ✅ pass unchanged |
+| Every admin route has a breadcrumb trail | ✅ still asserted, now including the six media and album routes |
 
 ## Verification log — Phase 4 (2026-09-08)
 
@@ -80,7 +97,11 @@ MariaDB 12.3.3 · live health and 401 checks.
 - Two-factor authentication for Super Admin (optional in the spec; Phase 2 §7).
 - `web/index.html` and `manifest.json` still carry a build-time temple name;
   the pre-rendered per-route head is dynamic (Phase 3 §9.1).
-- File uploads for the logo, member photographs and event posters — Phase 5.
+- Videos are linked, not embedded: playing one inline would put a third-party
+  iframe on the temple's own origin (Phase 5 §9.1).
+- Media reordering is one item at a time and is disabled while a filter is on;
+  drag-and-drop is wanted here, for the navigation menu and for the committee.
+- `checksum` is stored and indexed for duplicate detection; nothing reads it yet.
 - No per-occurrence overrides: one day of a recurring event cannot be cancelled
   on its own (Phase 4 §10.1).
 - No calendar export (.ics); reminders are Phase 8.
@@ -89,4 +110,4 @@ MariaDB 12.3.3 · live health and 401 checks.
 - Pre-render tool not wired into CI.
 - No cross-stack end-to-end test (Phase 12).
 
-Phase 5 must not begin without explicit approval.
+Phase 6 must not begin without explicit approval.

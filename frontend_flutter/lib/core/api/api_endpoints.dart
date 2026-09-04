@@ -29,6 +29,13 @@ class ApiEndpoints {
 
   static String publicEvent(int id) => '/public/events/$id';
 
+  // Gallery and video darshan (Phase 5)
+  static const String publicMedia = '/public/media';
+
+  static String publicMediaItem(int id) => '/public/media/$id';
+
+  static const String publicAlbums = '/public/albums';
+
   // Protected admin surface (Phase 0 foundation)
   static const String adminPing = '/admin/ping';
 
@@ -66,6 +73,21 @@ class ApiEndpoints {
   static const String adminEvents = '/admin/events';
 
   static String adminEvent(int id) => '/admin/events/$id';
+
+  // Media library (Phase 5)
+  static const String adminMedia = '/admin/media';
+
+  static String adminMediaItem(int id) => '/admin/media/$id';
+
+  static String adminMediaReferences(int id) => '/admin/media/$id/references';
+
+  static const String adminMediaVideo = '/admin/media/video';
+
+  static const String adminMediaReorder = '/admin/media/reorder';
+
+  static const String adminAlbums = '/admin/albums';
+
+  static String adminAlbum(int id) => '/admin/albums/$id';
 
   static const String resetPassword = '/auth/reset-password';
 

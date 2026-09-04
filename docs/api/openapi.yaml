@@ -2,12 +2,12 @@ openapi: 3.1.0
 
 info:
   title: Radha Krishna Thakurbari API
-  version: 0.5.0
+  version: 0.6.0
   description: |
     REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
     admin console.
 
-    **Scope: Phases 0-4.** Endpoints for media, donations, enquiries,
+    **Scope: Phases 0-5.** Endpoints for donations, enquiries,
     announcements, accounts and reports are added in their own phases and must
     be documented here in the same change that implements them.
 
@@ -1091,6 +1091,402 @@ paths:
         '403': { description: FORBIDDEN }
         '404': { description: NOT_FOUND }
 
+  # --- Gallery and video darshan (Phase 5) ----------------------------------
+
+  /api/public/media:
+    get:
+      tags: [Media]
+      summary: The published gallery, paginated
+      security: []
+      description: |
+        Published items only, filtered in the query rather than the serializer.
+        The response is **paginated**: an unbounded gallery is a
+        denial-of-service against this API, and worse here than elsewhere
+        because every row carries three image URLs.
+
+        `per_page` defaults to 24 and is capped at 60. Ordering is the
+        committee's arrangement (`sort_order`) and then newest first, so
+        anything unarranged still appears somewhere sensible.
+
+        An `album` slug that names an **unpublished** album returns nothing: the
+        album is the arrangement the committee has not finished.
+      parameters:
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en] } }
+        - { name: type, in: query, schema: { type: string, enum: [photo, video] } }
+        - { name: album, in: query, schema: { type: string }, description: Album slug }
+        - { name: page, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: per_page, in: query, schema: { type: integer, minimum: 1, maximum: 60 } }
+      responses:
+        '200':
+          description: One page of the gallery
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/PublicMedia' }
+                      meta: { $ref: '#/components/schemas/PageMeta' }
+
+  /api/public/media/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [Media]
+      summary: One published gallery item
+      security: []
+      description: A draft is indistinguishable from an item that does not exist.
+      parameters:
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en] } }
+      responses:
+        '200':
+          description: The item
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/PublicMedia' }
+        '404': { description: NOT_FOUND }
+
+  /api/public/albums:
+    get:
+      tags: [Media]
+      summary: Published albums with their covers
+      security: []
+      description: |
+        `media_count` is the number of **published** photographs in the album —
+        deliberately a different number from the one the library shows an
+        editor, which includes drafts.
+      parameters:
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en] } }
+      responses:
+        '200':
+          description: The albums
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/PublicAlbum' }
+
+  /api/admin/media:
+    get:
+      tags: [Media]
+      summary: The whole library, including drafts
+      description: Requires `content.view`, so a Viewer can see it without changing it.
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [draft, published] } }
+        - { name: type, in: query, schema: { type: string, enum: [photo, video] } }
+        - { name: album, in: query, schema: { type: integer } }
+      responses:
+        '200':
+          description: Every item
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/AdminMedia' }
+        '403': { description: FORBIDDEN }
+    post:
+      tags: [Media]
+      summary: Upload a photograph (multipart)
+      description: |
+        Requires `media.manage`, and rate-limited separately
+        (`throttle:media-upload`, 30/minute): this is the only endpoint that
+        consumes disk.
+
+        The file is validated **by its bytes**, never by its name or the
+        declared `Content-Type`:
+
+        1. size, against `media.max_upload_kb` (default 8 MB);
+        2. the MIME the server detects, against an allow-list of
+           `image/jpeg`, `image/png`, `image/webp` — no GIF, no SVG;
+        3. that the bytes decode as an image of that type, within bounds.
+
+        It is then **re-encoded**, which is the metadata strip: EXIF (including
+        GPS), XMP, IPTC, colour profiles and anything appended to the file are
+        not carried across, because nothing is copied. The same pass writes up
+        to three responsive variants (480 / 1080 / 1920 px on the longest edge);
+        an image smaller than a bound is never upscaled and simply has fewer
+        variants. The original is not kept.
+
+        A refused upload leaves neither a row nor a file.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, title_hi, status]
+              properties:
+                file: { type: string, format: binary }
+                title_hi: { type: string, maxLength: 200 }
+                title_en: { type: [string, 'null'], maxLength: 200 }
+                caption_hi: { type: [string, 'null'] }
+                caption_en: { type: [string, 'null'] }
+                album_id: { type: [integer, 'null'] }
+                sort_order: { type: [integer, 'null'] }
+                status: { type: string, enum: [draft, published] }
+      responses:
+        '201':
+          description: The stored item
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/AdminMedia' }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED — the refusal is against `file` }
+        '429': { description: TOO_MANY_REQUESTS }
+        '500': { description: SERVER_ERROR — image processing unavailable on this host }
+
+  /api/admin/media/video:
+    post:
+      tags: [Media]
+      summary: Link a video (nothing is uploaded)
+      description: |
+        Requires `media.manage`. Only YouTube links are accepted, and what is
+        stored is the extracted **video id**, not the URL that was typed: an
+        arbitrary embed source out of an admin form is a stored-XSS vector.
+        Tracking parameters are therefore dropped, and the canonical URL and
+        the `youtube-nocookie` embed URL are both rebuilt from the id.
+
+        Video files are not hosted: a ten-minute aarti recording is hundreds of
+        megabytes, and village shared hosting has neither the disk nor the
+        outbound bandwidth.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [external_url, title_hi, status]
+              properties:
+                external_url: { type: string, format: uri }
+                thumbnail_url: { type: [string, 'null'], format: uri }
+                title_hi: { type: string, maxLength: 200 }
+                title_en: { type: [string, 'null'] }
+                caption_hi: { type: [string, 'null'] }
+                caption_en: { type: [string, 'null'] }
+                album_id: { type: [integer, 'null'] }
+                status: { type: string, enum: [draft, published] }
+      responses:
+        '201': { description: The stored item }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED — not a YouTube video link }
+
+  /api/admin/media/reorder:
+    post:
+      tags: [Media]
+      summary: Apply a new gallery arrangement
+      description: |
+        Requires `media.manage`. The **whole** ordering is sent rather than one
+        move, and applied in one transaction, so a dropped request leaves the
+        previous arrangement intact rather than half of a new one.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ids]
+              properties:
+                ids:
+                  type: array
+                  maxItems: 500
+                  items: { type: integer }
+      responses:
+        '200': { description: Order updated }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED }
+
+  /api/admin/media/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [Media]
+      summary: One item, raw
+      description: Requires `content.view`.
+      responses:
+        '200': { description: The item }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+    put:
+      tags: [Media]
+      summary: Edit titles, captions, album, order and status
+      description: |
+        Requires `media.manage`.
+
+        The stored **file cannot be replaced**. Every reference to a photograph
+        on this site is by URL, so swapping the bytes under a URL would silently
+        change a page, an event poster and a committee portrait at once.
+        Uploading a new item and repointing the reference is visible; replacing
+        bytes in place is not.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/MediaInput' }
+      responses:
+        '200': { description: The updated item }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+        '422': { description: VALIDATION_FAILED }
+    delete:
+      tags: [Media]
+      summary: Delete an item and its stored files
+      description: |
+        Requires `media.manage`.
+
+        **Refused with 409 `MEDIA_IN_USE`** while anything on the site still
+        points at the file: the temple logo, a committee member's photograph, an
+        event poster, an album cover, or a page whose body embeds the URL. The
+        error names the referring records, because "cannot delete" with no
+        reason is a dead end for a committee member who cannot read the
+        database. Unpublishing is always available instead.
+      responses:
+        '204': { description: Removed }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+        '409':
+          description: MEDIA_IN_USE
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ErrorEnvelope'
+                  - type: object
+                    properties:
+                      error:
+                        type: object
+                        properties:
+                          details:
+                            type: object
+                            properties:
+                              references:
+                                type: array
+                                items: { $ref: '#/components/schemas/MediaReference' }
+
+  /api/admin/media/{id}/references:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [Media]
+      summary: What would block deleting this item
+      description: |
+        Requires `content.view`. Asked *before* offering a delete button, so a
+        blocked deletion is explained rather than attempted and refused.
+      responses:
+        '200':
+          description: The references, and whether deletion is possible
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          can_delete: { type: boolean }
+                          references:
+                            type: array
+                            items: { $ref: '#/components/schemas/MediaReference' }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+
+  /api/admin/albums:
+    get:
+      tags: [Media]
+      summary: Albums, with counts that include drafts
+      description: Requires `content.view`.
+      responses:
+        '200':
+          description: The albums
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/AdminAlbum' }
+        '403': { description: FORBIDDEN }
+    post:
+      tags: [Media]
+      summary: Create an album
+      description: |
+        Requires `media.manage`. `slug` is optional: a Hindi-only title
+        transliterates to nothing usable, so the server generates a unique slug
+        rather than letting two albums collide on an empty string.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AlbumInput' }
+      responses:
+        '201': { description: The album }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED }
+
+  /api/admin/albums/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [Media]
+      summary: One album
+      description: Requires `content.view`.
+      responses:
+        '200': { description: The album }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+    put:
+      tags: [Media]
+      summary: Update an album
+      description: Requires `media.manage`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AlbumInput' }
+      responses:
+        '200': { description: The updated album }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+        '422': { description: VALIDATION_FAILED }
+    delete:
+      tags: [Media]
+      summary: Remove an album, keeping its photographs
+      description: |
+        Requires `media.manage`. Deliberately **not** a cascade: an album is an
+        arrangement, and losing an arrangement must never lose the content. Its
+        photographs survive, unfiled.
+      responses:
+        '204': { description: Removed }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+
 components:
   securitySchemes:
     sessionCookie:
@@ -1134,6 +1530,7 @@ components:
                 - METHOD_NOT_ALLOWED
                 - TOO_MANY_REQUESTS
                 - CSRF_TOKEN_MISMATCH
+                - MEDIA_IN_USE
                 - SERVER_ERROR
             message:
               type: string
@@ -1534,6 +1931,140 @@ components:
           type: string
           enum: [connected, unavailable]
         time: { type: string, format: date-time }
+
+    PublicMedia:
+      type: object
+      description: |
+        All three image sizes are sent on every item so the client can pick per
+        use: a grid tile takes `thumb_url` and never the full photograph, and a
+        lightbox takes `medium_url` or `large_url` by form factor. Sending one
+        size only would mean either a grid that downloads full-size photographs
+        or a lightbox that shows blurred ones.
+
+        A photograph smaller than a variant's bound was never upscaled, so the
+        smaller URLs legitimately resolve to the same stored file.
+      properties:
+        id: { type: integer }
+        media_type: { type: string, enum: [photo, video] }
+        requested_language: { type: string, enum: [hi, en] }
+        title: { $ref: '#/components/schemas/LocalizedText' }
+        caption: { $ref: '#/components/schemas/LocalizedText' }
+        thumb_url: { type: [string, 'null'], description: 480 px longest edge }
+        medium_url: { type: [string, 'null'], description: 1080 px longest edge }
+        large_url: { type: [string, 'null'], description: 1920 px longest edge }
+        file_url: { type: [string, 'null'] }
+        external_url: { type: [string, 'null'], description: Videos only }
+        provider: { type: [string, 'null'], enum: [youtube, null] }
+        embed_url:
+          type: [string, 'null']
+          description: Built from the stored video id, never from admin input.
+        thumbnail_url: { type: [string, 'null'] }
+        width: { type: [integer, 'null'] }
+        height: { type: [integer, 'null'] }
+        album_id: { type: [integer, 'null'] }
+        sort_order: { type: integer }
+
+    AdminMedia:
+      type: object
+      description: |
+        Both languages raw, plus the technical detail an editor needs to judge a
+        file. `mime_type` is the type the **server detected from the bytes**,
+        not the one the browser claimed, and `original_name` is a display label
+        only — it is never used to build a filesystem path.
+      properties:
+        id: { type: integer }
+        media_type: { type: string, enum: [photo, video] }
+        title_hi: { type: string }
+        title_en: { type: [string, 'null'] }
+        caption_hi: { type: [string, 'null'] }
+        caption_en: { type: [string, 'null'] }
+        thumb_url: { type: [string, 'null'] }
+        medium_url: { type: [string, 'null'] }
+        large_url: { type: [string, 'null'] }
+        file_url: { type: [string, 'null'] }
+        external_url: { type: [string, 'null'] }
+        provider: { type: [string, 'null'] }
+        provider_ref: { type: [string, 'null'] }
+        embed_url: { type: [string, 'null'] }
+        thumbnail_url: { type: [string, 'null'] }
+        mime_type: { type: [string, 'null'] }
+        byte_size: { type: [integer, 'null'], description: After re-encoding }
+        width: { type: [integer, 'null'] }
+        height: { type: [integer, 'null'] }
+        original_name: { type: [string, 'null'] }
+        album_id: { type: [integer, 'null'] }
+        sort_order: { type: integer }
+        status: { type: string, enum: [draft, published] }
+        updated_at: { type: [string, 'null'], format: date-time }
+
+    MediaInput:
+      type: object
+      required: [title_hi, status]
+      description: Carries no file — see PUT /api/admin/media/{id}.
+      properties:
+        title_hi: { type: string, maxLength: 200 }
+        title_en: { type: [string, 'null'], maxLength: 200 }
+        caption_hi: { type: [string, 'null'], maxLength: 2000 }
+        caption_en: { type: [string, 'null'], maxLength: 2000 }
+        external_url: { type: [string, 'null'], description: Videos only }
+        thumbnail_url: { type: [string, 'null'] }
+        album_id: { type: [integer, 'null'] }
+        sort_order: { type: [integer, 'null'] }
+        status: { type: string, enum: [draft, published] }
+
+    MediaReference:
+      type: object
+      description: One record that still points at a media item.
+      properties:
+        type:
+          type: string
+          enum: [temple_logo, committee_member, event_poster, album_cover, page]
+        label: { type: string, description: The Hindi name of the referring record }
+        id: { type: [integer, 'null'] }
+
+    PublicAlbum:
+      type: object
+      properties:
+        id: { type: integer }
+        slug: { type: string }
+        requested_language: { type: string, enum: [hi, en] }
+        title: { $ref: '#/components/schemas/LocalizedText' }
+        description: { $ref: '#/components/schemas/LocalizedText' }
+        cover_url: { type: [string, 'null'] }
+        media_count: { type: integer, description: Published photographs only }
+        sort_order: { type: integer }
+
+    AdminAlbum:
+      type: object
+      properties:
+        id: { type: integer }
+        slug: { type: string }
+        title_hi: { type: string }
+        title_en: { type: [string, 'null'] }
+        description_hi: { type: [string, 'null'] }
+        description_en: { type: [string, 'null'] }
+        cover_media_id: { type: [integer, 'null'] }
+        cover_url: { type: [string, 'null'] }
+        media_count: { type: integer, description: Includes drafts }
+        sort_order: { type: integer }
+        status: { type: string, enum: [draft, published] }
+        updated_at: { type: [string, 'null'], format: date-time }
+
+    AlbumInput:
+      type: object
+      required: [title_hi, status]
+      properties:
+        title_hi: { type: string, maxLength: 200 }
+        title_en: { type: [string, 'null'] }
+        description_hi: { type: [string, 'null'] }
+        description_en: { type: [string, 'null'] }
+        slug:
+          type: [string, 'null']
+          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
+          description: Generated from the English title when omitted.
+        cover_media_id: { type: [integer, 'null'] }
+        sort_order: { type: [integer, 'null'] }
+        status: { type: string, enum: [draft, published] }
 
 security:
   - sessionCookie: []

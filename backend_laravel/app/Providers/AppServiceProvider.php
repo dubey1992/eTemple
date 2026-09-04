@@ -70,6 +70,13 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('auth-forgot-password', fn (Request $request) => Limit::perMinute(3)
             ->by(self::credentialKey($request))
             ->response(self::throttled(...)));
+
+        // Uploads are the most expensive endpoint in the application and the
+        // only one that consumes disk, so they get their own limit rather than
+        // sharing the general admin allowance (spec Phase 5).
+        RateLimiter::for('media-upload', fn (Request $request) => Limit::perMinute(30)
+            ->by($request->user()?->id ?: $request->ip())
+            ->response(self::throttled(...)));
     }
 
     /**

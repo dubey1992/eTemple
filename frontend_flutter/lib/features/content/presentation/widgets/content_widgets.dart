@@ -98,11 +98,18 @@ class ContentSection extends StatelessWidget {
     super.key,
     required this.title,
     required this.child,
+    this.subtitle,
     this.trailing,
   });
 
   final String title;
   final Widget child;
+
+  /// The line under the heading. The prototype gives most sections one; it is
+  /// optional here because several sections in this app have nothing to add to
+  /// their own title.
+  final String? subtitle;
+
   final Widget? trailing;
 
   @override
@@ -113,13 +120,28 @@ class ContentSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              child: Text(
-                title,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  color: theme.colorScheme.primary,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  if (subtitle != null) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      subtitle!,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
             ?trailing,

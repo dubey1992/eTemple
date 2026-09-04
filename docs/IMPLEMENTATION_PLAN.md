@@ -122,11 +122,11 @@ Explicitly **out** of Phase 0: CMS pages, home/about content, user CRUD screens,
 
 ## Phase 5 — Gallery & Video Darshan
 
-- [ ] `media` (+ optional `albums`): `media_type`, bilingual titles, `file_url`, `external_url`, `thumbnail_url`, `sort_order`, `status`, `uploaded_by`
-- [ ] Public gallery/videos endpoints + admin media CRUD
-- [ ] Server-side MIME/size validation, metadata stripping, optimized responsive variants
-- [ ] Lazy-loading memory-conscious Flutter gallery
-- [ ] Deletion guard when media is referenced by a page/event
+- [x] `media` (+ optional `albums`): `media_type`, bilingual titles, `file_url`, `external_url`, `thumbnail_url`, `sort_order`, `status`, `uploaded_by`
+- [x] Public gallery/videos endpoints + admin media CRUD
+- [x] Server-side MIME/size validation, metadata stripping, optimized responsive variants
+- [x] Lazy-loading memory-conscious Flutter gallery
+- [x] Deletion guard when media is referenced by a page/event
 
 ## Phase 6 — Donations & Receipts
 

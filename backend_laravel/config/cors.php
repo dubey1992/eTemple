@@ -14,7 +14,15 @@ $origins = array_values(array_filter(array_map(
 )));
 
 return [
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    /*
+    | `storage/*` is here for hosts that route uploads through PHP. Most do not
+    | — a static file is served by the web server and never reaches Laravel — so
+    | the header on the uploads path is a **web-server** setting, and the
+    | deployment checklist asks for it. Without it a browser cannot read the
+    | image bytes cross-origin; the Flutter client falls back to an <img>
+    | element so the gallery still renders, at the cost of the bounded decode.
+    */
+    'paths' => ['api/*', 'sanctum/csrf-cookie', 'storage/*'],
     'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     'allowed_origins' => $origins,
     'allowed_origins_patterns' => [],

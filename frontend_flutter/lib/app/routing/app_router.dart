@@ -22,6 +22,11 @@ import '../../features/events/presentation/admin_event_editor_screen.dart';
 import '../../features/events/presentation/admin_events_screen.dart';
 import '../../features/events/presentation/event_detail_screen.dart';
 import '../../features/events/presentation/events_screen.dart';
+import '../../features/media/presentation/admin_album_editor_screen.dart';
+import '../../features/media/presentation/admin_albums_screen.dart';
+import '../../features/media/presentation/admin_media_editor_screen.dart';
+import '../../features/media/presentation/admin_media_screen.dart';
+import '../../features/media/presentation/gallery_screen.dart';
 import '../../features/shell/presentation/not_found_screen.dart';
 import '../../features/shell/presentation/public_shell.dart';
 import '../../features/temple/presentation/admin_committee_member_screen.dart';
@@ -110,6 +115,14 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: RoutePaths.events,
             name: RouteNames.events,
             builder: (context, state) => const EventsScreen(),
+          ),
+          GoRoute(
+            // Declared here rather than left to the catch-all slug route, so
+            // /gallery is never mistaken for a CMS page.
+            path: RoutePaths.gallery,
+            name: RouteNames.gallery,
+            builder: (context, state) =>
+                GalleryScreen(album: state.uri.queryParameters['album']),
           ),
           GoRoute(
             path: RoutePaths.eventDetailPattern,
@@ -235,6 +248,44 @@ final routerProvider = Provider<GoRouter>((ref) {
               final id = int.tryParse(state.pathParameters['id'] ?? '');
               if (id == null) return const NotFoundScreen();
               return AdminEventEditorScreen(eventId: id);
+            },
+          ),
+          GoRoute(
+            path: RoutePaths.adminMedia,
+            name: RouteNames.adminMedia,
+            builder: (context, state) => const AdminMediaScreen(),
+          ),
+          GoRoute(
+            // Declared before /admin/media/:id so "new" is not read as an id.
+            path: RoutePaths.adminMediaNew,
+            builder: (context, state) => const AdminMediaEditorScreen(),
+          ),
+          GoRoute(
+            path: '${RoutePaths.adminMedia}/:id',
+            name: RouteNames.adminMediaEditor,
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '');
+              if (id == null) return const NotFoundScreen();
+              return AdminMediaEditorScreen(mediaId: id);
+            },
+          ),
+          GoRoute(
+            path: RoutePaths.adminAlbums,
+            name: RouteNames.adminAlbums,
+            builder: (context, state) => const AdminAlbumsScreen(),
+          ),
+          GoRoute(
+            // Declared before /admin/albums/:id so "new" is not read as an id.
+            path: RoutePaths.adminAlbumNew,
+            builder: (context, state) => const AdminAlbumEditorScreen(),
+          ),
+          GoRoute(
+            path: '${RoutePaths.adminAlbums}/:id',
+            name: RouteNames.adminAlbumEditor,
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '');
+              if (id == null) return const NotFoundScreen();
+              return AdminAlbumEditorScreen(albumId: id);
             },
           ),
           GoRoute(

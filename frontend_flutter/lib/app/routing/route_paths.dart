@@ -19,6 +19,13 @@ class RoutePaths {
 
   static const String eventDetailPattern = '/events/:id';
 
+  /// The public gallery. Declared before the catch-all slug route.
+  static const String gallery = '/gallery';
+
+  /// [album] is an album slug, so a link to one festival's photographs is
+  /// shareable.
+  static String galleryAlbum(String album) => '/gallery?album=$album';
+
   /// [on] names one occurrence of a repeating event, so a shared link to "the
   /// aarti on the 12th" still opens on the 12th.
   static String eventDetail(int id, {String? on}) =>
@@ -57,6 +64,16 @@ class RoutePaths {
 
   static String adminEventEditor(int id) => '/admin/events/$id';
 
+  static const String adminMedia = '/admin/media';
+  static const String adminMediaNew = '/admin/media/new';
+
+  static String adminMediaEditor(int id) => '/admin/media/$id';
+
+  static const String adminAlbums = '/admin/albums';
+  static const String adminAlbumNew = '/admin/albums/new';
+
+  static String adminAlbumEditor(int id) => '/admin/albums/$id';
+
   static String adminRolePermissions(int id) => '/admin/roles/$id';
 
   // --- Public (completes the Phase 0 password-reset flow) -------------------
@@ -89,6 +106,11 @@ class RouteNames {
   static const String eventDetail = 'event-detail';
   static const String adminEvents = 'admin-events';
   static const String adminEventEditor = 'admin-event-editor';
+  static const String gallery = 'gallery';
+  static const String adminMedia = 'admin-media';
+  static const String adminMediaEditor = 'admin-media-editor';
+  static const String adminAlbums = 'admin-albums';
+  static const String adminAlbumEditor = 'admin-album-editor';
   static const String adminRolePermissions = 'admin-role-permissions';
   static const String resetPassword = 'reset-password';
 }

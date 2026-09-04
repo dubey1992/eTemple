@@ -33,5 +33,12 @@ final class ApiErrorCode
 
     public const CSRF_TOKEN_MISMATCH = 'CSRF_TOKEN_MISMATCH';
 
+    /**
+     * A media file cannot be deleted because something still points at it
+     * (spec Phase 5 deletion guard). Distinct from VALIDATION_FAILED: the
+     * request was well formed, the site's state refuses it.
+     */
+    public const MEDIA_IN_USE = 'MEDIA_IN_USE';
+
     public const SERVER_ERROR = 'SERVER_ERROR';
 }

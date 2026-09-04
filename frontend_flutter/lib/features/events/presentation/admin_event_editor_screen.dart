@@ -11,6 +11,7 @@ import '../../../core/errors/app_exception.dart';
 import '../../../core/errors/error_code.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/page_container.dart';
+import '../../media/presentation/widgets/media_picker_field.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../admin/data/admin_providers.dart';
 import '../../content/data/content_providers.dart';
@@ -513,11 +514,16 @@ class _EventFormState extends ConsumerState<_EventForm> {
                   enabled,
                 ),
 
-              _field(
-                'poster_url',
-                '${l10n.fieldPosterUrl} · ${l10n.fieldOptional}',
-                enabled,
-                keyboardType: TextInputType.url,
+              // Chosen from the gallery since Phase 5. It is still stored as
+              // a URL, so an externally hosted poster remains possible and
+              // Phase 4's records are undisturbed.
+              MediaPickerField(
+                fieldKey: const ValueKey('event-poster_url'),
+                controller: _fields['poster_url']!,
+                label: '${l10n.fieldPosterUrl} · ${l10n.fieldOptional}',
+                enabled: enabled,
+                errorText: _error?.firstErrorFor('poster_url'),
+                onChanged: () => setState(() {}),
               ),
 
               DropdownButtonFormField<String>(

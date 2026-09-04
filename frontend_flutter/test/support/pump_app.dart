@@ -9,10 +9,12 @@ import 'package:rkt_web/app/localization/locale_controller.dart';
 import 'package:rkt_web/app/routing/route_paths.dart';
 import 'package:rkt_web/app/theme/app_theme.dart';
 import 'package:rkt_web/features/events/data/event_providers.dart';
+import 'package:rkt_web/features/media/data/media_providers.dart';
 import 'package:rkt_web/features/temple/data/temple_providers.dart';
 import 'package:rkt_web/l10n/app_localizations.dart';
 
 import 'fake_event_repository.dart';
+import 'fake_media_repository.dart';
 import 'fake_temple_repository.dart';
 import 'no_network.dart';
 
@@ -25,15 +27,24 @@ const forgotPasswordPlaceholderKey = Key('test-forgot-password-placeholder');
 /// Key on the stand-in screen the committee-list route renders.
 const committeeListPlaceholderKey = Key('test-committee-placeholder');
 
+/// Key on the stand-in screen the public gallery route renders.
+const galleryPlaceholderKey = Key('test-gallery-placeholder');
+
+/// Key on the stand-in screen the media-library route renders.
+const mediaListPlaceholderKey = Key('test-media-placeholder');
+
+/// Key on the stand-in screen the albums route renders.
+const albumListPlaceholderKey = Key('test-albums-placeholder');
+
 /// Pumps a single screen inside the real theme and localization setup.
 ///
 /// A minimal router is provided so screens that navigate (the login screen, for
 /// example) behave as they do in the application instead of throwing.
 ///
-/// The temple profile (Phase 3) and the calendar (Phase 4) are read by shared
-/// chrome — the header, the hero, even the sign-in page — so stubs for both are
-/// always supplied. Pass [temple] or [events] to script them, including making
-/// them fail.
+/// The temple profile (Phase 3), the calendar (Phase 4) and the gallery
+/// (Phase 5) are read by shared chrome — the header, the hero, the home page,
+/// even the sign-in page — so stubs for all three are always supplied. Pass
+/// [temple], [events] or [media] to script them, including making them fail.
 ///
 /// An [ApiClient] that refuses every request is installed as well, so a
 /// repository nobody remembered to fake fails loudly instead of quietly
@@ -46,6 +57,7 @@ Future<void> pumpScreen(
   Size? surfaceSize,
   FakeTempleRepository? temple,
   FakeEventRepository? events,
+  FakeMediaRepository? media,
 }) async {
   if (surfaceSize != null) {
     // Set the logical size directly: devicePixelRatio 1.0 makes the physical
@@ -87,6 +99,25 @@ Future<void> pumpScreen(
         path: RoutePaths.committee,
         builder: (_, _) => const Scaffold(body: SizedBox.shrink()),
       ),
+      GoRoute(
+        path: RoutePaths.gallery,
+        builder: (_, _) =>
+            const Scaffold(key: galleryPlaceholderKey, body: SizedBox.shrink()),
+      ),
+      GoRoute(
+        path: RoutePaths.adminMedia,
+        builder: (_, _) => const Scaffold(
+          key: mediaListPlaceholderKey,
+          body: SizedBox.shrink(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.adminAlbums,
+        builder: (_, _) => const Scaffold(
+          key: albumListPlaceholderKey,
+          body: SizedBox.shrink(),
+        ),
+      ),
     ],
   );
   addTearDown(router.dispose);
@@ -100,6 +131,9 @@ Future<void> pumpScreen(
         ),
         eventRepositoryProvider.overrideWithValue(
           events ?? FakeEventRepository(),
+        ),
+        mediaRepositoryProvider.overrideWithValue(
+          media ?? FakeMediaRepository(),
         ),
         ...overrides,
       ],

@@ -11,6 +11,9 @@ import '../../../core/widgets/section_band.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../events/data/event_providers.dart';
 import '../../events/presentation/widgets/event_card.dart';
+import '../../media/data/media_providers.dart';
+import '../../media/presentation/widgets/gallery_mosaic.dart';
+import '../../media/presentation/widgets/media_lightbox.dart';
 import '../../temple/data/temple_providers.dart';
 import '../../temple/domain/temple_profile.dart';
 import '../../temple/presentation/widgets/committee_list.dart';
@@ -71,8 +74,11 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 const SectionBand(child: _AboutSection()),
                 const SectionBand.alternate(child: _UpcomingEventsSection()),
-                const SectionBand(child: _CommitteeSection()),
-                SectionBand.alternate(
+                // The prototype puts the gallery between the events and the
+                // committee, so it goes there.
+                const SectionBand(child: _GallerySection()),
+                const SectionBand.alternate(child: _CommitteeSection()),
+                SectionBand(
                   child: ContentSection(
                     title: l10n.sectionAddress,
                     child: AddressCard(
@@ -170,6 +176,50 @@ class _UpcomingEventsSection extends ConsumerWidget {
           occurrences: data,
           limit: 3,
           emptyMessage: l10n.noUpcomingEvents,
+        ),
+      ),
+    );
+  }
+}
+
+/// The prototype's photo gallery block.
+///
+/// With nothing published it renders the approved design's own placeholder
+/// tiles, which is what that design *is*: its caption says the photographs
+/// "will appear here" (PHASE_5_PLAN assumption M12). Seeding invented
+/// photographs to make the demo look full is not an option the working
+/// agreement leaves open.
+class _GallerySection extends ConsumerWidget {
+  const _GallerySection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final gallery = ref.watch(homeGalleryProvider);
+    final items = gallery.value?.items ?? const [];
+
+    return ContentSection(
+      title: l10n.sectionGallery,
+      subtitle: l10n.gallerySubtitle,
+      trailing: items.isNotEmpty
+          ? TextButton(
+              key: const Key('gallery-see-all'),
+              onPressed: () => context.go(RoutePaths.gallery),
+              child: Text(l10n.viewGallery),
+            )
+          : null,
+      child: gallery.when(
+        loading: () => const Padding(
+          padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+          child: LoadingView(),
+        ),
+        // An unreachable gallery falls back to the approved placeholder rather
+        // than to an error: the block is decorative here, and the page a
+        // devotee came for must not break because of it.
+        error: (_, _) => const GalleryPlaceholderMosaic(),
+        data: (page) => GalleryMosaic(
+          items: page.items,
+          onOpen: (item) => MediaLightbox.show(context, item),
         ),
       ),
     );

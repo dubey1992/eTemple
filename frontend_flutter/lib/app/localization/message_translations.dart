@@ -22,6 +22,7 @@ extension AppExceptionMessage on AppException {
     ErrorCode.validationFailed => l10n.errorValidation,
     ErrorCode.tooManyRequests => l10n.errorTooManyRequests,
     ErrorCode.csrfTokenMismatch => l10n.errorSessionExpired,
+    ErrorCode.mediaInUse => l10n.mediaInUseTitle,
     ErrorCode.serverError => l10n.errorServer,
     ErrorCode.cancelled => l10n.errorUnknown,
     ErrorCode.malformedResponse => l10n.errorServer,

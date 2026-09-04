@@ -98,7 +98,12 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          extensions: mbstring, pdo, pdo_mysql, pdo_sqlite, bcmath, intl
+          # gd is a hard dependency from Phase 5 on: uploaded photographs are
+          # stripped of EXIF by being re-encoded, and without it the media
+          # service refuses the upload rather than storing an unstripped
+          # original. exif is optional (auto-rotation only) and installed so CI
+          # exercises the same path as production.
+          extensions: mbstring, pdo, pdo_mysql, pdo_sqlite, bcmath, intl, gd, exif
           coverage: none
 
       - name: Install dependencies

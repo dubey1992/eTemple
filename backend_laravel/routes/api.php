@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\Admin\AdminPingController;
+use App\Http\Controllers\Api\Admin\AlbumController;
 use App\Http\Controllers\Api\Admin\CommitteeMemberController;
 use App\Http\Controllers\Api\Admin\EventController as AdminEventController;
+use App\Http\Controllers\Api\Admin\MediaController as AdminMediaController;
 use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\SiteSettingsController as AdminSiteSettingsController;
@@ -13,6 +15,7 @@ use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\PublicSite\EventController as PublicEventController;
+use App\Http\Controllers\Api\PublicSite\MediaController as PublicMediaController;
 use App\Http\Controllers\Api\PublicSite\PageController as PublicPageController;
 use App\Http\Controllers\Api\PublicSite\SiteSettingsController as PublicSiteSettingsController;
 use App\Http\Controllers\Api\PublicSite\TempleController as PublicTempleController;
@@ -88,6 +91,19 @@ Route::prefix('public')
         Route::get('/events/{event}', [PublicEventController::class, 'show'])
             ->whereNumber('event')
             ->name('events.show');
+
+        // Gallery and video darshan (Phase 5). Published items only, filtered
+        // in the query; the list is paginated because an unbounded gallery is a
+        // denial-of-service against our own API.
+        Route::get('/media', [PublicMediaController::class, 'index'])
+            ->name('media.index');
+
+        Route::get('/media/{media}', [PublicMediaController::class, 'show'])
+            ->whereNumber('media')
+            ->name('media.show');
+
+        Route::get('/albums', [PublicMediaController::class, 'albums'])
+            ->name('albums.index');
 
         Route::get('/pages/{slug}', [PublicPageController::class, 'show'])
             ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')
@@ -175,4 +191,38 @@ Route::prefix('admin')
             ->middleware('can:'.Permission::EVENTS_MANAGE)->name('events.update');
         Route::delete('/events/{event}', [AdminEventController::class, 'destroy'])
             ->middleware('can:'.Permission::EVENTS_MANAGE)->name('events.destroy');
+
+        // --- Gallery and video darshan (Phase 5) -----------------------
+        // Reading is granted with content.view, as for the committee and the
+        // calendar; every write needs media.manage. Uploading carries its own
+        // rate limit on top: it is the only endpoint that consumes disk.
+        Route::get('/media', [AdminMediaController::class, 'index'])
+            ->middleware('can:'.Permission::CONTENT_VIEW)->name('media.index');
+        Route::get('/media/{media}', [AdminMediaController::class, 'show'])
+            ->middleware('can:'.Permission::CONTENT_VIEW)->name('media.show');
+        Route::get('/media/{media}/references', [AdminMediaController::class, 'references'])
+            ->middleware('can:'.Permission::CONTENT_VIEW)->name('media.references');
+
+        Route::post('/media', [AdminMediaController::class, 'store'])
+            ->middleware(['can:'.Permission::MEDIA_MANAGE, 'throttle:media-upload'])
+            ->name('media.store');
+        Route::post('/media/video', [AdminMediaController::class, 'storeVideo'])
+            ->middleware('can:'.Permission::MEDIA_MANAGE)->name('media.store-video');
+        Route::post('/media/reorder', [AdminMediaController::class, 'reorder'])
+            ->middleware('can:'.Permission::MEDIA_MANAGE)->name('media.reorder');
+        Route::put('/media/{media}', [AdminMediaController::class, 'update'])
+            ->middleware('can:'.Permission::MEDIA_MANAGE)->name('media.update');
+        Route::delete('/media/{media}', [AdminMediaController::class, 'destroy'])
+            ->middleware('can:'.Permission::MEDIA_MANAGE)->name('media.destroy');
+
+        Route::get('/albums', [AlbumController::class, 'index'])
+            ->middleware('can:'.Permission::CONTENT_VIEW)->name('albums.index');
+        Route::get('/albums/{album}', [AlbumController::class, 'show'])
+            ->middleware('can:'.Permission::CONTENT_VIEW)->name('albums.show');
+        Route::post('/albums', [AlbumController::class, 'store'])
+            ->middleware('can:'.Permission::MEDIA_MANAGE)->name('albums.store');
+        Route::put('/albums/{album}', [AlbumController::class, 'update'])
+            ->middleware('can:'.Permission::MEDIA_MANAGE)->name('albums.update');
+        Route::delete('/albums/{album}', [AlbumController::class, 'destroy'])
+            ->middleware('can:'.Permission::MEDIA_MANAGE)->name('albums.destroy');
     });

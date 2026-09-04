@@ -11,6 +11,7 @@ import '../../../core/errors/app_exception.dart';
 import '../../../core/errors/error_code.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/page_container.dart';
+import '../../media/presentation/widgets/media_picker_field.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../admin/data/admin_providers.dart';
 import '../data/temple_providers.dart';
@@ -419,11 +420,13 @@ class _MemberFormState extends ConsumerState<_MemberForm> {
                   enabled,
                   keyboardType: TextInputType.emailAddress,
                 ),
-                photoField: _field(
-                  'photo_url',
-                  '${l10n.fieldPhotoUrl} · ${l10n.fieldOptional}',
-                  enabled,
-                  keyboardType: TextInputType.url,
+                photoField: MediaPickerField(
+                  fieldKey: const ValueKey('member-photo_url'),
+                  controller: _fields['photo_url']!,
+                  label: '${l10n.fieldPhotoUrl} · ${l10n.fieldOptional}',
+                  enabled: enabled,
+                  errorText: _error?.firstErrorFor('photo_url'),
+                  onChanged: () => setState(() {}),
                 ),
               ),
 

@@ -874,4 +874,240 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get viewEvents => 'View Events';
+
+  @override
+  String get navGallery => 'Gallery';
+
+  @override
+  String get galleryTitle => 'Photo Gallery';
+
+  @override
+  String get gallerySubtitle =>
+      'Photos of the temple, worship, festivals and village events will appear here.';
+
+  @override
+  String get sectionGallery => 'Photo Gallery';
+
+  @override
+  String get viewGallery => 'See the full gallery';
+
+  @override
+  String get galleryPhotos => 'Photographs';
+
+  @override
+  String get galleryVideos => 'Video darshan';
+
+  @override
+  String get galleryAllAlbums => 'All';
+
+  @override
+  String get noPhotos => 'No photographs have been published yet.';
+
+  @override
+  String get noVideos => 'No video darshan is available yet.';
+
+  @override
+  String get galleryLoadMore => 'Show more';
+
+  @override
+  String get imageUnavailable => 'The image could not be loaded';
+
+  @override
+  String get actionClose => 'Close';
+
+  @override
+  String get openInYoutube => 'Watch on YouTube';
+
+  @override
+  String get videoDarshanNotice =>
+      'Videos are hosted on YouTube; playing one is subject to their terms.';
+
+  @override
+  String get navMedia => 'Gallery and video';
+
+  @override
+  String get navMediaDesc =>
+      'Upload, publish and arrange photographs and videos';
+
+  @override
+  String get mediaAdminTitle => 'Gallery and video';
+
+  @override
+  String get mediaAdminSubtitle =>
+      'Upload photographs and add video links here. Location and camera data is removed from every uploaded photograph automatically.';
+
+  @override
+  String get mediaEmpty => 'No media has been added yet.';
+
+  @override
+  String get mediaNew => 'Add media';
+
+  @override
+  String get mediaEdit => 'Edit media';
+
+  @override
+  String get mediaUploadPhoto => 'Upload a photograph';
+
+  @override
+  String get mediaAddVideo => 'Add a video link';
+
+  @override
+  String get mediaChooseFile => 'Choose a file';
+
+  @override
+  String mediaFileHint(int size) {
+    return 'JPEG, PNG or WebP · up to $size MB';
+  }
+
+  @override
+  String get mediaNoFileChosen => 'No file chosen';
+
+  @override
+  String mediaFileSelected(String name, String size) {
+    return '$name · $size';
+  }
+
+  @override
+  String get mediaFileRequired => 'Choose a photograph to upload.';
+
+  @override
+  String get mediaChooserUnavailable =>
+      'Choosing a file is only available in a browser.';
+
+  @override
+  String get mediaTypePhoto => 'Photograph';
+
+  @override
+  String get mediaTypeVideo => 'Video';
+
+  @override
+  String get mediaDelete => 'Remove media';
+
+  @override
+  String get mediaDeleteConfirmTitle => 'Remove this media?';
+
+  @override
+  String get mediaDeleteConfirmBody =>
+      'The file is erased permanently. To hide it instead, unpublish it.';
+
+  @override
+  String get mediaDeleted => 'Media removed.';
+
+  @override
+  String get mediaInUseTitle => 'This file is still in use';
+
+  @override
+  String get mediaInUseBody =>
+      'It can only be deleted once it is removed from the items below. Until then it can be unpublished.';
+
+  @override
+  String get mediaReferenceEventPoster => 'Event poster';
+
+  @override
+  String get mediaReferenceCommitteeMember => 'Committee member';
+
+  @override
+  String get mediaReferenceTempleLogo => 'Temple logo';
+
+  @override
+  String get mediaReferenceAlbumCover => 'Album cover';
+
+  @override
+  String get mediaReferencePage => 'Page';
+
+  @override
+  String get mediaMoveUp => 'Move up';
+
+  @override
+  String get mediaMoveDown => 'Move down';
+
+  @override
+  String get mediaOrderSaved => 'Order saved.';
+
+  @override
+  String get fieldCaptionHindi => 'Caption (Hindi)';
+
+  @override
+  String get fieldCaptionEnglish => 'Caption (English)';
+
+  @override
+  String get fieldVideoUrl => 'YouTube link';
+
+  @override
+  String get videoUrlHint => 'Only YouTube links can be added.';
+
+  @override
+  String get navAlbums => 'Albums';
+
+  @override
+  String get navAlbumsDesc => 'Group photographs by festival or occasion';
+
+  @override
+  String get albumsAdminTitle => 'Albums';
+
+  @override
+  String get albumsAdminSubtitle =>
+      'Group photographs by festival or occasion. Removing an album keeps its photographs.';
+
+  @override
+  String get albumsEmpty => 'No albums have been created yet.';
+
+  @override
+  String get albumNew => 'New album';
+
+  @override
+  String get albumEdit => 'Edit album';
+
+  @override
+  String get albumDelete => 'Remove album';
+
+  @override
+  String get albumDeleteConfirmTitle => 'Remove this album?';
+
+  @override
+  String get albumDeleteConfirmBody =>
+      'The album is removed; its photographs are kept.';
+
+  @override
+  String get albumDeleted => 'Album removed.';
+
+  @override
+  String get albumNone => 'Not in an album';
+
+  @override
+  String albumItemCount(int count) {
+    return '$count photographs';
+  }
+
+  @override
+  String get fieldAlbum => 'Album';
+
+  @override
+  String get fieldSlug => 'URL name';
+
+  @override
+  String get slugHint => 'Generated automatically when left blank.';
+
+  @override
+  String get fieldDescriptionHindi => 'Description (Hindi)';
+
+  @override
+  String get fieldDescriptionEnglish => 'Description (English)';
+
+  @override
+  String get fieldCoverPhoto => 'Cover photograph';
+
+  @override
+  String get mediaPickerChoose => 'Choose from the gallery';
+
+  @override
+  String get mediaPickerClear => 'Clear';
+
+  @override
+  String get mediaPickerEmpty =>
+      'There are no published photographs in the gallery yet.';
+
+  @override
+  String get mediaPickerHint =>
+      'Choose from the gallery, or type an external URL below.';
 }

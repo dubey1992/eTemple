@@ -247,7 +247,8 @@ class DevelopmentContentSeeder extends Seeder
             ['label_hi' => 'मुख्य पृष्ठ', 'label_en' => 'Home', 'route' => '/', 'sort_order' => 0],
             ['label_hi' => 'मंदिर परिचय', 'label_en' => 'About', 'route' => '/about', 'sort_order' => 1],
             ['label_hi' => 'कार्यक्रम', 'label_en' => 'Events', 'route' => '/events', 'sort_order' => 2],
-            ['label_hi' => 'मंदिर समिति', 'label_en' => 'Committee', 'route' => '/committee', 'sort_order' => 3],
+            ['label_hi' => 'गैलरी', 'label_en' => 'Gallery', 'route' => '/gallery', 'sort_order' => 3],
+            ['label_hi' => 'मंदिर समिति', 'label_en' => 'Committee', 'route' => '/committee', 'sort_order' => 4],
         ] as $item) {
             NavigationItem::query()->create($item + ['is_visible' => true]);
         }

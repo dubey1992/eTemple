@@ -1729,6 +1729,444 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'कार्यक्रम देखें'**
   String get viewEvents;
+
+  /// No description provided for @navGallery.
+  ///
+  /// In hi, this message translates to:
+  /// **'गैलरी'**
+  String get navGallery;
+
+  /// No description provided for @galleryTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'फोटो गैलरी'**
+  String get galleryTitle;
+
+  /// No description provided for @gallerySubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर, पूजा, त्योहार और ग्राम कार्यक्रमों की तस्वीरें यहाँ दिखाई जाएंगी।'**
+  String get gallerySubtitle;
+
+  /// No description provided for @sectionGallery.
+  ///
+  /// In hi, this message translates to:
+  /// **'फोटो गैलरी'**
+  String get sectionGallery;
+
+  /// No description provided for @viewGallery.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूरी गैलरी देखें'**
+  String get viewGallery;
+
+  /// No description provided for @galleryPhotos.
+  ///
+  /// In hi, this message translates to:
+  /// **'तस्वीरें'**
+  String get galleryPhotos;
+
+  /// No description provided for @galleryVideos.
+  ///
+  /// In hi, this message translates to:
+  /// **'वीडियो दर्शन'**
+  String get galleryVideos;
+
+  /// No description provided for @galleryAllAlbums.
+  ///
+  /// In hi, this message translates to:
+  /// **'सभी'**
+  String get galleryAllAlbums;
+
+  /// No description provided for @noPhotos.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी कोई तस्वीर प्रकाशित नहीं हुई है।'**
+  String get noPhotos;
+
+  /// No description provided for @noVideos.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी कोई वीडियो दर्शन उपलब्ध नहीं है।'**
+  String get noVideos;
+
+  /// No description provided for @galleryLoadMore.
+  ///
+  /// In hi, this message translates to:
+  /// **'और तस्वीरें दिखाएँ'**
+  String get galleryLoadMore;
+
+  /// No description provided for @imageUnavailable.
+  ///
+  /// In hi, this message translates to:
+  /// **'चित्र लोड नहीं हो सका'**
+  String get imageUnavailable;
+
+  /// No description provided for @actionClose.
+  ///
+  /// In hi, this message translates to:
+  /// **'बंद करें'**
+  String get actionClose;
+
+  /// No description provided for @openInYoutube.
+  ///
+  /// In hi, this message translates to:
+  /// **'यूट्यूब पर देखें'**
+  String get openInYoutube;
+
+  /// No description provided for @videoDarshanNotice.
+  ///
+  /// In hi, this message translates to:
+  /// **'वीडियो यूट्यूब पर होस्ट है; चलाने पर यूट्यूब की शर्तें लागू होंगी।'**
+  String get videoDarshanNotice;
+
+  /// No description provided for @navMedia.
+  ///
+  /// In hi, this message translates to:
+  /// **'गैलरी एवं वीडियो'**
+  String get navMedia;
+
+  /// No description provided for @navMediaDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'तस्वीरें और वीडियो अपलोड, प्रकाशित और क्रमबद्ध करें'**
+  String get navMediaDesc;
+
+  /// No description provided for @mediaAdminTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'गैलरी एवं वीडियो'**
+  String get mediaAdminTitle;
+
+  /// No description provided for @mediaAdminSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'तस्वीरें यहाँ अपलोड करें और वीडियो लिंक जोड़ें। अपलोड की गई हर तस्वीर से स्थान एवं कैमरा जानकारी स्वतः हटा दी जाती है।'**
+  String get mediaAdminSubtitle;
+
+  /// No description provided for @mediaEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी कोई मीडिया नहीं जोड़ा गया है।'**
+  String get mediaEmpty;
+
+  /// No description provided for @mediaNew.
+  ///
+  /// In hi, this message translates to:
+  /// **'नया मीडिया'**
+  String get mediaNew;
+
+  /// No description provided for @mediaEdit.
+  ///
+  /// In hi, this message translates to:
+  /// **'मीडिया संपादित करें'**
+  String get mediaEdit;
+
+  /// No description provided for @mediaUploadPhoto.
+  ///
+  /// In hi, this message translates to:
+  /// **'तस्वीर अपलोड करें'**
+  String get mediaUploadPhoto;
+
+  /// No description provided for @mediaAddVideo.
+  ///
+  /// In hi, this message translates to:
+  /// **'वीडियो लिंक जोड़ें'**
+  String get mediaAddVideo;
+
+  /// No description provided for @mediaChooseFile.
+  ///
+  /// In hi, this message translates to:
+  /// **'फ़ाइल चुनें'**
+  String get mediaChooseFile;
+
+  /// No description provided for @mediaFileHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'JPEG, PNG या WebP · अधिकतम {size} MB'**
+  String mediaFileHint(int size);
+
+  /// No description provided for @mediaNoFileChosen.
+  ///
+  /// In hi, this message translates to:
+  /// **'कोई फ़ाइल नहीं चुनी गई'**
+  String get mediaNoFileChosen;
+
+  /// No description provided for @mediaFileSelected.
+  ///
+  /// In hi, this message translates to:
+  /// **'{name} · {size}'**
+  String mediaFileSelected(String name, String size);
+
+  /// No description provided for @mediaFileRequired.
+  ///
+  /// In hi, this message translates to:
+  /// **'अपलोड करने के लिए एक तस्वीर चुनें।'**
+  String get mediaFileRequired;
+
+  /// No description provided for @mediaChooserUnavailable.
+  ///
+  /// In hi, this message translates to:
+  /// **'फ़ाइल चयन केवल ब्राउज़र में उपलब्ध है।'**
+  String get mediaChooserUnavailable;
+
+  /// No description provided for @mediaTypePhoto.
+  ///
+  /// In hi, this message translates to:
+  /// **'तस्वीर'**
+  String get mediaTypePhoto;
+
+  /// No description provided for @mediaTypeVideo.
+  ///
+  /// In hi, this message translates to:
+  /// **'वीडियो'**
+  String get mediaTypeVideo;
+
+  /// No description provided for @mediaDelete.
+  ///
+  /// In hi, this message translates to:
+  /// **'मीडिया हटाएँ'**
+  String get mediaDelete;
+
+  /// No description provided for @mediaDeleteConfirmTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह मीडिया हटाएँ?'**
+  String get mediaDeleteConfirmTitle;
+
+  /// No description provided for @mediaDeleteConfirmBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'फ़ाइल स्थायी रूप से मिट जाएगी। यदि इसे केवल छिपाना है तो प्रकाशन हटाएँ।'**
+  String get mediaDeleteConfirmBody;
+
+  /// No description provided for @mediaDeleted.
+  ///
+  /// In hi, this message translates to:
+  /// **'मीडिया हटा दिया गया।'**
+  String get mediaDeleted;
+
+  /// No description provided for @mediaInUseTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह फ़ाइल अभी उपयोग में है'**
+  String get mediaInUseTitle;
+
+  /// No description provided for @mediaInUseBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'नीचे दिए गए स्थानों से हटाने के बाद ही इसे मिटाया जा सकता है। तब तक इसका प्रकाशन हटाया जा सकता है।'**
+  String get mediaInUseBody;
+
+  /// No description provided for @mediaReferenceEventPoster.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यक्रम पोस्टर'**
+  String get mediaReferenceEventPoster;
+
+  /// No description provided for @mediaReferenceCommitteeMember.
+  ///
+  /// In hi, this message translates to:
+  /// **'समिति सदस्य'**
+  String get mediaReferenceCommitteeMember;
+
+  /// No description provided for @mediaReferenceTempleLogo.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर का लोगो'**
+  String get mediaReferenceTempleLogo;
+
+  /// No description provided for @mediaReferenceAlbumCover.
+  ///
+  /// In hi, this message translates to:
+  /// **'एल्बम कवर'**
+  String get mediaReferenceAlbumCover;
+
+  /// No description provided for @mediaReferencePage.
+  ///
+  /// In hi, this message translates to:
+  /// **'पृष्ठ'**
+  String get mediaReferencePage;
+
+  /// No description provided for @mediaMoveUp.
+  ///
+  /// In hi, this message translates to:
+  /// **'ऊपर ले जाएँ'**
+  String get mediaMoveUp;
+
+  /// No description provided for @mediaMoveDown.
+  ///
+  /// In hi, this message translates to:
+  /// **'नीचे ले जाएँ'**
+  String get mediaMoveDown;
+
+  /// No description provided for @mediaOrderSaved.
+  ///
+  /// In hi, this message translates to:
+  /// **'क्रम सहेजा गया।'**
+  String get mediaOrderSaved;
+
+  /// No description provided for @fieldCaptionHindi.
+  ///
+  /// In hi, this message translates to:
+  /// **'कैप्शन (हिन्दी)'**
+  String get fieldCaptionHindi;
+
+  /// No description provided for @fieldCaptionEnglish.
+  ///
+  /// In hi, this message translates to:
+  /// **'कैप्शन (अंग्रेज़ी)'**
+  String get fieldCaptionEnglish;
+
+  /// No description provided for @fieldVideoUrl.
+  ///
+  /// In hi, this message translates to:
+  /// **'यूट्यूब लिंक'**
+  String get fieldVideoUrl;
+
+  /// No description provided for @videoUrlHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'केवल यूट्यूब लिंक जोड़े जा सकते हैं।'**
+  String get videoUrlHint;
+
+  /// No description provided for @navAlbums.
+  ///
+  /// In hi, this message translates to:
+  /// **'एल्बम'**
+  String get navAlbums;
+
+  /// No description provided for @navAlbumsDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'तस्वीरों को त्योहार या अवसर के अनुसार समूह में रखें'**
+  String get navAlbumsDesc;
+
+  /// No description provided for @albumsAdminTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'एल्बम'**
+  String get albumsAdminTitle;
+
+  /// No description provided for @albumsAdminSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'तस्वीरों को त्योहार या अवसर के अनुसार समूह में रखें। एल्बम हटाने पर तस्वीरें बनी रहती हैं।'**
+  String get albumsAdminSubtitle;
+
+  /// No description provided for @albumsEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी कोई एल्बम नहीं बनाया गया है।'**
+  String get albumsEmpty;
+
+  /// No description provided for @albumNew.
+  ///
+  /// In hi, this message translates to:
+  /// **'नया एल्बम'**
+  String get albumNew;
+
+  /// No description provided for @albumEdit.
+  ///
+  /// In hi, this message translates to:
+  /// **'एल्बम संपादित करें'**
+  String get albumEdit;
+
+  /// No description provided for @albumDelete.
+  ///
+  /// In hi, this message translates to:
+  /// **'एल्बम हटाएँ'**
+  String get albumDelete;
+
+  /// No description provided for @albumDeleteConfirmTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह एल्बम हटाएँ?'**
+  String get albumDeleteConfirmTitle;
+
+  /// No description provided for @albumDeleteConfirmBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'एल्बम हट जाएगा, पर उसकी तस्वीरें बनी रहेंगी।'**
+  String get albumDeleteConfirmBody;
+
+  /// No description provided for @albumDeleted.
+  ///
+  /// In hi, this message translates to:
+  /// **'एल्बम हटा दिया गया।'**
+  String get albumDeleted;
+
+  /// No description provided for @albumNone.
+  ///
+  /// In hi, this message translates to:
+  /// **'किसी एल्बम में नहीं'**
+  String get albumNone;
+
+  /// No description provided for @albumItemCount.
+  ///
+  /// In hi, this message translates to:
+  /// **'{count} तस्वीरें'**
+  String albumItemCount(int count);
+
+  /// No description provided for @fieldAlbum.
+  ///
+  /// In hi, this message translates to:
+  /// **'एल्बम'**
+  String get fieldAlbum;
+
+  /// No description provided for @fieldSlug.
+  ///
+  /// In hi, this message translates to:
+  /// **'यूआरएल नाम'**
+  String get fieldSlug;
+
+  /// No description provided for @slugHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'खाली छोड़ने पर स्वतः बना दिया जाएगा।'**
+  String get slugHint;
+
+  /// No description provided for @fieldDescriptionHindi.
+  ///
+  /// In hi, this message translates to:
+  /// **'विवरण (हिन्दी)'**
+  String get fieldDescriptionHindi;
+
+  /// No description provided for @fieldDescriptionEnglish.
+  ///
+  /// In hi, this message translates to:
+  /// **'विवरण (अंग्रेज़ी)'**
+  String get fieldDescriptionEnglish;
+
+  /// No description provided for @fieldCoverPhoto.
+  ///
+  /// In hi, this message translates to:
+  /// **'कवर तस्वीर'**
+  String get fieldCoverPhoto;
+
+  /// No description provided for @mediaPickerChoose.
+  ///
+  /// In hi, this message translates to:
+  /// **'गैलरी से चुनें'**
+  String get mediaPickerChoose;
+
+  /// No description provided for @mediaPickerClear.
+  ///
+  /// In hi, this message translates to:
+  /// **'हटाएँ'**
+  String get mediaPickerClear;
+
+  /// No description provided for @mediaPickerEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'गैलरी में अभी कोई प्रकाशित तस्वीर नहीं है।'**
+  String get mediaPickerEmpty;
+
+  /// No description provided for @mediaPickerHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'गैलरी से चुनें, या नीचे कोई बाहरी यूआरएल लिखें।'**
+  String get mediaPickerHint;
 }
 
 class _AppLocalizationsDelegate

@@ -18,11 +18,13 @@ import 'package:rkt_web/l10n/app_localizations.dart';
 
 import 'package:rkt_web/features/content/data/content_providers.dart';
 import 'package:rkt_web/features/events/data/event_providers.dart';
+import 'package:rkt_web/features/media/data/media_providers.dart';
 import 'package:rkt_web/features/temple/data/temple_providers.dart';
 
 import '../support/fake_auth_repository.dart';
 import '../support/fake_content_repository.dart';
 import '../support/fake_event_repository.dart';
+import '../support/fake_media_repository.dart';
 import '../support/fake_temple_repository.dart';
 import '../support/no_network.dart';
 
@@ -32,9 +34,9 @@ Future<(GoRouter, ProviderContainer)> bootRouter(
   WidgetTester tester,
   FakeAuthRepository repository,
 ) async {
-  // The real router builds the real screens, and those read the temple profile
-  // and the calendar. Every repository is faked and the HTTP client refuses to
-  // connect, so booting the router cannot reach the network.
+  // The real router builds the real screens, and those read the temple profile,
+  // the calendar and the gallery. Every repository is faked and the HTTP client
+  // refuses to connect, so booting the router cannot reach the network.
   final container = ProviderContainer.test(
     overrides: [
       noNetworkOverride,
@@ -49,6 +51,7 @@ Future<(GoRouter, ProviderContainer)> bootRouter(
         FakeTempleRepository(profile: testProfile()),
       ),
       eventRepositoryProvider.overrideWithValue(FakeEventRepository()),
+      mediaRepositoryProvider.overrideWithValue(FakeMediaRepository()),
     ],
   );
 

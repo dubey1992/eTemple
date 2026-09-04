@@ -433,5 +433,102 @@
   "clearEndTime": "Clear the end time",
   "@clearEndTime": {},
   "viewEvents": "View Events",
-  "@viewEvents": {}
+  "@viewEvents": {},
+  "navGallery": "Gallery",
+  "galleryTitle": "Photo Gallery",
+  "gallerySubtitle": "Photos of the temple, worship, festivals and village events will appear here.",
+  "sectionGallery": "Photo Gallery",
+  "viewGallery": "See the full gallery",
+  "galleryPhotos": "Photographs",
+  "galleryVideos": "Video darshan",
+  "galleryAllAlbums": "All",
+  "noPhotos": "No photographs have been published yet.",
+  "noVideos": "No video darshan is available yet.",
+  "galleryLoadMore": "Show more",
+  "imageUnavailable": "The image could not be loaded",
+  "actionClose": "Close",
+  "openInYoutube": "Watch on YouTube",
+  "videoDarshanNotice": "Videos are hosted on YouTube; playing one is subject to their terms.",
+  "navMedia": "Gallery and video",
+  "navMediaDesc": "Upload, publish and arrange photographs and videos",
+  "mediaAdminTitle": "Gallery and video",
+  "mediaAdminSubtitle": "Upload photographs and add video links here. Location and camera data is removed from every uploaded photograph automatically.",
+  "mediaEmpty": "No media has been added yet.",
+  "mediaNew": "Add media",
+  "mediaEdit": "Edit media",
+  "mediaUploadPhoto": "Upload a photograph",
+  "mediaAddVideo": "Add a video link",
+  "mediaChooseFile": "Choose a file",
+  "mediaFileHint": "JPEG, PNG or WebP · up to {size} MB",
+  "@mediaFileHint": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "mediaNoFileChosen": "No file chosen",
+  "mediaFileSelected": "{name} · {size}",
+  "@mediaFileSelected": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "mediaFileRequired": "Choose a photograph to upload.",
+  "mediaChooserUnavailable": "Choosing a file is only available in a browser.",
+  "mediaTypePhoto": "Photograph",
+  "mediaTypeVideo": "Video",
+  "mediaDelete": "Remove media",
+  "mediaDeleteConfirmTitle": "Remove this media?",
+  "mediaDeleteConfirmBody": "The file is erased permanently. To hide it instead, unpublish it.",
+  "mediaDeleted": "Media removed.",
+  "mediaInUseTitle": "This file is still in use",
+  "mediaInUseBody": "It can only be deleted once it is removed from the items below. Until then it can be unpublished.",
+  "mediaReferenceEventPoster": "Event poster",
+  "mediaReferenceCommitteeMember": "Committee member",
+  "mediaReferenceTempleLogo": "Temple logo",
+  "mediaReferenceAlbumCover": "Album cover",
+  "mediaReferencePage": "Page",
+  "mediaMoveUp": "Move up",
+  "mediaMoveDown": "Move down",
+  "mediaOrderSaved": "Order saved.",
+  "fieldCaptionHindi": "Caption (Hindi)",
+  "fieldCaptionEnglish": "Caption (English)",
+  "fieldVideoUrl": "YouTube link",
+  "videoUrlHint": "Only YouTube links can be added.",
+  "navAlbums": "Albums",
+  "navAlbumsDesc": "Group photographs by festival or occasion",
+  "albumsAdminTitle": "Albums",
+  "albumsAdminSubtitle": "Group photographs by festival or occasion. Removing an album keeps its photographs.",
+  "albumsEmpty": "No albums have been created yet.",
+  "albumNew": "New album",
+  "albumEdit": "Edit album",
+  "albumDelete": "Remove album",
+  "albumDeleteConfirmTitle": "Remove this album?",
+  "albumDeleteConfirmBody": "The album is removed; its photographs are kept.",
+  "albumDeleted": "Album removed.",
+  "albumNone": "Not in an album",
+  "albumItemCount": "{count} photographs",
+  "@albumItemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fieldAlbum": "Album",
+  "fieldSlug": "URL name",
+  "slugHint": "Generated automatically when left blank.",
+  "fieldDescriptionHindi": "Description (Hindi)",
+  "fieldDescriptionEnglish": "Description (English)",
+  "fieldCoverPhoto": "Cover photograph",
+  "mediaPickerChoose": "Choose from the gallery",
+  "mediaPickerClear": "Clear",
+  "mediaPickerEmpty": "There are no published photographs in the gallery yet.",
+  "mediaPickerHint": "Choose from the gallery, or type an external URL below."
 }

@@ -870,4 +870,240 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get viewEvents => 'कार्यक्रम देखें';
+
+  @override
+  String get navGallery => 'गैलरी';
+
+  @override
+  String get galleryTitle => 'फोटो गैलरी';
+
+  @override
+  String get gallerySubtitle =>
+      'मंदिर, पूजा, त्योहार और ग्राम कार्यक्रमों की तस्वीरें यहाँ दिखाई जाएंगी।';
+
+  @override
+  String get sectionGallery => 'फोटो गैलरी';
+
+  @override
+  String get viewGallery => 'पूरी गैलरी देखें';
+
+  @override
+  String get galleryPhotos => 'तस्वीरें';
+
+  @override
+  String get galleryVideos => 'वीडियो दर्शन';
+
+  @override
+  String get galleryAllAlbums => 'सभी';
+
+  @override
+  String get noPhotos => 'अभी कोई तस्वीर प्रकाशित नहीं हुई है।';
+
+  @override
+  String get noVideos => 'अभी कोई वीडियो दर्शन उपलब्ध नहीं है।';
+
+  @override
+  String get galleryLoadMore => 'और तस्वीरें दिखाएँ';
+
+  @override
+  String get imageUnavailable => 'चित्र लोड नहीं हो सका';
+
+  @override
+  String get actionClose => 'बंद करें';
+
+  @override
+  String get openInYoutube => 'यूट्यूब पर देखें';
+
+  @override
+  String get videoDarshanNotice =>
+      'वीडियो यूट्यूब पर होस्ट है; चलाने पर यूट्यूब की शर्तें लागू होंगी।';
+
+  @override
+  String get navMedia => 'गैलरी एवं वीडियो';
+
+  @override
+  String get navMediaDesc =>
+      'तस्वीरें और वीडियो अपलोड, प्रकाशित और क्रमबद्ध करें';
+
+  @override
+  String get mediaAdminTitle => 'गैलरी एवं वीडियो';
+
+  @override
+  String get mediaAdminSubtitle =>
+      'तस्वीरें यहाँ अपलोड करें और वीडियो लिंक जोड़ें। अपलोड की गई हर तस्वीर से स्थान एवं कैमरा जानकारी स्वतः हटा दी जाती है।';
+
+  @override
+  String get mediaEmpty => 'अभी कोई मीडिया नहीं जोड़ा गया है।';
+
+  @override
+  String get mediaNew => 'नया मीडिया';
+
+  @override
+  String get mediaEdit => 'मीडिया संपादित करें';
+
+  @override
+  String get mediaUploadPhoto => 'तस्वीर अपलोड करें';
+
+  @override
+  String get mediaAddVideo => 'वीडियो लिंक जोड़ें';
+
+  @override
+  String get mediaChooseFile => 'फ़ाइल चुनें';
+
+  @override
+  String mediaFileHint(int size) {
+    return 'JPEG, PNG या WebP · अधिकतम $size MB';
+  }
+
+  @override
+  String get mediaNoFileChosen => 'कोई फ़ाइल नहीं चुनी गई';
+
+  @override
+  String mediaFileSelected(String name, String size) {
+    return '$name · $size';
+  }
+
+  @override
+  String get mediaFileRequired => 'अपलोड करने के लिए एक तस्वीर चुनें।';
+
+  @override
+  String get mediaChooserUnavailable =>
+      'फ़ाइल चयन केवल ब्राउज़र में उपलब्ध है।';
+
+  @override
+  String get mediaTypePhoto => 'तस्वीर';
+
+  @override
+  String get mediaTypeVideo => 'वीडियो';
+
+  @override
+  String get mediaDelete => 'मीडिया हटाएँ';
+
+  @override
+  String get mediaDeleteConfirmTitle => 'यह मीडिया हटाएँ?';
+
+  @override
+  String get mediaDeleteConfirmBody =>
+      'फ़ाइल स्थायी रूप से मिट जाएगी। यदि इसे केवल छिपाना है तो प्रकाशन हटाएँ।';
+
+  @override
+  String get mediaDeleted => 'मीडिया हटा दिया गया।';
+
+  @override
+  String get mediaInUseTitle => 'यह फ़ाइल अभी उपयोग में है';
+
+  @override
+  String get mediaInUseBody =>
+      'नीचे दिए गए स्थानों से हटाने के बाद ही इसे मिटाया जा सकता है। तब तक इसका प्रकाशन हटाया जा सकता है।';
+
+  @override
+  String get mediaReferenceEventPoster => 'कार्यक्रम पोस्टर';
+
+  @override
+  String get mediaReferenceCommitteeMember => 'समिति सदस्य';
+
+  @override
+  String get mediaReferenceTempleLogo => 'मंदिर का लोगो';
+
+  @override
+  String get mediaReferenceAlbumCover => 'एल्बम कवर';
+
+  @override
+  String get mediaReferencePage => 'पृष्ठ';
+
+  @override
+  String get mediaMoveUp => 'ऊपर ले जाएँ';
+
+  @override
+  String get mediaMoveDown => 'नीचे ले जाएँ';
+
+  @override
+  String get mediaOrderSaved => 'क्रम सहेजा गया।';
+
+  @override
+  String get fieldCaptionHindi => 'कैप्शन (हिन्दी)';
+
+  @override
+  String get fieldCaptionEnglish => 'कैप्शन (अंग्रेज़ी)';
+
+  @override
+  String get fieldVideoUrl => 'यूट्यूब लिंक';
+
+  @override
+  String get videoUrlHint => 'केवल यूट्यूब लिंक जोड़े जा सकते हैं।';
+
+  @override
+  String get navAlbums => 'एल्बम';
+
+  @override
+  String get navAlbumsDesc =>
+      'तस्वीरों को त्योहार या अवसर के अनुसार समूह में रखें';
+
+  @override
+  String get albumsAdminTitle => 'एल्बम';
+
+  @override
+  String get albumsAdminSubtitle =>
+      'तस्वीरों को त्योहार या अवसर के अनुसार समूह में रखें। एल्बम हटाने पर तस्वीरें बनी रहती हैं।';
+
+  @override
+  String get albumsEmpty => 'अभी कोई एल्बम नहीं बनाया गया है।';
+
+  @override
+  String get albumNew => 'नया एल्बम';
+
+  @override
+  String get albumEdit => 'एल्बम संपादित करें';
+
+  @override
+  String get albumDelete => 'एल्बम हटाएँ';
+
+  @override
+  String get albumDeleteConfirmTitle => 'यह एल्बम हटाएँ?';
+
+  @override
+  String get albumDeleteConfirmBody =>
+      'एल्बम हट जाएगा, पर उसकी तस्वीरें बनी रहेंगी।';
+
+  @override
+  String get albumDeleted => 'एल्बम हटा दिया गया।';
+
+  @override
+  String get albumNone => 'किसी एल्बम में नहीं';
+
+  @override
+  String albumItemCount(int count) {
+    return '$count तस्वीरें';
+  }
+
+  @override
+  String get fieldAlbum => 'एल्बम';
+
+  @override
+  String get fieldSlug => 'यूआरएल नाम';
+
+  @override
+  String get slugHint => 'खाली छोड़ने पर स्वतः बना दिया जाएगा।';
+
+  @override
+  String get fieldDescriptionHindi => 'विवरण (हिन्दी)';
+
+  @override
+  String get fieldDescriptionEnglish => 'विवरण (अंग्रेज़ी)';
+
+  @override
+  String get fieldCoverPhoto => 'कवर तस्वीर';
+
+  @override
+  String get mediaPickerChoose => 'गैलरी से चुनें';
+
+  @override
+  String get mediaPickerClear => 'हटाएँ';
+
+  @override
+  String get mediaPickerEmpty => 'गैलरी में अभी कोई प्रकाशित तस्वीर नहीं है।';
+
+  @override
+  String get mediaPickerHint =>
+      'गैलरी से चुनें, या नीचे कोई बाहरी यूआरएल लिखें।';
 }
