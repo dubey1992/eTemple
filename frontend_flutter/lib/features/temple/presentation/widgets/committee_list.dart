@@ -6,11 +6,12 @@ import '../../../../core/widgets/breakpoints.dart';
 import '../../../content/presentation/widgets/content_widgets.dart';
 import '../../domain/committee_member.dart';
 
-/// The public committee, laid out as cards.
+/// The public committee, laid out as equal-height cards.
 ///
 /// A member's phone, e-mail or photograph appears only when the API sent it,
 /// which it does only where consent is on record. There is no client-side
-/// "should we show this?" decision to get wrong.
+/// "should we show this?" decision to get wrong — a detail the server withheld
+/// is rendered as "not available", which says nothing about the person.
 class CommitteeList extends StatelessWidget {
   const CommitteeList({
     super.key,
@@ -68,27 +69,42 @@ class CommitteeList extends StatelessWidget {
           const FallbackNotice(),
           const SizedBox(height: AppSpacing.md),
         ],
-        LayoutBuilder(
-          builder: (context, constraints) {
-            const spacing = AppSpacing.md;
-            final width =
-                (constraints.maxWidth - spacing * (columns - 1)) / columns;
-
-            return Wrap(
-              spacing: spacing,
-              runSpacing: spacing,
+        // Rows are built by hand rather than with Wrap so that every card in a
+        // row is the same height. Wrap sizes each child independently, which
+        // left cards ragged whenever one member had a bio and another did not.
+        for (final row in _rows(shown, columns)) ...[
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                for (final member in shown)
-                  SizedBox(
-                    width: width,
-                    child: _MemberCard(member: member),
+                for (var i = 0; i < columns; i++) ...[
+                  if (i > 0) const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    // The last row can be short; the empty slots keep the cards
+                    // that are there the same width as in a full row.
+                    child: i < row.length
+                        ? _MemberCard(member: row[i])
+                        : const SizedBox.shrink(),
                   ),
+                ],
               ],
-            );
-          },
-        ),
+            ),
+          ),
+          if (row != _rows(shown, columns).last)
+            const SizedBox(height: AppSpacing.md),
+        ],
       ],
     );
+  }
+
+  static List<List<CommitteeMember>> _rows(
+    List<CommitteeMember> members,
+    int columns,
+  ) {
+    return [
+      for (var i = 0; i < members.length; i += columns)
+        members.sublist(i, (i + columns).clamp(0, members.length)),
+    ];
   }
 }
 
@@ -111,27 +127,7 @@ class _MemberCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                if (member.photoUrl != null)
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: theme.colorScheme.secondaryContainer,
-                    foregroundImage: NetworkImage(member.photoUrl!),
-                    // A broken image URL must not blank the card.
-                    onForegroundImageError: (_, _) {},
-                    child: Icon(
-                      Icons.person_outline,
-                      color: theme.colorScheme.onSecondaryContainer,
-                    ),
-                  )
-                else
-                  CircleAvatar(
-                    radius: 24,
-                    backgroundColor: theme.colorScheme.secondaryContainer,
-                    child: Icon(
-                      Icons.person_outline,
-                      color: theme.colorScheme.onSecondaryContainer,
-                    ),
-                  ),
+                _Avatar(photoUrl: member.photoUrl),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Column(
@@ -173,21 +169,20 @@ class _MemberCard extends StatelessWidget {
               ),
             ],
 
-            if (member.hasPublicContact) ...[
-              const SizedBox(height: AppSpacing.md),
-              if (member.phone != null)
-                _ContactLine(
-                  icon: Icons.call_outlined,
-                  label: l10n.contactPhone,
-                  value: member.phone!,
-                ),
-              if (member.email != null)
-                _ContactLine(
-                  icon: Icons.mail_outline,
-                  label: l10n.contactEmail,
-                  value: member.email!,
-                ),
-            ],
+            // Both lines are always present so every card has the same shape.
+            // A withheld detail reads "not available", which reveals nothing
+            // about the member — the server decided it, not this widget.
+            const SizedBox(height: AppSpacing.md),
+            _ContactLine(
+              icon: Icons.call_outlined,
+              label: l10n.contactPhone,
+              value: member.phone,
+            ),
+            _ContactLine(
+              icon: Icons.mail_outline,
+              label: l10n.contactEmail,
+              value: member.email,
+            ),
           ],
         ),
       ),
@@ -204,6 +199,38 @@ class _MemberCard extends StatelessWidget {
   }
 }
 
+class _Avatar extends StatelessWidget {
+  const _Avatar({required this.photoUrl});
+
+  final String? photoUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final placeholder = Icon(
+      Icons.person_outline,
+      color: scheme.onSecondaryContainer,
+    );
+
+    if (photoUrl == null) {
+      return CircleAvatar(
+        radius: 24,
+        backgroundColor: scheme.secondaryContainer,
+        child: placeholder,
+      );
+    }
+
+    return CircleAvatar(
+      radius: 24,
+      backgroundColor: scheme.secondaryContainer,
+      foregroundImage: NetworkImage(photoUrl!),
+      // A broken image URL must not blank the card.
+      onForegroundImageError: (_, _) {},
+      child: placeholder,
+    );
+  }
+}
+
 class _ContactLine extends StatelessWidget {
   const _ContactLine({
     required this.icon,
@@ -213,24 +240,38 @@ class _ContactLine extends StatelessWidget {
 
   final IconData icon;
   final String label;
-  final String value;
+
+  /// Null when the server withheld the detail, which is not the same thing as
+  /// the member not having one — the label says "not available", not "none".
+  final String? value;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final text = value ?? context.l10n.valueNotAvailable;
+    final isMissing = value == null;
 
     return Padding(
       padding: const EdgeInsets.only(top: AppSpacing.xs),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 18, color: theme.colorScheme.secondary),
+          Icon(
+            icon,
+            size: 18,
+            color: isMissing
+                ? theme.colorScheme.onSurfaceVariant
+                : theme.colorScheme.secondary,
+          ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
-              value,
-              style: theme.textTheme.bodySmall,
-              semanticsLabel: '$label: $value',
+              text,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: isMissing ? theme.colorScheme.onSurfaceVariant : null,
+                fontStyle: isMissing ? FontStyle.italic : null,
+              ),
+              semanticsLabel: '$label: $text',
             ),
           ),
         ],

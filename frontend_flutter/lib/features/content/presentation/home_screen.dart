@@ -9,6 +9,8 @@ import '../../../core/errors/app_exception.dart';
 import '../../../core/widgets/breakpoints.dart';
 import '../../../core/widgets/page_container.dart';
 import '../../../core/widgets/state_views.dart';
+import '../../events/data/event_providers.dart';
+import '../../events/presentation/widgets/event_card.dart';
 import '../../temple/data/temple_providers.dart';
 import '../../temple/domain/temple_profile.dart';
 import '../../temple/presentation/widgets/committee_list.dart';
@@ -63,6 +65,8 @@ class HomeScreen extends ConsumerWidget {
                   _Hero(settings: data, profile: templeProfile),
                   const SizedBox(height: AppSpacing.xxl),
                   const _AboutSection(),
+                  const SizedBox(height: AppSpacing.xxl),
+                  const _UpcomingEventsSection(),
                   const SizedBox(height: AppSpacing.xxl),
                   const _CommitteeSection(),
                   const SizedBox(height: AppSpacing.xxl),
@@ -182,6 +186,56 @@ class _AboutSection extends ConsumerWidget {
         // site has no content yet and must not look broken.
         error: (error, _) => _AboutUnavailable(error: error),
         data: (page) => _AboutPreview(page: page),
+      ),
+    );
+  }
+}
+
+/// What is coming up at the temple, with a link to the full calendar.
+///
+/// Loaded separately from the rest so a calendar outage degrades one section
+/// rather than the whole page.
+class _UpcomingEventsSection extends ConsumerWidget {
+  const _UpcomingEventsSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final events = ref.watch(featuredEventsProvider);
+
+    return ContentSection(
+      title: l10n.sectionEvents,
+      trailing: (events.value?.isNotEmpty ?? false)
+          ? TextButton(
+              key: const Key('events-see-all'),
+              onPressed: () => context.go(RoutePaths.events),
+              child: Text(l10n.viewAllEvents),
+            )
+          : null,
+      child: events.when(
+        loading: () => const Padding(
+          padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+          child: LoadingView(),
+        ),
+        // An empty calendar is an empty state, not an error.
+        error: (_, _) => Card(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: Text(
+              l10n.noUpcomingEvents,
+              key: const Key('events-unavailable'),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+        ),
+        data: (data) => EventList(
+          occurrences: data,
+          limit: 3,
+          emptyMessage: l10n.noUpcomingEvents,
+        ),
       ),
     );
   }

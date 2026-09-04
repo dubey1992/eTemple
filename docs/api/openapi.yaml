@@ -2,12 +2,12 @@ openapi: 3.1.0
 
 info:
   title: Radha Krishna Thakurbari API
-  version: 0.4.0
+  version: 0.5.0
   description: |
     REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
     admin console.
 
-    **Scope: Phases 0-3.** Endpoints for events, media, donations, enquiries,
+    **Scope: Phases 0-4.** Endpoints for media, donations, enquiries,
     announcements, accounts and reports are added in their own phases and must
     be documented here in the same change that implements them.
 
@@ -79,6 +79,7 @@ tags:
   - name: Roles and permissions
   - name: Temple profile
   - name: Committee
+  - name: Events
 
 paths:
   /api/health:
@@ -924,6 +925,172 @@ paths:
         '403': { description: FORBIDDEN }
         '404': { description: NOT_FOUND }
 
+  /api/public/events:
+    get:
+      tags: [Events]
+      summary: The calendar, as dated occurrences
+      description: |
+        Returns **occurrences**, not stored rows. A recurring event is stored
+        once as a rule — "the aarti, daily, at 18:30" — and expanded here across
+        the requested window, so the daily aarti is one record and appears every
+        day.
+
+        Drafts are excluded in the query, never in the serializer. Cancelled
+        events **are** returned, flagged with `is_cancelled`: silently dropping
+        a cancelled festival would leave devotees who planned around it finding
+        nothing and assuming the site was broken.
+
+        The window is bounded (`days`, default 90, maximum 366) and each event
+        contributes at most 366 occurrences, so an indefinite daily rule cannot
+        produce an unbounded response.
+      security: []
+      parameters:
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en], default: hi } }
+        - name: view
+          in: query
+          schema: { type: string, enum: [upcoming, past], default: upcoming }
+          description: |
+            `upcoming` returns occurrences that have not finished, soonest
+            first — a festival that began yesterday and ends tomorrow has not
+            been missed. `past` returns finished occurrences, most recent first.
+        - { name: days, in: query, schema: { type: integer, minimum: 1, maximum: 366, default: 90 } }
+        - { name: featured, in: query, schema: { type: boolean }, description: A cancelled event is never featured. }
+        - { name: type, in: query, schema: { type: string, enum: [aarti, bhajan_kirtan, festival, puja, other] }, description: An unrecognised value is ignored rather than refused. }
+      responses:
+        '200':
+          description: The occurrences
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/EventOccurrence' }
+                      meta:
+                        type: object
+                        properties:
+                          view: { type: string, enum: [upcoming, past] }
+                          timezone: { type: string, example: Asia/Kolkata }
+                          count: { type: integer }
+
+  /api/public/events/{id}:
+    get:
+      tags: [Events]
+      summary: One event and its next occurrences
+      description: |
+        A draft is indistinguishable from an event that does not exist: both are
+        404. `on` names the occurrence the visitor arrived at, so a shared link
+        to "the aarti on the 12th" still opens on the 12th.
+      security: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en], default: hi } }
+        - { name: on, in: query, schema: { type: string, format: date }, description: Which occurrence to open on. }
+      responses:
+        '200':
+          description: The event
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          event: { $ref: '#/components/schemas/EventOccurrence' }
+                          occurrences:
+                            type: array
+                            items: { $ref: '#/components/schemas/EventOccurrence' }
+        '404': { description: NOT_FOUND - unknown, or still a draft }
+
+  /api/admin/events:
+    get:
+      tags: [Events]
+      summary: Every event, including drafts and past ones
+      description: |
+        Requires `content.view`. The calendar is a record as well as a schedule,
+        so nothing is filtered out by default. A repeating event appears once —
+        it is the rule, not the dates it produces.
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [draft, published, cancelled] } }
+      responses:
+        '200':
+          description: The events, newest first
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/AdminEvent' }
+        '403': { description: FORBIDDEN }
+    post:
+      tags: [Events]
+      summary: Add an event
+      description: Requires `events.manage`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EventInput' }
+      responses:
+        '201': { description: The event }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED }
+
+  /api/admin/events/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [Events]
+      summary: One event, raw
+      description: Requires `content.view`.
+      responses:
+        '200': { description: The event }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+    put:
+      tags: [Events]
+      summary: Update an event
+      description: |
+        Requires `events.manage`. Two refusals surface as 422 against the named
+        field: `end_at` earlier than `start_at`, and `recurrence_until` earlier
+        than the first occurrence.
+
+        Setting `status` to `cancelled` clears `is_featured` — a cancelled event
+        is never promoted on the home page. `recurrence_days` is cleared for any
+        rule other than `weekly`, and a weekly rule with no days adopts the
+        weekday the event starts on.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EventInput' }
+      responses:
+        '200': { description: The updated event }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+        '422': { description: VALIDATION_FAILED }
+    delete:
+      tags: [Events]
+      summary: Remove an event permanently
+      description: |
+        Requires `events.manage`. Distinct from cancelling: setting the status
+        to `cancelled` keeps the record and tells devotees the event is off.
+        Deletion is for entries created by mistake.
+      responses:
+        '204': { description: Removed }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+
 components:
   securitySchemes:
     sessionCookie:
@@ -1275,6 +1442,85 @@ components:
         show_email_publicly: { type: boolean, default: false }
         show_photo_publicly: { type: boolean, default: false }
         sort_order: { type: integer, minimum: 0, maximum: 9999 }
+
+    EventOccurrence:
+      type: object
+      description: |
+        One dated instance of an event. `id` is the event; `occurrence_key`
+        (`<id>@<date>`) identifies this particular date, so a link to one day of
+        a repeating event survives being shared.
+      properties:
+        id: { type: integer }
+        occurrence_key: { type: string, example: "7@2026-10-12" }
+        event_type: { type: string, enum: [aarti, bhajan_kirtan, festival, puja, other] }
+        requested_language: { type: string, enum: [hi, en] }
+        title: { $ref: '#/components/schemas/LocalizedText' }
+        description: { $ref: '#/components/schemas/LocalizedText' }
+        venue: { $ref: '#/components/schemas/LocalizedText' }
+        start_at:
+          type: string
+          format: date-time
+          description: ISO-8601 **with the temple's offset**, not bare UTC, so a client that ignores timezones still shows the right local time.
+          example: "2026-10-12T18:30:00+05:30"
+        end_at: { type: [string, 'null'], format: date-time }
+        timezone: { type: string, example: Asia/Kolkata }
+        is_recurring: { type: boolean }
+        recurrence: { type: string, enum: [none, daily, weekly, monthly, yearly] }
+        is_featured: { type: boolean }
+        is_cancelled: { type: boolean }
+        poster_url: { type: [string, 'null'] }
+
+    AdminEvent:
+      type: object
+      description: The stored rule, not the dates it produces.
+      properties:
+        id: { type: integer }
+        event_type: { type: string }
+        title_hi: { type: string }
+        title_en: { type: [string, 'null'] }
+        description_hi: { type: [string, 'null'] }
+        description_en: { type: [string, 'null'] }
+        venue_hi: { type: [string, 'null'] }
+        venue_en: { type: [string, 'null'] }
+        start_at: { type: string, format: date-time }
+        end_at: { type: [string, 'null'], format: date-time }
+        recurrence: { type: string, enum: [none, daily, weekly, monthly, yearly] }
+        recurrence_days:
+          type: array
+          items: { type: integer, minimum: 1, maximum: 7 }
+          description: ISO weekdays, 1 = Monday. Meaningful only for a weekly rule.
+        recurrence_until: { type: [string, 'null'], format: date }
+        poster_url: { type: [string, 'null'] }
+        is_featured: { type: boolean }
+        status: { type: string, enum: [draft, published, cancelled] }
+        timezone: { type: string }
+        updated_at: { type: [string, 'null'], format: date-time }
+
+    EventInput:
+      type: object
+      required: [event_type, title_hi, start_at, status]
+      properties:
+        event_type: { type: string, enum: [aarti, bhajan_kirtan, festival, puja, other] }
+        title_hi: { type: string, maxLength: 200 }
+        title_en: { type: [string, 'null'], maxLength: 200 }
+        description_hi: { type: [string, 'null'] }
+        description_en: { type: [string, 'null'] }
+        venue_hi: { type: [string, 'null'], maxLength: 200 }
+        venue_en: { type: [string, 'null'], maxLength: 200 }
+        start_at:
+          type: string
+          description: Read in the temple's timezone, which is the clock the committee typed.
+          example: "2026-10-15 18:00:00"
+        end_at: { type: [string, 'null'], description: Must be at or after start_at. }
+        recurrence: { type: string, enum: [none, daily, weekly, monthly, yearly], default: none }
+        recurrence_days:
+          type: array
+          maxItems: 7
+          items: { type: integer, minimum: 1, maximum: 7 }
+        recurrence_until: { type: [string, 'null'], format: date }
+        poster_url: { type: [string, 'null'], format: uri, maxLength: 500 }
+        is_featured: { type: boolean, default: false }
+        status: { type: string, enum: [draft, published, cancelled] }
 
     Health:
       type: object

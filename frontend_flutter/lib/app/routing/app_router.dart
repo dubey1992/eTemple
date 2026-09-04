@@ -18,6 +18,10 @@ import '../../features/content/presentation/admin_site_settings_screen.dart';
 import '../../features/content/presentation/admin_pages_screen.dart';
 import '../../features/content/presentation/home_screen.dart';
 import '../../features/content/presentation/page_screen.dart';
+import '../../features/events/presentation/admin_event_editor_screen.dart';
+import '../../features/events/presentation/admin_events_screen.dart';
+import '../../features/events/presentation/event_detail_screen.dart';
+import '../../features/events/presentation/events_screen.dart';
 import '../../features/shell/presentation/not_found_screen.dart';
 import '../../features/shell/presentation/public_shell.dart';
 import '../../features/temple/presentation/admin_committee_member_screen.dart';
@@ -101,6 +105,23 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: RoutePaths.committee,
             name: RouteNames.committee,
             builder: (context, state) => const CommitteeScreen(),
+          ),
+          GoRoute(
+            path: RoutePaths.events,
+            name: RouteNames.events,
+            builder: (context, state) => const EventsScreen(),
+          ),
+          GoRoute(
+            path: RoutePaths.eventDetailPattern,
+            name: RouteNames.eventDetail,
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '');
+              if (id == null) return const NotFoundScreen();
+              return EventDetailScreen(
+                eventId: id,
+                on: state.uri.queryParameters['on'],
+              );
+            },
           ),
         ],
       ),
@@ -195,6 +216,25 @@ final routerProvider = Provider<GoRouter>((ref) {
               final id = int.tryParse(state.pathParameters['id'] ?? '');
               if (id == null) return const NotFoundScreen();
               return AdminCommitteeMemberScreen(memberId: id);
+            },
+          ),
+          GoRoute(
+            path: RoutePaths.adminEvents,
+            name: RouteNames.adminEvents,
+            builder: (context, state) => const AdminEventsScreen(),
+          ),
+          GoRoute(
+            // Declared before /admin/events/:id so "new" is not read as an id.
+            path: RoutePaths.adminEventNew,
+            builder: (context, state) => const AdminEventEditorScreen(),
+          ),
+          GoRoute(
+            path: '${RoutePaths.adminEvents}/:id',
+            name: RouteNames.adminEventEditor,
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '');
+              if (id == null) return const NotFoundScreen();
+              return AdminEventEditorScreen(eventId: id);
             },
           ),
           GoRoute(

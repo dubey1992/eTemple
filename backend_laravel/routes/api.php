@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Api\Admin\AdminPingController;
 use App\Http\Controllers\Api\Admin\CommitteeMemberController;
+use App\Http\Controllers\Api\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\SiteSettingsController as AdminSiteSettingsController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Api\Admin\TempleProfileController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\PublicSite\EventController as PublicEventController;
 use App\Http\Controllers\Api\PublicSite\PageController as PublicPageController;
 use App\Http\Controllers\Api\PublicSite\SiteSettingsController as PublicSiteSettingsController;
 use App\Http\Controllers\Api\PublicSite\TempleController as PublicTempleController;
@@ -76,6 +78,16 @@ Route::prefix('public')
 
         Route::get('/committee', [PublicTempleController::class, 'committee'])
             ->name('committee');
+
+        // Puja, aarti and festivals (Phase 4). The list returns dated
+        // occurrences expanded from each event's recurrence rule, not stored
+        // rows: the daily aarti is one record and many occurrences.
+        Route::get('/events', [PublicEventController::class, 'index'])
+            ->name('events.index');
+
+        Route::get('/events/{event}', [PublicEventController::class, 'show'])
+            ->whereNumber('event')
+            ->name('events.show');
 
         Route::get('/pages/{slug}', [PublicPageController::class, 'show'])
             ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')
@@ -149,4 +161,18 @@ Route::prefix('admin')
             ->middleware('can:'.Permission::TEMPLE_MANAGE)->name('committee-members.update');
         Route::delete('/committee-members/{member}', [CommitteeMemberController::class, 'destroy'])
             ->middleware('can:'.Permission::TEMPLE_MANAGE)->name('committee-members.destroy');
+
+        // --- Puja, events and the calendar (Phase 4) -------------------
+        // Reading is granted with content.view so a Viewer can see the
+        // calendar without being able to change it; writes need events.manage.
+        Route::get('/events', [AdminEventController::class, 'index'])
+            ->middleware('can:'.Permission::CONTENT_VIEW)->name('events.index');
+        Route::get('/events/{event}', [AdminEventController::class, 'show'])
+            ->middleware('can:'.Permission::CONTENT_VIEW)->name('events.show');
+        Route::post('/events', [AdminEventController::class, 'store'])
+            ->middleware('can:'.Permission::EVENTS_MANAGE)->name('events.store');
+        Route::put('/events/{event}', [AdminEventController::class, 'update'])
+            ->middleware('can:'.Permission::EVENTS_MANAGE)->name('events.update');
+        Route::delete('/events/{event}', [AdminEventController::class, 'destroy'])
+            ->middleware('can:'.Permission::EVENTS_MANAGE)->name('events.destroy');
     });

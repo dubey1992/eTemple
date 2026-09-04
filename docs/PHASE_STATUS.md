@@ -10,8 +10,8 @@ Legend: `NOT STARTED` · `IN PROGRESS` · `PARTIAL` · `BLOCKED` · `COMPLETE`
 | 1 | Public Website & Bilingual CMS | **COMPLETE** | `phase-reports/PHASE_1_COMPLETION.md` |
 | 2 | Admin, Users & Roles | **COMPLETE** | Permission matrix, user management, login history, password reset, plus the site-settings editor carried from Phase 1. Two-factor auth (marked *optional* in the spec) deliberately deferred — `phase-reports/PHASE_2_COMPLETION.md` §7. |
 | 3 | Temple Profile & Committee | **COMPLETE** | Profile, committee and the consent gate on members' personal details. The address **moved** out of `site_settings` (columns dropped) and the temple name and village were **taken over** from the ARB files — `phase-reports/PHASE_3_COMPLETION.md`. |
-| 4 | Puja, Events & Calendar | NOT STARTED | Permission key `events.manage` already exists and is labelled "Available in phase 4". |
-| 5 | Gallery & Video Darshan | NOT STARTED | Key `media.manage` exists. |
+| 4 | Puja, Events & Calendar | **COMPLETE** | Recurring events stored as a rule and expanded on read; past/upcoming views; cancelled events kept visible and flagged. Also fixed two Phase 3 findings: admin breadcrumbs and equal-height cards — `phase-reports/PHASE_4_COMPLETION.md`. |
+| 5 | Gallery & Video Darshan | NOT STARTED | Key `media.manage` exists. Brings the first real uploads, which `poster_url`, `photo_url` and `logo_url` are all waiting on. |
 | 6 | Donations & Receipts | NOT STARTED | Keys `donations.*` exist. |
 | 7 | Devotee Contact & Enquiries | NOT STARTED | Key `enquiries.manage` exists. |
 | 8 | Announcements & Notifications | NOT STARTED | Key `announcements.manage` exists. |
@@ -19,6 +19,21 @@ Legend: `NOT STARTED` · `IN PROGRESS` · `PARTIAL` · `BLOCKED` · `COMPLETE`
 | 10 | Reports & Analytics | NOT STARTED | Keys `reports.*` exist. |
 | 11 | Security, Backup & Audit | NOT STARTED | |
 | 12 | Testing, Deployment & Handover | NOT STARTED | |
+
+## Verification log — Phase 4 (2026-09-08)
+
+| Check | Result |
+|---|---|
+| `flutter analyze` | ✅ No issues found |
+| `dart format --set-exit-if-changed` | ✅ 0 of 124 files changed |
+| `flutter test` | ✅ **318/318** passed |
+| `flutter build web --release` | ✅ built |
+| `./vendor/bin/pint --test` | ✅ passed |
+| `php artisan test` | ✅ **279** passed (1129 assertions) |
+| migrate → rollback → migrate → seed (MariaDB) | ✅ reversible |
+| Recurrence edge cases | ✅ month-end, years-old start, expired rules, bounded output, still-running events |
+| Phase 0–3 tests | ✅ pass unchanged |
+| Every admin route has a breadcrumb trail | ✅ asserted by `admin_breadcrumbs_test.dart` |
 
 ## Verification log — Phase 3 (2026-09-07)
 
@@ -65,10 +80,13 @@ MariaDB 12.3.3 · live health and 401 checks.
 - Two-factor authentication for Super Admin (optional in the spec; Phase 2 §7).
 - `web/index.html` and `manifest.json` still carry a build-time temple name;
   the pre-rendered per-route head is dynamic (Phase 3 §9.1).
-- File uploads for the logo and member photographs — Phase 5.
+- File uploads for the logo, member photographs and event posters — Phase 5.
+- No per-occurrence overrides: one day of a recurring event cannot be cancelled
+  on its own (Phase 4 §10.1).
+- No calendar export (.ics); reminders are Phase 8.
 - Committee ordering and the navigation menu both need reorderable editors.
 - Consent changes are not audit-logged; the record exists for Phase 11.
 - Pre-render tool not wired into CI.
 - No cross-stack end-to-end test (Phase 12).
 
-Phase 4 must not begin without explicit approval.
+Phase 5 must not begin without explicit approval.

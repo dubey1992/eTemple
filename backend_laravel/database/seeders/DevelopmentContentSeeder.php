@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\CommitteeMember;
+use App\Models\Event;
 use App\Models\NavigationItem;
 use App\Models\Page;
 use App\Models\SiteSetting;
 use App\Models\TempleProfile;
+use App\Support\EventType;
 use Illuminate\Database\Seeder;
 
 /**
@@ -128,12 +130,64 @@ class DevelopmentContentSeeder extends Seeder
             ['label_hi' => 'मुख पृष्ठ', 'label_en' => 'Home', 'route' => '/', 'sort_order' => 0],
             ['label_hi' => 'हमारे बारे में', 'label_en' => 'About', 'route' => '/about', 'sort_order' => 1],
             ['label_hi' => 'प्रबंध समिति', 'label_en' => 'Committee', 'route' => '/committee', 'sort_order' => 2],
+            ['label_hi' => 'कार्यक्रम', 'label_en' => 'Events', 'route' => '/events', 'sort_order' => 3],
         ] as $item) {
             NavigationItem::query()->create($item + ['is_visible' => true]);
         }
 
+        // Sample calendar. The aarti is deliberately one recurring row rather
+        // than a row a day — that is the whole point of the recurrence rule.
+        Event::query()->delete();
+        Event::query()->create([
+            'event_type' => EventType::AARTI,
+            'title_hi' => 'संध्या आरती',
+            'title_en' => 'Evening aarti',
+            'description_hi' => 'प्रतिदिन संध्या आरती एवं प्रसाद वितरण।',
+            'description_en' => 'Daily evening aarti followed by prasad.',
+            'venue_hi' => 'मुख्य मंदिर',
+            'venue_en' => 'Main shrine',
+            'start_at' => now()->subMonths(6)->setTime(18, 30),
+            'end_at' => now()->subMonths(6)->setTime(19, 15),
+            'recurrence' => Event::RECURRENCE_DAILY,
+            'status' => Event::STATUS_PUBLISHED,
+        ]);
+
+        Event::query()->create([
+            'event_type' => EventType::BHAJAN_KIRTAN,
+            'title_hi' => 'साप्ताहिक भजन-कीर्तन',
+            'title_en' => 'Weekly bhajan-kirtan',
+            'venue_hi' => 'मंदिर प्रांगण',
+            'start_at' => now()->subMonths(3)->setTime(19, 0),
+            'end_at' => now()->subMonths(3)->setTime(21, 0),
+            'recurrence' => Event::RECURRENCE_WEEKLY,
+            // Tuesday and Saturday.
+            'recurrence_days' => [2, 6],
+            'status' => Event::STATUS_PUBLISHED,
+        ]);
+
+        Event::query()->create([
+            'event_type' => EventType::FESTIVAL,
+            'title_hi' => 'जन्माष्टमी महोत्सव',
+            'title_en' => 'Janmashtami festival',
+            'description_hi' => 'यह नमूना विवरण है। वास्तविक कार्यक्रम समिति द्वारा जोड़ा जाएगा।',
+            'description_en' => null,
+            'venue_hi' => 'मंदिर परिसर',
+            'start_at' => now()->addDays(21)->setTime(17, 0),
+            'end_at' => now()->addDays(22)->setTime(1, 0),
+            'is_featured' => true,
+            'status' => Event::STATUS_PUBLISHED,
+        ]);
+
+        Event::query()->create([
+            'event_type' => EventType::PUJA,
+            'title_hi' => 'नमूना मसौदा कार्यक्रम',
+            'start_at' => now()->addDays(30)->setTime(10, 0),
+            'status' => Event::STATUS_DRAFT,
+        ]);
+
         $this->command?->info(
-            '[dev-seed] Sample public content, temple profile, committee, settings and navigation ready.'
+            '[dev-seed] Sample public content, temple profile, committee, calendar, '
+            .'settings and navigation ready.'
         );
     }
 }

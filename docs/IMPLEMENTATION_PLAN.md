@@ -109,11 +109,16 @@ Explicitly **out** of Phase 0: CMS pages, home/about content, user CRUD screens,
 
 ## Phase 4 — Puja, Events & Calendar
 
-- [ ] `events` (`event_type`, bilingual title/description/venue, `start_at`, `end_at`, `poster_url`, `is_featured`, `status`, `created_by`)
-- [ ] Public event list/detail + admin CRUD endpoints
-- [ ] Daily aarti, bhajan-kirtan, festival, one-time and recurring events
-- [ ] Past/upcoming views, featured flag, timezone-safe API values
-- [ ] Rules: `end_at >= start_at`; drafts never public; cancelled retained in history
+- [x] `events` (`event_type`, bilingual title/description/venue, `start_at`, `end_at`, `poster_url`, `is_featured`, `status`, `created_by`)
+- [x] Public event list/detail + admin CRUD endpoints
+- [x] Daily aarti, bhajan-kirtan, festival, one-time and recurring events —
+      stored as a **rule** and expanded on read, so the daily aarti is one record
+- [x] Past/upcoming views, featured flag, timezone-safe API values (offsets, not bare UTC)
+- [x] Rules: `end_at >= start_at`; drafts never public; cancelled retained **and shown**, flagged
+- [x] Admin breadcrumbs and equal-height cards (findings raised against Phase 3)
+
+**Phase 4 is COMPLETE.** 318 Flutter tests, 279 Laravel tests; see
+`phase-reports/PHASE_4_COMPLETION.md`.
 
 ## Phase 5 — Gallery & Video Darshan
 

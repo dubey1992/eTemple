@@ -59,7 +59,9 @@ void main() {
       tester,
     ) async {
       // The consent decision is the server's; the client renders what arrives
-      // and has no way to reveal what did not.
+      // and has no way to reveal what did not. A withheld detail is shown as
+      // "NA" so every card keeps the same shape — that says nothing about the
+      // member, only that the value was not published.
       final temple = FakeTempleRepository(
         members: [
           testMember(id: 1, phone: '+91 90000 00000'),
@@ -70,8 +72,35 @@ void main() {
       await pumpTemple(tester, const CommitteeScreen(), temple);
 
       expect(find.text('+91 90000 00000'), findsOneWidget);
-      expect(find.byIcon(Icons.call_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.mail_outline), findsNothing);
+      // Two members, two contact rows each: nothing is hidden structurally.
+      expect(find.byIcon(Icons.call_outlined), findsNWidgets(2));
+      expect(find.byIcon(Icons.mail_outline), findsNWidgets(2));
+      // One phone was sent; the other phone and both e-mails were not.
+      expect(find.text('NA'), findsNWidgets(3));
+    });
+
+    testWidgets('every card in a row is the same height', (tester) async {
+      // One member has a bio and a tenure, the other has neither. Before the
+      // rows were built by hand, Wrap sized each card independently and left
+      // them ragged.
+      final temple = FakeTempleRepository(
+        members: [
+          testMember(
+            id: 1,
+            bio: 'एक लम्बा परिचय जो कई पंक्तियों में फैलता है।',
+            tenureStart: '2024-04-01',
+          ),
+          testMember(id: 2, name: 'दूसरा सदस्य'),
+        ],
+      );
+
+      await pumpTemple(tester, const CommitteeScreen(), temple);
+
+      final first = tester.getSize(find.byKey(const Key('committee-card-1')));
+      final second = tester.getSize(find.byKey(const Key('committee-card-2')));
+
+      expect(second.height, first.height);
+      expect(second.width, first.width);
     });
 
     testWidgets('an empty committee is a coming-soon state, not an error', (

@@ -680,4 +680,195 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sectionTenure => 'Tenure';
+
+  @override
+  String get actionBack => 'Back';
+
+  @override
+  String get valueNotAvailable => 'NA';
+
+  @override
+  String get navEvents => 'Puja and events';
+
+  @override
+  String get navEventsDesc =>
+      'Aarti, bhajan-kirtan, festivals and the calendar';
+
+  @override
+  String get eventsTitle => 'Puja and events';
+
+  @override
+  String get eventsSubtitle =>
+      'Daily aarti, weekly kirtan and the festivals ahead.';
+
+  @override
+  String get sectionEvents => 'Coming up';
+
+  @override
+  String get viewUpcoming => 'Upcoming';
+
+  @override
+  String get viewPast => 'Past';
+
+  @override
+  String get noUpcomingEvents => 'No events are scheduled yet.';
+
+  @override
+  String get noPastEvents => 'No past events are recorded yet.';
+
+  @override
+  String get viewAllEvents => 'See all events';
+
+  @override
+  String get eventCancelled => 'Cancelled';
+
+  @override
+  String get eventCancelledNotice => 'This event has been cancelled.';
+
+  @override
+  String get eventVenue => 'Venue';
+
+  @override
+  String get eventUpcomingDates => 'Coming up on';
+
+  @override
+  String get eventNotFound => 'This event is not available.';
+
+  @override
+  String get eventTypeAarti => 'Aarti';
+
+  @override
+  String get eventTypeBhajanKirtan => 'Bhajan-kirtan';
+
+  @override
+  String get eventTypeFestival => 'Festival';
+
+  @override
+  String get eventTypePuja => 'Puja';
+
+  @override
+  String get eventTypeOther => 'Other';
+
+  @override
+  String get recurrenceNone => 'Once';
+
+  @override
+  String get recurrenceDaily => 'Daily';
+
+  @override
+  String get recurrenceWeekly => 'Weekly';
+
+  @override
+  String get recurrenceMonthly => 'Monthly';
+
+  @override
+  String get recurrenceYearly => 'Yearly';
+
+  @override
+  String get weekdayMon => 'Mon';
+
+  @override
+  String get weekdayTue => 'Tue';
+
+  @override
+  String get weekdayWed => 'Wed';
+
+  @override
+  String get weekdayThu => 'Thu';
+
+  @override
+  String get weekdayFri => 'Fri';
+
+  @override
+  String get weekdaySat => 'Sat';
+
+  @override
+  String get weekdaySun => 'Sun';
+
+  @override
+  String get eventsAdminTitle => 'Puja and events';
+
+  @override
+  String get eventsAdminSubtitle =>
+      'Add aarti, kirtan and festivals here. A repeating event is entered once.';
+
+  @override
+  String get eventsEmpty => 'No events have been added yet.';
+
+  @override
+  String get eventNew => 'New event';
+
+  @override
+  String get eventEdit => 'Edit event';
+
+  @override
+  String get eventCreate => 'Add event';
+
+  @override
+  String get eventCreated => 'Event added.';
+
+  @override
+  String get eventDeleted => 'Event removed.';
+
+  @override
+  String get eventDelete => 'Remove event';
+
+  @override
+  String get eventDeleteConfirmTitle => 'Remove this event?';
+
+  @override
+  String get eventDeleteConfirmBody =>
+      'This erases the record permanently. If the event is merely called off, set its status to Cancelled instead so devotees are told.';
+
+  @override
+  String get statusCancelled => 'Cancelled';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get fieldEventType => 'Event type';
+
+  @override
+  String get fieldEventTitle => 'Event name';
+
+  @override
+  String get fieldEventDescription => 'Description';
+
+  @override
+  String get fieldVenue => 'Venue';
+
+  @override
+  String get fieldStartAt => 'Starts';
+
+  @override
+  String get fieldEndAt => 'Ends';
+
+  @override
+  String get fieldRecurrence => 'Repeats';
+
+  @override
+  String get fieldRecurrenceDays => 'On which days';
+
+  @override
+  String get fieldRecurrenceUntil => 'Repeat until';
+
+  @override
+  String get fieldPosterUrl => 'Poster URL';
+
+  @override
+  String get fieldFeatured => 'Show on the home page';
+
+  @override
+  String get recurringHint =>
+      'A repeating event is stored once — the daily aarti does not need 365 entries.';
+
+  @override
+  String get pickDate => 'Pick a date';
+
+  @override
+  String get pickTime => 'Pick a time';
+
+  @override
+  String get clearEndTime => 'Clear the end time';
 }

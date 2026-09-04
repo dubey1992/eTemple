@@ -24,6 +24,11 @@ class ApiEndpoints {
 
   static const String publicCommittee = '/public/committee';
 
+  // Puja, events and the calendar (Phase 4)
+  static const String publicEvents = '/public/events';
+
+  static String publicEvent(int id) => '/public/events/$id';
+
   // Protected admin surface (Phase 0 foundation)
   static const String adminPing = '/admin/ping';
 
@@ -57,6 +62,10 @@ class ApiEndpoints {
   static const String adminCommitteeMembers = '/admin/committee-members';
 
   static String adminCommitteeMember(int id) => '/admin/committee-members/$id';
+
+  static const String adminEvents = '/admin/events';
+
+  static String adminEvent(int id) => '/admin/events/$id';
 
   static const String resetPassword = '/auth/reset-password';
 

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'admin_breadcrumbs.dart';
+
 import '../../../app/localization/locale_controller.dart';
 import '../../../app/routing/route_paths.dart';
 import '../../../app/theme/app_spacing.dart';
@@ -11,8 +13,9 @@ import '../../auth/presentation/auth_controller.dart';
 
 /// Chrome for the protected admin area.
 ///
-/// The navigation surface is intentionally minimal in Phase 0 — the dashboard,
-/// user management and permission-aware menus are Phase 2.
+/// Carries a breadcrumb trail beneath the app bar. Detail screens are reached
+/// by their own URLs, so without it a deep link or a hard refresh left no way
+/// back to the list except the browser's own button.
 class AdminShell extends ConsumerWidget {
   const AdminShell({super.key, required this.child});
 
@@ -54,7 +57,14 @@ class AdminShell extends ConsumerWidget {
           ],
         ],
       ),
-      body: SafeArea(child: child),
+      body: SafeArea(
+        child: Column(
+          children: [
+            AdminBreadcrumbs(location: GoRouterState.of(context).uri.path),
+            Expanded(child: child),
+          ],
+        ),
+      ),
     );
   }
 }

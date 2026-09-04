@@ -677,4 +677,194 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get sectionTenure => 'कार्यकाल';
+
+  @override
+  String get actionBack => 'वापस';
+
+  @override
+  String get valueNotAvailable => 'NA';
+
+  @override
+  String get navEvents => 'पूजा एवं कार्यक्रम';
+
+  @override
+  String get navEventsDesc => 'आरती, भजन-कीर्तन, उत्सव और कैलेंडर';
+
+  @override
+  String get eventsTitle => 'पूजा एवं कार्यक्रम';
+
+  @override
+  String get eventsSubtitle =>
+      'मंदिर की दैनिक आरती, साप्ताहिक कीर्तन और आगामी उत्सव।';
+
+  @override
+  String get sectionEvents => 'आगामी कार्यक्रम';
+
+  @override
+  String get viewUpcoming => 'आगामी';
+
+  @override
+  String get viewPast => 'पूर्व कार्यक्रम';
+
+  @override
+  String get noUpcomingEvents => 'अभी कोई आगामी कार्यक्रम निर्धारित नहीं है।';
+
+  @override
+  String get noPastEvents => 'अभी कोई पूर्व कार्यक्रम दर्ज नहीं है।';
+
+  @override
+  String get viewAllEvents => 'सभी कार्यक्रम देखें';
+
+  @override
+  String get eventCancelled => 'रद्द';
+
+  @override
+  String get eventCancelledNotice => 'यह कार्यक्रम रद्द कर दिया गया है।';
+
+  @override
+  String get eventVenue => 'स्थान';
+
+  @override
+  String get eventUpcomingDates => 'आगामी तिथियाँ';
+
+  @override
+  String get eventNotFound => 'यह कार्यक्रम उपलब्ध नहीं है।';
+
+  @override
+  String get eventTypeAarti => 'आरती';
+
+  @override
+  String get eventTypeBhajanKirtan => 'भजन-कीर्तन';
+
+  @override
+  String get eventTypeFestival => 'उत्सव';
+
+  @override
+  String get eventTypePuja => 'पूजा';
+
+  @override
+  String get eventTypeOther => 'अन्य';
+
+  @override
+  String get recurrenceNone => 'एक बार';
+
+  @override
+  String get recurrenceDaily => 'प्रतिदिन';
+
+  @override
+  String get recurrenceWeekly => 'साप्ताहिक';
+
+  @override
+  String get recurrenceMonthly => 'मासिक';
+
+  @override
+  String get recurrenceYearly => 'वार्षिक';
+
+  @override
+  String get weekdayMon => 'सोम';
+
+  @override
+  String get weekdayTue => 'मंगल';
+
+  @override
+  String get weekdayWed => 'बुध';
+
+  @override
+  String get weekdayThu => 'गुरु';
+
+  @override
+  String get weekdayFri => 'शुक्र';
+
+  @override
+  String get weekdaySat => 'शनि';
+
+  @override
+  String get weekdaySun => 'रवि';
+
+  @override
+  String get eventsAdminTitle => 'पूजा एवं कार्यक्रम';
+
+  @override
+  String get eventsAdminSubtitle =>
+      'आरती, कीर्तन और उत्सव यहाँ से जोड़ें। दोहराने वाला कार्यक्रम एक ही बार दर्ज करें।';
+
+  @override
+  String get eventsEmpty => 'अभी कोई कार्यक्रम दर्ज नहीं है।';
+
+  @override
+  String get eventNew => 'नया कार्यक्रम';
+
+  @override
+  String get eventEdit => 'कार्यक्रम संपादित करें';
+
+  @override
+  String get eventCreate => 'कार्यक्रम जोड़ें';
+
+  @override
+  String get eventCreated => 'कार्यक्रम जोड़ दिया गया।';
+
+  @override
+  String get eventDeleted => 'कार्यक्रम हटा दिया गया।';
+
+  @override
+  String get eventDelete => 'कार्यक्रम हटाएँ';
+
+  @override
+  String get eventDeleteConfirmTitle => 'कार्यक्रम हटाएँ?';
+
+  @override
+  String get eventDeleteConfirmBody =>
+      'इससे रिकॉर्ड स्थायी रूप से मिट जाएगा। यदि कार्यक्रम केवल रद्द हुआ है तो स्थिति \"रद्द\" चुनें — तब भक्तों को सूचना मिलती रहेगी।';
+
+  @override
+  String get statusCancelled => 'रद्द';
+
+  @override
+  String get filterAll => 'सभी';
+
+  @override
+  String get fieldEventType => 'कार्यक्रम का प्रकार';
+
+  @override
+  String get fieldEventTitle => 'कार्यक्रम का नाम';
+
+  @override
+  String get fieldEventDescription => 'विवरण';
+
+  @override
+  String get fieldVenue => 'स्थान';
+
+  @override
+  String get fieldStartAt => 'आरंभ';
+
+  @override
+  String get fieldEndAt => 'समाप्ति';
+
+  @override
+  String get fieldRecurrence => 'दोहराव';
+
+  @override
+  String get fieldRecurrenceDays => 'किन दिनों';
+
+  @override
+  String get fieldRecurrenceUntil => 'इस तिथि तक';
+
+  @override
+  String get fieldPosterUrl => 'पोस्टर का URL';
+
+  @override
+  String get fieldFeatured => 'मुख पृष्ठ पर दिखाएँ';
+
+  @override
+  String get recurringHint =>
+      'दोहराने वाला कार्यक्रम एक ही बार दर्ज होता है — दैनिक आरती के लिए 365 प्रविष्टियाँ नहीं बनानी पड़तीं।';
+
+  @override
+  String get pickDate => 'तिथि चुनें';
+
+  @override
+  String get pickTime => 'समय चुनें';
+
+  @override
+  String get clearEndTime => 'समाप्ति हटाएँ';
 }

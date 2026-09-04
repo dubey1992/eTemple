@@ -67,6 +67,17 @@ class AdminDashboardScreen extends ConsumerWidget {
           description: l10n.navCommitteeDesc,
           route: RoutePaths.adminCommittee,
         ),
+      if (permissions.canAny(const [
+        Permissions.eventsManage,
+        Permissions.contentView,
+      ]))
+        _Entry(
+          key: const Key('dash-events'),
+          icon: Icons.event_outlined,
+          title: l10n.navEvents,
+          description: l10n.navEventsDesc,
+          route: RoutePaths.adminEvents,
+        ),
       if (permissions.can(Permissions.usersView))
         _Entry(
           key: const Key('dash-users'),

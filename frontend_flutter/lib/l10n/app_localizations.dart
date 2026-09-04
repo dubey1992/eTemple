@@ -1351,6 +1351,378 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'कार्यकाल'**
   String get sectionTenure;
+
+  /// No description provided for @actionBack.
+  ///
+  /// In hi, this message translates to:
+  /// **'वापस'**
+  String get actionBack;
+
+  /// Placeholder for a detail the server did not publish
+  ///
+  /// In hi, this message translates to:
+  /// **'NA'**
+  String get valueNotAvailable;
+
+  /// No description provided for @navEvents.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूजा एवं कार्यक्रम'**
+  String get navEvents;
+
+  /// No description provided for @navEventsDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'आरती, भजन-कीर्तन, उत्सव और कैलेंडर'**
+  String get navEventsDesc;
+
+  /// No description provided for @eventsTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूजा एवं कार्यक्रम'**
+  String get eventsTitle;
+
+  /// No description provided for @eventsSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर की दैनिक आरती, साप्ताहिक कीर्तन और आगामी उत्सव।'**
+  String get eventsSubtitle;
+
+  /// No description provided for @sectionEvents.
+  ///
+  /// In hi, this message translates to:
+  /// **'आगामी कार्यक्रम'**
+  String get sectionEvents;
+
+  /// No description provided for @viewUpcoming.
+  ///
+  /// In hi, this message translates to:
+  /// **'आगामी'**
+  String get viewUpcoming;
+
+  /// No description provided for @viewPast.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूर्व कार्यक्रम'**
+  String get viewPast;
+
+  /// No description provided for @noUpcomingEvents.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी कोई आगामी कार्यक्रम निर्धारित नहीं है।'**
+  String get noUpcomingEvents;
+
+  /// No description provided for @noPastEvents.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी कोई पूर्व कार्यक्रम दर्ज नहीं है।'**
+  String get noPastEvents;
+
+  /// No description provided for @viewAllEvents.
+  ///
+  /// In hi, this message translates to:
+  /// **'सभी कार्यक्रम देखें'**
+  String get viewAllEvents;
+
+  /// No description provided for @eventCancelled.
+  ///
+  /// In hi, this message translates to:
+  /// **'रद्द'**
+  String get eventCancelled;
+
+  /// No description provided for @eventCancelledNotice.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह कार्यक्रम रद्द कर दिया गया है।'**
+  String get eventCancelledNotice;
+
+  /// No description provided for @eventVenue.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्थान'**
+  String get eventVenue;
+
+  /// No description provided for @eventUpcomingDates.
+  ///
+  /// In hi, this message translates to:
+  /// **'आगामी तिथियाँ'**
+  String get eventUpcomingDates;
+
+  /// No description provided for @eventNotFound.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह कार्यक्रम उपलब्ध नहीं है।'**
+  String get eventNotFound;
+
+  /// No description provided for @eventTypeAarti.
+  ///
+  /// In hi, this message translates to:
+  /// **'आरती'**
+  String get eventTypeAarti;
+
+  /// No description provided for @eventTypeBhajanKirtan.
+  ///
+  /// In hi, this message translates to:
+  /// **'भजन-कीर्तन'**
+  String get eventTypeBhajanKirtan;
+
+  /// No description provided for @eventTypeFestival.
+  ///
+  /// In hi, this message translates to:
+  /// **'उत्सव'**
+  String get eventTypeFestival;
+
+  /// No description provided for @eventTypePuja.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूजा'**
+  String get eventTypePuja;
+
+  /// No description provided for @eventTypeOther.
+  ///
+  /// In hi, this message translates to:
+  /// **'अन्य'**
+  String get eventTypeOther;
+
+  /// No description provided for @recurrenceNone.
+  ///
+  /// In hi, this message translates to:
+  /// **'एक बार'**
+  String get recurrenceNone;
+
+  /// No description provided for @recurrenceDaily.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रतिदिन'**
+  String get recurrenceDaily;
+
+  /// No description provided for @recurrenceWeekly.
+  ///
+  /// In hi, this message translates to:
+  /// **'साप्ताहिक'**
+  String get recurrenceWeekly;
+
+  /// No description provided for @recurrenceMonthly.
+  ///
+  /// In hi, this message translates to:
+  /// **'मासिक'**
+  String get recurrenceMonthly;
+
+  /// No description provided for @recurrenceYearly.
+  ///
+  /// In hi, this message translates to:
+  /// **'वार्षिक'**
+  String get recurrenceYearly;
+
+  /// No description provided for @weekdayMon.
+  ///
+  /// In hi, this message translates to:
+  /// **'सोम'**
+  String get weekdayMon;
+
+  /// No description provided for @weekdayTue.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंगल'**
+  String get weekdayTue;
+
+  /// No description provided for @weekdayWed.
+  ///
+  /// In hi, this message translates to:
+  /// **'बुध'**
+  String get weekdayWed;
+
+  /// No description provided for @weekdayThu.
+  ///
+  /// In hi, this message translates to:
+  /// **'गुरु'**
+  String get weekdayThu;
+
+  /// No description provided for @weekdayFri.
+  ///
+  /// In hi, this message translates to:
+  /// **'शुक्र'**
+  String get weekdayFri;
+
+  /// No description provided for @weekdaySat.
+  ///
+  /// In hi, this message translates to:
+  /// **'शनि'**
+  String get weekdaySat;
+
+  /// No description provided for @weekdaySun.
+  ///
+  /// In hi, this message translates to:
+  /// **'रवि'**
+  String get weekdaySun;
+
+  /// No description provided for @eventsAdminTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूजा एवं कार्यक्रम'**
+  String get eventsAdminTitle;
+
+  /// No description provided for @eventsAdminSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'आरती, कीर्तन और उत्सव यहाँ से जोड़ें। दोहराने वाला कार्यक्रम एक ही बार दर्ज करें।'**
+  String get eventsAdminSubtitle;
+
+  /// No description provided for @eventsEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी कोई कार्यक्रम दर्ज नहीं है।'**
+  String get eventsEmpty;
+
+  /// No description provided for @eventNew.
+  ///
+  /// In hi, this message translates to:
+  /// **'नया कार्यक्रम'**
+  String get eventNew;
+
+  /// No description provided for @eventEdit.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यक्रम संपादित करें'**
+  String get eventEdit;
+
+  /// No description provided for @eventCreate.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यक्रम जोड़ें'**
+  String get eventCreate;
+
+  /// No description provided for @eventCreated.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यक्रम जोड़ दिया गया।'**
+  String get eventCreated;
+
+  /// No description provided for @eventDeleted.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यक्रम हटा दिया गया।'**
+  String get eventDeleted;
+
+  /// No description provided for @eventDelete.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यक्रम हटाएँ'**
+  String get eventDelete;
+
+  /// No description provided for @eventDeleteConfirmTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यक्रम हटाएँ?'**
+  String get eventDeleteConfirmTitle;
+
+  /// No description provided for @eventDeleteConfirmBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'इससे रिकॉर्ड स्थायी रूप से मिट जाएगा। यदि कार्यक्रम केवल रद्द हुआ है तो स्थिति \"रद्द\" चुनें — तब भक्तों को सूचना मिलती रहेगी।'**
+  String get eventDeleteConfirmBody;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In hi, this message translates to:
+  /// **'रद्द'**
+  String get statusCancelled;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In hi, this message translates to:
+  /// **'सभी'**
+  String get filterAll;
+
+  /// No description provided for @fieldEventType.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यक्रम का प्रकार'**
+  String get fieldEventType;
+
+  /// No description provided for @fieldEventTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यक्रम का नाम'**
+  String get fieldEventTitle;
+
+  /// No description provided for @fieldEventDescription.
+  ///
+  /// In hi, this message translates to:
+  /// **'विवरण'**
+  String get fieldEventDescription;
+
+  /// No description provided for @fieldVenue.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्थान'**
+  String get fieldVenue;
+
+  /// No description provided for @fieldStartAt.
+  ///
+  /// In hi, this message translates to:
+  /// **'आरंभ'**
+  String get fieldStartAt;
+
+  /// No description provided for @fieldEndAt.
+  ///
+  /// In hi, this message translates to:
+  /// **'समाप्ति'**
+  String get fieldEndAt;
+
+  /// No description provided for @fieldRecurrence.
+  ///
+  /// In hi, this message translates to:
+  /// **'दोहराव'**
+  String get fieldRecurrence;
+
+  /// No description provided for @fieldRecurrenceDays.
+  ///
+  /// In hi, this message translates to:
+  /// **'किन दिनों'**
+  String get fieldRecurrenceDays;
+
+  /// No description provided for @fieldRecurrenceUntil.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस तिथि तक'**
+  String get fieldRecurrenceUntil;
+
+  /// No description provided for @fieldPosterUrl.
+  ///
+  /// In hi, this message translates to:
+  /// **'पोस्टर का URL'**
+  String get fieldPosterUrl;
+
+  /// No description provided for @fieldFeatured.
+  ///
+  /// In hi, this message translates to:
+  /// **'मुख पृष्ठ पर दिखाएँ'**
+  String get fieldFeatured;
+
+  /// No description provided for @recurringHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'दोहराने वाला कार्यक्रम एक ही बार दर्ज होता है — दैनिक आरती के लिए 365 प्रविष्टियाँ नहीं बनानी पड़तीं।'**
+  String get recurringHint;
+
+  /// No description provided for @pickDate.
+  ///
+  /// In hi, this message translates to:
+  /// **'तिथि चुनें'**
+  String get pickDate;
+
+  /// No description provided for @pickTime.
+  ///
+  /// In hi, this message translates to:
+  /// **'समय चुनें'**
+  String get pickTime;
+
+  /// No description provided for @clearEndTime.
+  ///
+  /// In hi, this message translates to:
+  /// **'समाप्ति हटाएँ'**
+  String get clearEndTime;
 }
 
 class _AppLocalizationsDelegate

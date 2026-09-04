@@ -14,6 +14,16 @@ class RoutePaths {
   /// not mistaken for a CMS page.
   static const String committee = '/committee';
 
+  /// The public calendar. Declared before the catch-all slug route.
+  static const String events = '/events';
+
+  static const String eventDetailPattern = '/events/:id';
+
+  /// [on] names one occurrence of a repeating event, so a shared link to "the
+  /// aarti on the 12th" still opens on the 12th.
+  static String eventDetail(int id, {String? on}) =>
+      on == null ? '/events/$id' : '/events/$id?on=$on';
+
   /// A CMS page lives at its own slug, so /about is a clean, shareable URL.
   /// Declared last in the router so it cannot shadow the routes above.
   static const String pagePattern = '/:slug';
@@ -41,6 +51,11 @@ class RoutePaths {
   static const String adminCommitteeNew = '/admin/committee/new';
 
   static String adminCommitteeMember(int id) => '/admin/committee/$id';
+
+  static const String adminEvents = '/admin/events';
+  static const String adminEventNew = '/admin/events/new';
+
+  static String adminEventEditor(int id) => '/admin/events/$id';
 
   static String adminRolePermissions(int id) => '/admin/roles/$id';
 
@@ -70,6 +85,10 @@ class RouteNames {
   static const String adminTempleProfile = 'admin-temple-profile';
   static const String adminCommittee = 'admin-committee';
   static const String adminCommitteeMember = 'admin-committee-member';
+  static const String events = 'events';
+  static const String eventDetail = 'event-detail';
+  static const String adminEvents = 'admin-events';
+  static const String adminEventEditor = 'admin-event-editor';
   static const String adminRolePermissions = 'admin-role-permissions';
   static const String resetPassword = 'reset-password';
 }

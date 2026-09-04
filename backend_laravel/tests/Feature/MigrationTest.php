@@ -148,6 +148,28 @@ class MigrationTest extends TestCase
         }
     }
 
+    public function test_events_table_stores_the_recurrence_rule(): void
+    {
+        $this->assertTrue(Schema::hasTable('events'));
+
+        $expected = [
+            'id', 'event_type',
+            'title_hi', 'title_en', 'description_hi', 'description_en',
+            'venue_hi', 'venue_en',
+            'start_at', 'end_at',
+            'recurrence', 'recurrence_days', 'recurrence_until',
+            'poster_url', 'is_featured', 'status',
+            'created_by', 'updated_by', 'created_at', 'updated_at',
+        ];
+
+        foreach ($expected as $column) {
+            $this->assertTrue(
+                Schema::hasColumn('events', $column),
+                "events table is missing the [{$column}] column."
+            );
+        }
+    }
+
     public function test_login_attempts_table_records_the_history(): void
     {
         $this->assertTrue(Schema::hasTable('login_attempts'));
