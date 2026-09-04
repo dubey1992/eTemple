@@ -55,6 +55,20 @@ class AppColors {
   /// Footer body text on the dark ground.
   static const Color onFooter = Color(0xFFCDBCC1);
 
+  // --- Status tones -------------------------------------------------------
+  // A status is not a Material role. "Published" has to read as positive to a
+  // person whatever the brand palette is, so these are named and fixed here
+  // rather than borrowed from primaryContainer / secondaryContainer — which
+  // the seed generator is free to make identical to each other, and did.
+  static const Color positiveSurface = Color(0xFFE3F0E1);
+  static const Color onPositiveSurface = Color(0xFF1B5E20);
+
+  static const Color warningSurface = Color(0xFFFCEBC8);
+  static const Color onWarningSurface = Color(0xFF6B4300);
+
+  static const Color infoSurface = Color(0xFFF6DDE5);
+  static const Color onInfoSurface = Color(0xFF5A0F26);
+
   static const Color success = Color(0xFF2E7D32);
   static const Color warning = Color(0xFFB26A00);
   static const Color danger = Color(0xFFB3261E);

@@ -169,6 +169,7 @@ class _HeroEmblem extends StatelessWidget {
       height: isCompact ? 180 : 300,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppRadius.xl),
+        boxShadow: AppColors.panelShadow,
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,

@@ -28,8 +28,9 @@ class AppTypography {
   static TextTheme textTheme(ColorScheme scheme) {
     final base = Typography.material2021().black;
 
+    // The fallback is applied *after* copyWith, not before: copyWith replaces
+    // whole TextStyles taken from `base`, which would drop an earlier apply().
     return base
-        .apply(fontFamilyFallback: fontFallback)
         .copyWith(
           displaySmall: base.displaySmall?.copyWith(
             height: headingHeight,
@@ -51,6 +52,10 @@ class AppTypography {
           bodyMedium: base.bodyMedium?.copyWith(height: bodyHeight),
           bodySmall: base.bodySmall?.copyWith(height: bodyHeight),
         )
-        .apply(bodyColor: scheme.onSurface, displayColor: scheme.onSurface);
+        .apply(
+          bodyColor: scheme.onSurface,
+          displayColor: scheme.onSurface,
+          fontFamilyFallback: fontFallback,
+        );
   }
 }

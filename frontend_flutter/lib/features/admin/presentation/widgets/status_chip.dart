@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 
 /// How a chip should read at a glance.
@@ -7,8 +8,15 @@ enum StatusTone { neutral, positive, warning, info, danger }
 
 /// A small labelled chip used across the admin screens.
 ///
-/// Colours come from the scheme rather than literals, so the whole admin area
-/// followed the Rose & Peacock theme change without edits here.
+/// The neutral and danger tones come from the colour scheme, so the admin area
+/// followed two complete repaints — Marigold & Maroon to Rose & Peacock, and
+/// Rose & Peacock to Maroon & Gold — without an edit here.
+///
+/// The other three are fixed tokens rather than scheme roles. Borrowing
+/// `primaryContainer` and `secondaryContainer` made "published" and the event
+/// type chip identical the moment the palette changed, because the seed
+/// generator produced the same colour for both: a status has to stay legible
+/// as a status, not follow whatever the brand happens to be.
 class StatusChip extends StatelessWidget {
   const StatusChip({
     super.key,
@@ -29,14 +37,14 @@ class StatusChip extends StatelessWidget {
         scheme.onSurfaceVariant,
       ),
       StatusTone.positive => (
-        scheme.secondaryContainer,
-        scheme.onSecondaryContainer,
+        AppColors.positiveSurface,
+        AppColors.onPositiveSurface,
       ),
       StatusTone.warning => (
-        scheme.tertiaryContainer,
-        scheme.onTertiaryContainer,
+        AppColors.warningSurface,
+        AppColors.onWarningSurface,
       ),
-      StatusTone.info => (scheme.primaryContainer, scheme.onPrimaryContainer),
+      StatusTone.info => (AppColors.infoSurface, AppColors.onInfoSurface),
       StatusTone.danger => (scheme.errorContainer, scheme.onErrorContainer),
     };
 

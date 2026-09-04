@@ -78,7 +78,10 @@ void main() {
       await pumpEvents(tester, const EventsScreen(), events);
       expect(find.text('जन्माष्टमी'), findsOneWidget);
 
-      await tester.tap(find.text('पूर्व कार्यक्रम'));
+      // Tapped by icon, not by its translated label: a text finder's box is
+      // only as wide as the glyphs actually render, and a machine with no
+      // Devanagari font gives it almost no width to hit.
+      await tester.tap(find.byIcon(Icons.history));
       await tester.pumpAndSettle();
 
       expect(events.lastQuery?.view, EventView.past);
@@ -401,7 +404,10 @@ void main() {
 
       await tester.tap(find.byKey(const Key('event-recurrence')));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('साप्ताहिक').last);
+      // By key rather than by translated label, for the same reason.
+      await tester.tap(
+        find.byKey(const Key('event-recurrence-${Recurrences.weekly}')).last,
+      );
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('event-day-1')), findsOneWidget);

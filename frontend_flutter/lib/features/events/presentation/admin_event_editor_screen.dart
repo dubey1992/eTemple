@@ -375,6 +375,9 @@ class _EventFormState extends ConsumerState<_EventForm> {
                 items: [
                   for (final type in EventTypes.all)
                     DropdownMenuItem(
+                      // Keyed so a test can choose an option without tapping
+                      // its translated label.
+                      key: Key('event-type-$type'),
                       value: type,
                       child: Text(EventFormatting.typeLabel(type, l10n)),
                     ),
@@ -448,6 +451,7 @@ class _EventFormState extends ConsumerState<_EventForm> {
                 items: [
                   for (final recurrence in Recurrences.all)
                     DropdownMenuItem(
+                      key: Key('event-recurrence-$recurrence'),
                       value: recurrence,
                       child: Text(
                         EventFormatting.recurrenceLabel(recurrence, l10n),
@@ -523,6 +527,7 @@ class _EventFormState extends ConsumerState<_EventForm> {
                 items: [
                   for (final status in EventStatuses.all)
                     DropdownMenuItem(
+                      key: Key('event-status-$status'),
                       value: status,
                       child: Text(EventFormatting.statusLabel(status, l10n)),
                     ),

@@ -1,14 +1,14 @@
 """Generate the favicon and PWA icons for Radha Krishna Thakurbari.
 
 The mark is a temple shikhara (spire) with a kalash finial, drawn in the
-"Rose & Peacock" palette from lib/app/theme/app_colors.dart:
+"Maroon & Gold" palette from lib/app/theme/app_colors.dart:
 
-    rose    #B5426B   background (Radha)
-    ivory   #FFF7F4   the temple silhouette
-    gold    #C9971F   the kalash finial
-    peacock #1F6F78   the plinth band (Krishna)
+    maroon  #8B1E3F   background
+    cream   #FFF8EC   the temple silhouette
+    gold    #F4B942   the kalash finial
+    deep    #65142D   the plinth band
 
-A filled rose tile with an ivory glyph stays legible at 16px in a browser tab,
+A filled maroon tile with a cream glyph stays legible at 16px in a browser tab,
 which a thin outline on a light background would not.
 
 Run from frontend_flutter/:   python tool/generate_icons.py
@@ -23,10 +23,10 @@ import os
 
 from PIL import Image, ImageDraw
 
-ROSE = (181, 66, 107, 255)
-IVORY = (255, 247, 244, 255)
-GOLD = (201, 151, 31, 255)
-PEACOCK = (31, 111, 120, 255)
+MAROON = (139, 30, 63, 255)
+IVORY = (255, 248, 236, 255)
+GOLD = (244, 185, 66, 255)
+MAROON_DEEP = (101, 20, 45, 255)
 TRANSPARENT = (0, 0, 0, 0)
 
 SS = 4  # supersampling factor
@@ -49,13 +49,13 @@ def draw_mark(size: int, *, bleed: bool, corner_ratio: float = 0.18) -> Image.Im
 
     # --- background ---------------------------------------------------------
     if bleed:
-        d.rectangle([0, 0, s, s], fill=ROSE)
+        d.rectangle([0, 0, s, s], fill=MAROON)
         # Maskable icons must keep content inside the middle 80%, so the glyph
         # is drawn smaller and centred.
         scale, offset_y = 0.78, px(6)
     else:
         r = px(BASE * corner_ratio)
-        d.rounded_rectangle([0, 0, s - 1, s - 1], radius=r, fill=ROSE)
+        d.rounded_rectangle([0, 0, s - 1, s - 1], radius=r, fill=MAROON)
         scale, offset_y = 1.0, 0.0
 
     cx = s / 2
@@ -66,9 +66,9 @@ def draw_mark(size: int, *, bleed: bool, corner_ratio: float = 0.18) -> Image.Im
     def Y(v: float) -> float:
         return px(v) * scale + (s * (1 - scale) / 2) + offset_y
 
-    # --- plinth (peacock band + ivory steps) --------------------------------
+    # --- plinth (deep maroon band + cream steps) --------------------------------
     d.rounded_rectangle(
-        [X(96), Y(410), X(416), Y(446)], radius=px(10) * scale, fill=PEACOCK
+        [X(96), Y(410), X(416), Y(446)], radius=px(10) * scale, fill=MAROON_DEEP
     )
     d.rounded_rectangle(
         [X(120), Y(378), X(392), Y(412)], radius=px(8) * scale, fill=IVORY
@@ -102,9 +102,9 @@ def draw_mark(size: int, *, bleed: bool, corner_ratio: float = 0.18) -> Image.Im
 
     # --- doorway ------------------------------------------------------------
     d.rounded_rectangle(
-        [X(228), Y(300), X(284), Y(378)], radius=px(28) * scale, fill=ROSE
+        [X(228), Y(300), X(284), Y(378)], radius=px(28) * scale, fill=MAROON
     )
-    d.rectangle([X(228), Y(350), X(284), Y(378)], fill=ROSE)
+    d.rectangle([X(228), Y(350), X(284), Y(378)], fill=MAROON)
 
     return img.resize((size, size), Image.LANCZOS)
 

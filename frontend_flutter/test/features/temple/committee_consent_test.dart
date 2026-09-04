@@ -282,7 +282,14 @@ void main() {
 
     await tester.tap(find.byKey(const Key('member-delete')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('रद्द करें').last);
+    // The dialog's cancel button, found by type rather than by its translated
+    // label: a text finder is only as wide as the glyphs that render.
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const Key('member-delete-dialog')),
+        matching: find.byType(TextButton),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(temple.deleteMemberCalls, 0);

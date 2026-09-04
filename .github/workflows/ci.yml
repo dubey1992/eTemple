@@ -43,11 +43,21 @@ jobs:
       - name: Static analysis
         run: flutter analyze
 
-      # The GitHub reporter annotates the run with the name of each failing
-      # test. Without it a red build says only "1 test failed", which is not
-      # enough to act on when the failure does not reproduce locally.
+      # A red build that says only "1 test failed" is not enough to act on when
+      # the failure does not reproduce locally, and the raw log needs repository
+      # admin rights to read. Echoing the failing test names as ::error::
+      # annotations puts them on the run's summary page, where anyone can see
+      # them.
       - name: Tests
-        run: flutter test --reporter github
+        run: |
+          set +e
+          flutter test 2>&1 | tee flutter-test.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            sed -n '/Failing tests:/,$p' flutter-test.log \
+              | sed 's/^/::error::/'
+          fi
+          exit "$status"
 
       - name: Release web build
         run: flutter build web --release --dart-define=APP_ENV=staging
