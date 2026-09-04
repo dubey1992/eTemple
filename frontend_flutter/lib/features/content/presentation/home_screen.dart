@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../../app/localization/locale_controller.dart';
 import '../../../app/routing/route_paths.dart';
 import '../../../app/theme/app_spacing.dart';
+import '../../../app/theme/app_colors.dart';
 import '../../../core/errors/app_exception.dart';
-import '../../../core/widgets/breakpoints.dart';
-import '../../../core/widgets/page_container.dart';
+import '../../../core/widgets/section_band.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../events/data/event_providers.dart';
 import '../../events/presentation/widgets/event_card.dart';
@@ -16,10 +16,10 @@ import '../../temple/domain/temple_profile.dart';
 import '../../temple/presentation/widgets/committee_list.dart';
 import '../data/content_providers.dart';
 import '../domain/page_content.dart';
-import '../domain/site_settings.dart';
 import 'seo_scope.dart';
 import 'widgets/address_card.dart';
 import 'widgets/content_widgets.dart';
+import 'widgets/home_hero.dart';
 
 /// The public home page: hero, about excerpt, committee preview and the temple
 /// address.
@@ -57,100 +57,35 @@ class HomeScreen extends ConsumerWidget {
               data.tagline.value ??
               templeProfile.mission.value,
           canonicalPath: RoutePaths.home,
+          // Full-width bands rather than one padded column: the prototype
+          // alternates the page ground so each section reads as its own block
+          // on a long scroll, and a colour band has to run edge to edge.
           child: SingleChildScrollView(
-            child: PageContainer(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _Hero(settings: data, profile: templeProfile),
-                  const SizedBox(height: AppSpacing.xxl),
-                  const _AboutSection(),
-                  const SizedBox(height: AppSpacing.xxl),
-                  const _UpcomingEventsSection(),
-                  const SizedBox(height: AppSpacing.xxl),
-                  const _CommitteeSection(),
-                  const SizedBox(height: AppSpacing.xxl),
-                  ContentSection(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SectionBand(
+                  gradient: AppColors.heroGradient,
+                  verticalPadding: AppSpacing.xxl,
+                  child: HomeHero(settings: data, profile: templeProfile),
+                ),
+                const SectionBand(child: _AboutSection()),
+                const SectionBand.alternate(child: _UpcomingEventsSection()),
+                const SectionBand(child: _CommitteeSection()),
+                SectionBand.alternate(
+                  child: ContentSection(
                     title: l10n.sectionAddress,
                     child: AddressCard(
                       address: templeProfile.address,
                       contact: data.contact,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.xxl),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
       },
-    );
-  }
-}
-
-class _Hero extends StatelessWidget {
-  const _Hero({required this.settings, required this.profile});
-
-  final SiteSettings settings;
-  final TempleProfile profile;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final theme = Theme.of(context);
-    final isCompact = Breakpoints.of(context).isCompact;
-    final locality = profile.address.locality;
-
-    return Column(
-      children: [
-        Text(
-          l10n.invocation,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.titleMedium?.copyWith(
-            color: theme.colorScheme.tertiary,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          // The temple's own name, from the profile. The ARB string stands in
-          // only until that request resolves.
-          profile.name.orElse(l10n.appTitle),
-          key: const Key('hero-title'),
-          textAlign: TextAlign.center,
-          style:
-              (isCompact
-                      ? theme.textTheme.headlineMedium
-                      : theme.textTheme.displaySmall)
-                  ?.copyWith(color: theme.colorScheme.primary),
-        ),
-        // The village line is temple content: no fallback, it simply does not
-        // appear until the committee fills in the address.
-        if (locality != null) ...[
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            locality,
-            key: const Key('hero-locality'),
-            textAlign: TextAlign.center,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-        // The devotional tagline is CMS-managed; it simply does not appear
-        // until the committee writes one.
-        if (settings.tagline.isNotEmpty) ...[
-          const SizedBox(height: AppSpacing.lg),
-          Text(
-            settings.tagline.value!,
-            key: const Key('hero-tagline'),
-            textAlign: TextAlign.center,
-            style: theme.textTheme.titleLarge?.copyWith(
-              color: theme.colorScheme.secondary,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ],
     );
   }
 }

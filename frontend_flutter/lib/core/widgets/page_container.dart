@@ -29,6 +29,12 @@ class PageContainer extends StatelessWidget {
 
     return Align(
       alignment: Alignment.topCenter,
+      // Shrink-wraps vertically. Without this the Align expands to whatever
+      // height it is offered, which is correct inside a scroll view but makes
+      // the widget swallow the whole screen anywhere the height is merely
+      // loose — a footer in `bottomNavigationBar`, for instance, then covers
+      // the page and eats every tap.
+      heightFactor: 1,
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: maxWidth),
         child: Padding(

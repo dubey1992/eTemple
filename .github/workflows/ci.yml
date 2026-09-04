@@ -43,8 +43,11 @@ jobs:
       - name: Static analysis
         run: flutter analyze
 
+      # The GitHub reporter annotates the run with the name of each failing
+      # test. Without it a red build says only "1 test failed", which is not
+      # enough to act on when the failure does not reproduce locally.
       - name: Tests
-        run: flutter test
+        run: flutter test --reporter github
 
       - name: Release web build
         run: flutter build web --release --dart-define=APP_ENV=staging

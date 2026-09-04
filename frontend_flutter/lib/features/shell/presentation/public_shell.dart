@@ -4,16 +4,18 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/localization/locale_controller.dart';
 import '../../../app/routing/route_paths.dart';
+import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/widgets/breakpoints.dart';
 import '../../../core/widgets/language_switch.dart';
+import '../../../core/widgets/page_container.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../content/data/content_providers.dart';
 import '../../content/domain/site_settings.dart';
 import '../../temple/data/temple_providers.dart';
 
-/// Chrome shared by every public page: header, admin-configured navigation,
-/// language switch and footer.
+/// Chrome shared by every public page: an information strip, the header with
+/// admin-configured navigation, the language switch and the footer.
 ///
 /// The temple's name, the locality beneath it, the menu and the footer all come
 /// from the CMS, so the committee can change them without a code release. If
@@ -46,31 +48,43 @@ class PublicShell extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: AppSpacing.md,
-        toolbarHeight: isCompact ? 64 : 76,
+        toolbarHeight: isCompact ? 68 : 80,
         title: InkWell(
           onTap: () => context.go(RoutePaths.home),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                templeName,
-                key: const Key('shell-temple-name'),
-                style: theme.textTheme.titleLarge,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              if (!isCompact && locality != null)
-                Text(
-                  locality,
-                  key: const Key('shell-temple-locality'),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+              const _BrandMark(),
+              const SizedBox(width: AppSpacing.sm),
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      templeName,
+                      key: const Key('shell-temple-name'),
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w800,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (!isCompact && locality != null)
+                      Text(
+                        locality,
+                        key: const Key('shell-temple-locality'),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                  ],
                 ),
+              ),
             ],
           ),
         ),
@@ -92,19 +106,123 @@ class PublicShell extends ConsumerWidget {
             )
           else ...[
             const SizedBox(width: AppSpacing.sm),
-            TextButton(
+            FilledButton(
               onPressed: () => context.go(destination),
               child: Text(actionLabel),
             ),
-            const SizedBox(width: AppSpacing.sm),
+            const SizedBox(width: AppSpacing.md),
           ],
         ],
       ),
       drawer: (!formFactor.isDesktop && navigation.isNotEmpty)
           ? _NavigationDrawer(items: navigation)
           : null,
-      body: SafeArea(child: child),
+      body: SafeArea(
+        child: Column(
+          children: [
+            if (!isCompact) const _InfoStrip(),
+            Expanded(child: child),
+          ],
+        ),
+      ),
       bottomNavigationBar: const _PublicFooter(),
+    );
+  }
+}
+
+/// The circular gold emblem beside the temple's name.
+class _BrandMark extends StatelessWidget {
+  const _BrandMark();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 44,
+      height: 44,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.gold, Color(0xFFFFDF86)],
+        ),
+      ),
+      child: const Icon(
+        Icons.temple_hindu,
+        size: 24,
+        color: AppColors.maroonDeep,
+      ),
+    );
+  }
+}
+
+/// The dark strip above the page: where the temple is, and how to reach it.
+///
+/// Deliberately *not* the tagline: that already leads the hero directly below,
+/// and saying it twice on one screen reads as a mistake. What a visitor cannot
+/// get from the hero is the address and the phone number, so those go here.
+///
+/// Both halves are CMS content, so the strip disappears entirely on a site the
+/// committee has not configured rather than showing invented copy.
+class _InfoStrip extends ConsumerWidget {
+  const _InfoStrip();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+
+    final address = ref
+        .watch(templeProfileProvider)
+        .value
+        ?.address
+        .lines(panchayatLabel: l10n.panchayatLabel);
+    final where = (address == null || address.isEmpty)
+        ? null
+        : address.join(', ');
+
+    final contact = ref.watch(siteSettingsProvider).value?.contact;
+    final reach = [?contact?.phone, ?contact?.email].join('  ·  ');
+
+    if (where == null && reach.isEmpty) return const SizedBox.shrink();
+
+    final style = theme.textTheme.bodySmall?.copyWith(
+      color: Colors.white.withValues(alpha: 0.86),
+    );
+
+    return Material(
+      color: AppColors.maroonInk,
+      child: PageContainer(
+        maxWidth: 1120,
+        verticalPadding: AppSpacing.sm,
+        child: Row(
+          children: [
+            if (where != null)
+              Expanded(
+                child: Text(
+                  where,
+                  key: const Key('info-strip-address'),
+                  style: style,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            if (reach.isNotEmpty) ...[
+              const SizedBox(width: AppSpacing.md),
+              Flexible(
+                child: Text(
+                  reach,
+                  key: const Key('info-strip-contact'),
+                  style: style,
+                  textAlign: TextAlign.right,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }
@@ -133,6 +251,7 @@ class _NavigationDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       child: SafeArea(
         child: ListView(
           children: [
@@ -141,8 +260,10 @@ class _NavigationDrawer extends StatelessWidget {
               child: Consumer(
                 builder: (context, ref, _) => Text(
                   ref.watch(templeNameProvider) ?? context.l10n.appTitle,
-                  style: Theme.of(context).textTheme.titleLarge
-                      ?.copyWith(color: Theme.of(context).colorScheme.primary),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
             ),
@@ -163,6 +284,7 @@ class _NavigationDrawer extends StatelessWidget {
   }
 }
 
+/// The dark footer that closes the page.
 class _PublicFooter extends ConsumerWidget {
   const _PublicFooter();
 
@@ -180,20 +302,18 @@ class _PublicFooter extends ConsumerWidget {
     final footer = settings?.footerText.value ?? identity;
 
     return Material(
-      color: theme.colorScheme.surfaceContainerHighest,
+      color: AppColors.maroonFooter,
       child: SafeArea(
         top: false,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.md,
-          ),
+        child: PageContainer(
+          maxWidth: 1120,
+          verticalPadding: AppSpacing.md,
           child: Text(
             footer,
             key: const Key('public-footer'),
             textAlign: TextAlign.center,
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+              color: AppColors.onFooter,
             ),
           ),
         ),

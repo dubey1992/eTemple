@@ -22,6 +22,16 @@ class AppRadius {
   const AppRadius._();
 
   static const double sm = 8;
+
+  /// Inputs and buttons.
   static const double md = 12;
-  static const double lg = 20;
+
+  /// Cards and panels (the prototype's `--radius`).
+  static const double lg = 18;
+
+  /// The hero panel and other large surfaces.
+  static const double xl = 28;
+
+  /// Pills: the language switch, the hero eyebrow, chips.
+  static const double pill = 999;
 }
