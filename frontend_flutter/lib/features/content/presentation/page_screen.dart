@@ -9,6 +9,7 @@ import '../../../core/seo/seo_metadata_service.dart';
 import '../../../core/widgets/page_container.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../shell/presentation/not_found_screen.dart';
+import '../../temple/data/temple_providers.dart';
 import '../data/content_providers.dart';
 import 'seo_scope.dart';
 import 'widgets/content_widgets.dart';
@@ -45,12 +46,15 @@ class PageScreen extends ConsumerWidget {
       },
       data: (data) {
         final l10n = context.l10n;
-        final title = data.title.orElse(l10n.appTitle);
+        // The temple's own name comes from the profile; the ARB string is the
+        // shell fallback used only until that resolves.
+        final siteName = ref.watch(templeNameProvider) ?? l10n.appTitle;
+        final title = data.title.orElse(siteName);
 
         return SeoScope(
           title: PageMetadata.compose(
             pageTitle: data.metaTitle.value ?? data.title.value,
-            siteName: l10n.appTitle,
+            siteName: siteName,
           ),
           description: data.metaDescription.value ?? data.content.value,
           canonicalPath: RoutePaths.page(slug),

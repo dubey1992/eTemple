@@ -79,8 +79,8 @@ class MigrationTest extends TestCase
         $this->assertTrue(Schema::hasTable('site_settings'));
         $this->assertTrue(Schema::hasTable('navigation_items'));
 
-        foreach (['tagline_hi', 'tagline_en', 'footer_text_hi', 'village', 'district',
-            'contact_email', 'map_url', 'social_links',
+        foreach (['tagline_hi', 'tagline_en', 'footer_text_hi',
+            'contact_phone', 'contact_email', 'social_links',
             'default_meta_title_hi', 'default_meta_description_en'] as $column) {
             $this->assertTrue(
                 Schema::hasColumn('site_settings', $column),
@@ -88,10 +88,62 @@ class MigrationTest extends TestCase
             );
         }
 
+        // Phase 3 moved the address to temple_profiles. A move, not a copy:
+        // these columns must be gone, or the site has two addresses.
+        foreach (['address_line1', 'village', 'panchayat', 'police_station',
+            'district', 'state', 'postal_code', 'country', 'map_url'] as $column) {
+            $this->assertFalse(
+                Schema::hasColumn('site_settings', $column),
+                "site_settings still has the [{$column}] column; the address was supposed to move."
+            );
+        }
+
         foreach (['label_hi', 'label_en', 'route', 'sort_order', 'is_visible'] as $column) {
             $this->assertTrue(
                 Schema::hasColumn('navigation_items', $column),
                 "navigation_items table is missing the [{$column}] column."
+            );
+        }
+    }
+
+    public function test_temple_profile_table_owns_the_identity_and_address(): void
+    {
+        $this->assertTrue(Schema::hasTable('temple_profiles'));
+
+        $expected = [
+            'id', 'name_hi', 'name_en',
+            'history_hi', 'history_en', 'mission_hi', 'mission_en',
+            'address_line1', 'address_line2', 'village', 'panchayat',
+            'police_station', 'district', 'state', 'postal_code', 'country',
+            'logo_url', 'map_url', 'established_year',
+            'updated_by', 'created_at', 'updated_at',
+        ];
+
+        foreach ($expected as $column) {
+            $this->assertTrue(
+                Schema::hasColumn('temple_profiles', $column),
+                "temple_profiles table is missing the [{$column}] column."
+            );
+        }
+    }
+
+    public function test_committee_members_table_carries_the_consent_record(): void
+    {
+        $this->assertTrue(Schema::hasTable('committee_members'));
+
+        $expected = [
+            'id', 'name_hi', 'name_en', 'designation_hi', 'designation_en',
+            'bio_hi', 'bio_en', 'phone', 'email', 'photo_url',
+            'tenure_start', 'tenure_end', 'is_published',
+            'contact_consent_at', 'consent_recorded_by',
+            'show_phone_publicly', 'show_email_publicly', 'show_photo_publicly',
+            'sort_order', 'created_by', 'updated_by', 'created_at', 'updated_at',
+        ];
+
+        foreach ($expected as $column) {
+            $this->assertTrue(
+                Schema::hasColumn('committee_members', $column),
+                "committee_members table is missing the [{$column}] column."
             );
         }
     }

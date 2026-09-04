@@ -20,12 +20,8 @@ class SiteSettingFactory extends Factory
         return [
             'tagline_hi' => 'भक्ति और सेवा का केंद्र',
             'tagline_en' => 'A place of devotion and service',
-            'village' => 'Amarpur Pankhoriya',
-            'panchayat' => 'Kurma',
-            'district' => 'Bhagalpur',
-            'state' => 'Bihar',
-            'postal_code' => '813204',
-            'country' => 'India',
+            'contact_phone' => null,
+            'contact_email' => null,
         ];
     }
 

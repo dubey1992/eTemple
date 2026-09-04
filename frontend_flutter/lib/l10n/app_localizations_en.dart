@@ -13,9 +13,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Radha Krishna Thakurbari';
 
   @override
-  String get appSubtitle => 'Amarpur Pankhoriya, Kurma Panchayat';
-
-  @override
   String get invocation => '|| Radhe Krishna ||';
 
   @override
@@ -471,4 +468,216 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fieldContactEmail => 'Contact e-mail';
+
+  @override
+  String get navTempleProfile => 'Temple profile';
+
+  @override
+  String get navTempleProfileDesc =>
+      'The temple\'s name, address, history and mission';
+
+  @override
+  String get navCommittee => 'Management committee';
+
+  @override
+  String get navCommitteeDesc => 'Members, tenure and public visibility';
+
+  @override
+  String get sectionCommittee => 'Management committee';
+
+  @override
+  String get sectionHistory => 'History of the temple';
+
+  @override
+  String get sectionMission => 'Our mission';
+
+  @override
+  String get committeeTitle => 'Management committee';
+
+  @override
+  String get committeeSubtitle => 'The members who look after the temple.';
+
+  @override
+  String get committeeComingSoon =>
+      'Details of the committee will be added shortly.';
+
+  @override
+  String get viewCommittee => 'See the full committee';
+
+  @override
+  String get panchayatLabel => 'Panchayat';
+
+  @override
+  String establishedIn(int year) {
+    return 'Established $year';
+  }
+
+  @override
+  String tenureSince(String from) {
+    return 'Serving since $from';
+  }
+
+  @override
+  String tenureRange(String from, String to) {
+    return 'Tenure: $from – $to';
+  }
+
+  @override
+  String get sectionContact => 'Contact details';
+
+  @override
+  String get addressLivesInTempleProfile =>
+      'The address now lives in the temple profile, so it is kept in one place only.';
+
+  @override
+  String get templeProfileTitle => 'Temple profile';
+
+  @override
+  String get templeProfileSubtitle =>
+      'The temple\'s name, address and introduction. This name appears at the top of the website.';
+
+  @override
+  String get sectionIdentity => 'Identity';
+
+  @override
+  String get fieldTempleName => 'Temple name';
+
+  @override
+  String get fieldHistory => 'History';
+
+  @override
+  String get fieldMission => 'Mission';
+
+  @override
+  String get fieldAddressLine1 => 'Address line 1';
+
+  @override
+  String get fieldAddressLine2 => 'Address line 2';
+
+  @override
+  String get fieldCountry => 'Country';
+
+  @override
+  String get fieldLogoUrl => 'Logo URL';
+
+  @override
+  String get fieldMapUrl => 'Map URL';
+
+  @override
+  String get fieldEstablishedYear => 'Year established';
+
+  @override
+  String get templeNameHint =>
+      'This name is used in the site title, header and footer. While it is blank the app\'s default name is shown.';
+
+  @override
+  String get committeeAdminTitle => 'Management committee';
+
+  @override
+  String get committeeAdminSubtitle =>
+      'Add committee members and decide which of their details are public.';
+
+  @override
+  String get committeeEmpty => 'No members have been added yet.';
+
+  @override
+  String get memberNew => 'New member';
+
+  @override
+  String get memberEdit => 'Edit member';
+
+  @override
+  String get memberCreate => 'Add member';
+
+  @override
+  String get memberCreated => 'Member added.';
+
+  @override
+  String get memberDeleted => 'Member removed.';
+
+  @override
+  String get memberDelete => 'Remove member';
+
+  @override
+  String get memberDeleteConfirmTitle => 'Remove this member?';
+
+  @override
+  String get memberDeleteConfirmBody =>
+      'This erases the record permanently. If the term has simply ended, set the tenure end date instead and the record is kept.';
+
+  @override
+  String get memberTenureEnded => 'Tenure ended';
+
+  @override
+  String get memberNotPublished => 'Not published';
+
+  @override
+  String get actionDelete => 'Remove';
+
+  @override
+  String get fieldName => 'Name';
+
+  @override
+  String get fieldDesignation => 'Designation';
+
+  @override
+  String get fieldBio => 'Short introduction';
+
+  @override
+  String get fieldPhone => 'Phone';
+
+  @override
+  String get fieldEmail => 'Email';
+
+  @override
+  String get fieldPhotoUrl => 'Photo URL';
+
+  @override
+  String get fieldTenureStart => 'Tenure start';
+
+  @override
+  String get fieldTenureEnd => 'Tenure end';
+
+  @override
+  String get fieldSortOrder => 'Display order';
+
+  @override
+  String get fieldPublished => 'Show on the public website';
+
+  @override
+  String get dateHint => 'YYYY-MM-DD';
+
+  @override
+  String get consentTitle => 'Consent for personal details';
+
+  @override
+  String get consentExplain =>
+      'Phone, e-mail and photograph are published only while the member’s consent is on record. Withdrawing consent hides all three immediately.';
+
+  @override
+  String get consentRecorded => 'The member\'s consent is on record';
+
+  @override
+  String consentRecordedOn(String date) {
+    return 'Consent recorded on $date';
+  }
+
+  @override
+  String get consentMissingHint =>
+      'No personal detail can be published until consent is recorded.';
+
+  @override
+  String get showPhonePublicly => 'Show the phone number publicly';
+
+  @override
+  String get showEmailPublicly => 'Show the e-mail address publicly';
+
+  @override
+  String get showPhotoPublicly => 'Show the photograph publicly';
+
+  @override
+  String get consentPublicWarning => 'Personal details are public';
+
+  @override
+  String get sectionTenure => 'Tenure';
 }

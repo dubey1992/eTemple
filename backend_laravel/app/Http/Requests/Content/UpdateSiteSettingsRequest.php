@@ -11,6 +11,10 @@ use Illuminate\Foundation\Http\FormRequest;
  * and a half-configured site must still save.
  *
  * `navigation`, when present, replaces the whole menu (see SiteSettingService).
+ *
+ * The postal address is deliberately absent: Phase 3 moved it to the temple
+ * profile, and an address sent here is unknown input rather than a field that
+ * is quietly ignored.
  */
 class UpdateSiteSettingsRequest extends FormRequest
 {
@@ -28,19 +32,8 @@ class UpdateSiteSettingsRequest extends FormRequest
             'footer_text_hi' => ['nullable', 'string', 'max:400'],
             'footer_text_en' => ['nullable', 'string', 'max:400'],
 
-            'address_line1' => ['nullable', 'string', 'max:200'],
-            'address_line2' => ['nullable', 'string', 'max:200'],
-            'village' => ['nullable', 'string', 'max:120'],
-            'panchayat' => ['nullable', 'string', 'max:120'],
-            'police_station' => ['nullable', 'string', 'max:120'],
-            'district' => ['nullable', 'string', 'max:120'],
-            'state' => ['nullable', 'string', 'max:120'],
-            'postal_code' => ['nullable', 'string', 'max:20'],
-            'country' => ['nullable', 'string', 'max:120'],
-
             'contact_phone' => ['nullable', 'string', 'max:40'],
             'contact_email' => ['nullable', 'email:rfc', 'max:191'],
-            'map_url' => ['nullable', 'url', 'max:500'],
             'social_links' => ['nullable', 'array'],
             'social_links.*' => ['nullable', 'url', 'max:300'],
 

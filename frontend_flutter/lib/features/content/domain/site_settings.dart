@@ -37,26 +37,13 @@ class NavigationEntry {
   };
 }
 
-/// The temple's postal and contact details.
+/// How to reach the temple committee.
 ///
-/// Phase 1 serves these from `site_settings`; Phase 3 introduces the
-/// authoritative `temple_profile` and these move there
-/// (PHASE_1_PLAN assumption B2).
+/// The postal address is **not** here: Phase 3 moved it to the authoritative
+/// temple profile, so `TempleAddress` is the only place it lives. What remains
+/// is the contact block the specification assigns to site settings.
 class ContactInfo {
-  const ContactInfo({
-    this.addressLine1,
-    this.addressLine2,
-    this.village,
-    this.panchayat,
-    this.policeStation,
-    this.district,
-    this.state,
-    this.postalCode,
-    this.country,
-    this.phone,
-    this.email,
-    this.mapUrl,
-  });
+  const ContactInfo({this.phone, this.email});
 
   factory ContactInfo.fromJson(Object? json) {
     final map = ApiEnvelopeParser.asMap(json) ?? const <String, dynamic>{};
@@ -65,65 +52,13 @@ class ContactInfo {
       return value is String && value.trim().isNotEmpty ? value.trim() : null;
     }
 
-    return ContactInfo(
-      addressLine1: read('address_line1'),
-      addressLine2: read('address_line2'),
-      village: read('village'),
-      panchayat: read('panchayat'),
-      policeStation: read('police_station'),
-      district: read('district'),
-      state: read('state'),
-      postalCode: read('postal_code'),
-      country: read('country'),
-      phone: read('phone'),
-      email: read('email'),
-      mapUrl: read('map_url'),
-    );
+    return ContactInfo(phone: read('phone'), email: read('email'));
   }
 
-  final String? addressLine1;
-  final String? addressLine2;
-  final String? village;
-  final String? panchayat;
-  final String? policeStation;
-  final String? district;
-  final String? state;
-  final String? postalCode;
-  final String? country;
   final String? phone;
   final String? email;
-  final String? mapUrl;
 
-  /// The address as display lines, skipping anything not filled in.
-  ///
-  /// Built here rather than in a widget so the ordering is testable and the
-  /// same everywhere the address appears.
-  List<String> get addressLines {
-    final village = [
-      this.village,
-      if (panchayat != null) 'पंचायत: $panchayat',
-    ].whereType<String>().join(', ');
-
-    final district = [
-      policeStation,
-      this.district,
-      state,
-      postalCode,
-    ].whereType<String>().join(', ');
-
-    return [
-          addressLine1,
-          addressLine2,
-          village.isEmpty ? null : village,
-          district.isEmpty ? null : district,
-          country,
-        ]
-        .whereType<String>()
-        .where((line) => line.isNotEmpty)
-        .toList(growable: false);
-  }
-
-  bool get isEmpty => addressLines.isEmpty && phone == null && email == null;
+  bool get isEmpty => phone == null && email == null;
 }
 
 /// Site-wide content the committee configures: tagline, footer, contact block,
@@ -204,12 +139,6 @@ class EditableSiteSettings {
     this.taglineEn,
     this.footerHi,
     this.footerEn,
-    this.village,
-    this.panchayat,
-    this.policeStation,
-    this.district,
-    this.state,
-    this.postalCode,
     this.contactPhone,
     this.contactEmail,
   });
@@ -225,12 +154,6 @@ class EditableSiteSettings {
       taglineEn: read('tagline_en'),
       footerHi: read('footer_text_hi'),
       footerEn: read('footer_text_en'),
-      village: read('village'),
-      panchayat: read('panchayat'),
-      policeStation: read('police_station'),
-      district: read('district'),
-      state: read('state'),
-      postalCode: read('postal_code'),
       contactPhone: read('contact_phone'),
       contactEmail: read('contact_email'),
     );
@@ -240,12 +163,6 @@ class EditableSiteSettings {
   final String? taglineEn;
   final String? footerHi;
   final String? footerEn;
-  final String? village;
-  final String? panchayat;
-  final String? policeStation;
-  final String? district;
-  final String? state;
-  final String? postalCode;
   final String? contactPhone;
   final String? contactEmail;
 }

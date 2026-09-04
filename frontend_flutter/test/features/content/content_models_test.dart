@@ -212,24 +212,17 @@ void main() {
   });
 
   group('ContactInfo', () {
-    test('builds address lines in order, skipping blanks', () {
+    // The postal address moved to TempleAddress in Phase 3; the line-building
+    // rules are tested in temple_models_test.dart. What is left here is the
+    // contact block itself.
+    test('a contact block ignores an address sent by mistake', () {
       final contact = ContactInfo.fromJson({
         'village': 'Amarpur Pankhoriya',
-        'panchayat': 'Kurma',
-        'police_station': 'Rasulpur Ekchari',
-        'district': 'Bhagalpur',
-        'state': 'Bihar',
-        'postal_code': '813204',
-        'country': 'India',
-        'address_line1': '   ',
+        'phone': '+91 90000 00000',
       });
 
-      expect(contact.addressLines, [
-        'Amarpur Pankhoriya, पंचायत: Kurma',
-        'Rasulpur Ekchari, Bhagalpur, Bihar, 813204',
-        'India',
-      ]);
-      expect(contact.isEmpty, isFalse);
+      expect(contact.phone, '+91 90000 00000');
+      expect(contact.email, isNull);
     });
 
     test('an unfilled contact block is empty', () {

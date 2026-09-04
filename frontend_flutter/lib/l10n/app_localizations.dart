@@ -98,17 +98,11 @@ abstract class AppLocalizations {
     Locale('hi'),
   ];
 
-  /// Temple name shown in the browser title bar and app bar
+  /// Application shell fallback for the temple name. Since Phase 3 the real name comes from temple_profile; this is shown only while that request is in flight or has failed.
   ///
   /// In hi, this message translates to:
   /// **'राधा कृष्ण ठाकुरबाड़ी'**
   String get appTitle;
-
-  /// Village and panchayat shown beneath the temple name
-  ///
-  /// In hi, this message translates to:
-  /// **'अमरपुर पंखोरिया, कुर्मा पंचायत'**
-  String get appSubtitle;
 
   /// Devotional invocation displayed above the temple name
   ///
@@ -967,6 +961,396 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'संपर्क ईमेल'**
   String get fieldContactEmail;
+
+  /// No description provided for @navTempleProfile.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर प्रोफ़ाइल'**
+  String get navTempleProfile;
+
+  /// No description provided for @navTempleProfileDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर का नाम, पता, इतिहास और उद्देश्य'**
+  String get navTempleProfileDesc;
+
+  /// No description provided for @navCommittee.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रबंध समिति'**
+  String get navCommittee;
+
+  /// No description provided for @navCommitteeDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'सदस्य, कार्यकाल और सार्वजनिक दृश्यता'**
+  String get navCommitteeDesc;
+
+  /// No description provided for @sectionCommittee.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रबंध समिति'**
+  String get sectionCommittee;
+
+  /// No description provided for @sectionHistory.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर का इतिहास'**
+  String get sectionHistory;
+
+  /// No description provided for @sectionMission.
+  ///
+  /// In hi, this message translates to:
+  /// **'हमारा उद्देश्य'**
+  String get sectionMission;
+
+  /// No description provided for @committeeTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रबंध समिति'**
+  String get committeeTitle;
+
+  /// No description provided for @committeeSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर की देखरेख करने वाले समिति सदस्य।'**
+  String get committeeSubtitle;
+
+  /// No description provided for @committeeComingSoon.
+  ///
+  /// In hi, this message translates to:
+  /// **'समिति की जानकारी शीघ्र ही जोड़ी जाएगी।'**
+  String get committeeComingSoon;
+
+  /// No description provided for @viewCommittee.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूरी समिति देखें'**
+  String get viewCommittee;
+
+  /// Prefix for the panchayat in a rendered address line
+  ///
+  /// In hi, this message translates to:
+  /// **'पंचायत'**
+  String get panchayatLabel;
+
+  /// No description provided for @establishedIn.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्थापना: {year}'**
+  String establishedIn(int year);
+
+  /// No description provided for @tenureSince.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यकाल: {from} से'**
+  String tenureSince(String from);
+
+  /// No description provided for @tenureRange.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यकाल: {from} – {to}'**
+  String tenureRange(String from, String to);
+
+  /// No description provided for @sectionContact.
+  ///
+  /// In hi, this message translates to:
+  /// **'संपर्क विवरण'**
+  String get sectionContact;
+
+  /// No description provided for @addressLivesInTempleProfile.
+  ///
+  /// In hi, this message translates to:
+  /// **'पता अब मंदिर प्रोफ़ाइल में रखा जाता है, ताकि वह केवल एक ही स्थान पर रहे।'**
+  String get addressLivesInTempleProfile;
+
+  /// No description provided for @templeProfileTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर प्रोफ़ाइल'**
+  String get templeProfileTitle;
+
+  /// No description provided for @templeProfileSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर का नाम, पता और परिचय। यही नाम वेबसाइट के शीर्ष पर दिखाया जाता है।'**
+  String get templeProfileSubtitle;
+
+  /// No description provided for @sectionIdentity.
+  ///
+  /// In hi, this message translates to:
+  /// **'पहचान'**
+  String get sectionIdentity;
+
+  /// No description provided for @fieldTempleName.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर का नाम'**
+  String get fieldTempleName;
+
+  /// No description provided for @fieldHistory.
+  ///
+  /// In hi, this message translates to:
+  /// **'इतिहास'**
+  String get fieldHistory;
+
+  /// No description provided for @fieldMission.
+  ///
+  /// In hi, this message translates to:
+  /// **'उद्देश्य'**
+  String get fieldMission;
+
+  /// No description provided for @fieldAddressLine1.
+  ///
+  /// In hi, this message translates to:
+  /// **'पता पंक्ति 1'**
+  String get fieldAddressLine1;
+
+  /// No description provided for @fieldAddressLine2.
+  ///
+  /// In hi, this message translates to:
+  /// **'पता पंक्ति 2'**
+  String get fieldAddressLine2;
+
+  /// No description provided for @fieldCountry.
+  ///
+  /// In hi, this message translates to:
+  /// **'देश'**
+  String get fieldCountry;
+
+  /// No description provided for @fieldLogoUrl.
+  ///
+  /// In hi, this message translates to:
+  /// **'लोगो का URL'**
+  String get fieldLogoUrl;
+
+  /// No description provided for @fieldMapUrl.
+  ///
+  /// In hi, this message translates to:
+  /// **'मानचित्र का URL'**
+  String get fieldMapUrl;
+
+  /// No description provided for @fieldEstablishedYear.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्थापना वर्ष'**
+  String get fieldEstablishedYear;
+
+  /// No description provided for @templeNameHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह नाम वेबसाइट के शीर्षक, हेडर और फुटर में उपयोग होता है। खाली रहने पर ऐप का डिफ़ॉल्ट नाम दिखेगा।'**
+  String get templeNameHint;
+
+  /// No description provided for @committeeAdminTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रबंध समिति'**
+  String get committeeAdminTitle;
+
+  /// No description provided for @committeeAdminSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'समिति सदस्य जोड़ें और तय करें कि उनकी कौन-सी जानकारी सार्वजनिक हो।'**
+  String get committeeAdminSubtitle;
+
+  /// No description provided for @committeeEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी कोई सदस्य दर्ज नहीं है।'**
+  String get committeeEmpty;
+
+  /// No description provided for @memberNew.
+  ///
+  /// In hi, this message translates to:
+  /// **'नया सदस्य'**
+  String get memberNew;
+
+  /// No description provided for @memberEdit.
+  ///
+  /// In hi, this message translates to:
+  /// **'सदस्य संपादित करें'**
+  String get memberEdit;
+
+  /// No description provided for @memberCreate.
+  ///
+  /// In hi, this message translates to:
+  /// **'सदस्य जोड़ें'**
+  String get memberCreate;
+
+  /// No description provided for @memberCreated.
+  ///
+  /// In hi, this message translates to:
+  /// **'सदस्य जोड़ दिया गया।'**
+  String get memberCreated;
+
+  /// No description provided for @memberDeleted.
+  ///
+  /// In hi, this message translates to:
+  /// **'सदस्य हटा दिया गया।'**
+  String get memberDeleted;
+
+  /// No description provided for @memberDelete.
+  ///
+  /// In hi, this message translates to:
+  /// **'सदस्य हटाएँ'**
+  String get memberDelete;
+
+  /// No description provided for @memberDeleteConfirmTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'सदस्य हटाएँ?'**
+  String get memberDeleteConfirmTitle;
+
+  /// No description provided for @memberDeleteConfirmBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'इससे रिकॉर्ड स्थायी रूप से मिट जाएगा। यदि केवल कार्यकाल समाप्त हुआ है तो \"कार्यकाल समाप्त\" तिथि भरें — रिकॉर्ड सुरक्षित रहेगा।'**
+  String get memberDeleteConfirmBody;
+
+  /// No description provided for @memberTenureEnded.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यकाल समाप्त'**
+  String get memberTenureEnded;
+
+  /// No description provided for @memberNotPublished.
+  ///
+  /// In hi, this message translates to:
+  /// **'अप्रकाशित'**
+  String get memberNotPublished;
+
+  /// No description provided for @actionDelete.
+  ///
+  /// In hi, this message translates to:
+  /// **'हटाएँ'**
+  String get actionDelete;
+
+  /// No description provided for @fieldName.
+  ///
+  /// In hi, this message translates to:
+  /// **'नाम'**
+  String get fieldName;
+
+  /// No description provided for @fieldDesignation.
+  ///
+  /// In hi, this message translates to:
+  /// **'पद'**
+  String get fieldDesignation;
+
+  /// No description provided for @fieldBio.
+  ///
+  /// In hi, this message translates to:
+  /// **'परिचय'**
+  String get fieldBio;
+
+  /// No description provided for @fieldPhone.
+  ///
+  /// In hi, this message translates to:
+  /// **'दूरभाष'**
+  String get fieldPhone;
+
+  /// No description provided for @fieldEmail.
+  ///
+  /// In hi, this message translates to:
+  /// **'ईमेल'**
+  String get fieldEmail;
+
+  /// No description provided for @fieldPhotoUrl.
+  ///
+  /// In hi, this message translates to:
+  /// **'फ़ोटो का URL'**
+  String get fieldPhotoUrl;
+
+  /// No description provided for @fieldTenureStart.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यकाल आरंभ'**
+  String get fieldTenureStart;
+
+  /// No description provided for @fieldTenureEnd.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यकाल समाप्त'**
+  String get fieldTenureEnd;
+
+  /// No description provided for @fieldSortOrder.
+  ///
+  /// In hi, this message translates to:
+  /// **'क्रम'**
+  String get fieldSortOrder;
+
+  /// No description provided for @fieldPublished.
+  ///
+  /// In hi, this message translates to:
+  /// **'सार्वजनिक वेबसाइट पर दिखाएँ'**
+  String get fieldPublished;
+
+  /// No description provided for @dateHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'YYYY-MM-DD'**
+  String get dateHint;
+
+  /// No description provided for @consentTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'व्यक्तिगत जानकारी की सहमति'**
+  String get consentTitle;
+
+  /// No description provided for @consentExplain.
+  ///
+  /// In hi, this message translates to:
+  /// **'दूरभाष, ईमेल और फ़ोटो तभी सार्वजनिक होंगे जब सदस्य की सहमति दर्ज हो। सहमति हटाते ही तीनों तुरंत छिप जाते हैं।'**
+  String get consentExplain;
+
+  /// No description provided for @consentRecorded.
+  ///
+  /// In hi, this message translates to:
+  /// **'सदस्य की सहमति दर्ज है'**
+  String get consentRecorded;
+
+  /// No description provided for @consentRecordedOn.
+  ///
+  /// In hi, this message translates to:
+  /// **'सहमति दर्ज: {date}'**
+  String consentRecordedOn(String date);
+
+  /// No description provided for @consentMissingHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'सहमति दर्ज किए बिना कोई भी व्यक्तिगत विवरण सार्वजनिक नहीं किया जा सकता।'**
+  String get consentMissingHint;
+
+  /// No description provided for @showPhonePublicly.
+  ///
+  /// In hi, this message translates to:
+  /// **'दूरभाष सार्वजनिक रूप से दिखाएँ'**
+  String get showPhonePublicly;
+
+  /// No description provided for @showEmailPublicly.
+  ///
+  /// In hi, this message translates to:
+  /// **'ईमेल सार्वजनिक रूप से दिखाएँ'**
+  String get showEmailPublicly;
+
+  /// No description provided for @showPhotoPublicly.
+  ///
+  /// In hi, this message translates to:
+  /// **'फ़ोटो सार्वजनिक रूप से दिखाएँ'**
+  String get showPhotoPublicly;
+
+  /// No description provided for @consentPublicWarning.
+  ///
+  /// In hi, this message translates to:
+  /// **'व्यक्तिगत विवरण सार्वजनिक'**
+  String get consentPublicWarning;
+
+  /// No description provided for @sectionTenure.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यकाल'**
+  String get sectionTenure;
 }
 
 class _AppLocalizationsDelegate

@@ -10,6 +10,10 @@ class RoutePaths {
   static const String login = '/login';
   static const String forgotPassword = '/forgot-password';
 
+  /// The committee page. Declared before the catch-all slug route so it is
+  /// not mistaken for a CMS page.
+  static const String committee = '/committee';
+
   /// A CMS page lives at its own slug, so /about is a clean, shareable URL.
   /// Declared last in the router so it cannot shadow the routes above.
   static const String pagePattern = '/:slug';
@@ -30,6 +34,13 @@ class RoutePaths {
   static String adminUserEditor(int id) => '/admin/users/$id';
 
   static const String adminRoles = '/admin/roles';
+
+  static const String adminTempleProfile = '/admin/temple-profile';
+
+  static const String adminCommittee = '/admin/committee';
+  static const String adminCommitteeNew = '/admin/committee/new';
+
+  static String adminCommitteeMember(int id) => '/admin/committee/$id';
 
   static String adminRolePermissions(int id) => '/admin/roles/$id';
 
@@ -55,6 +66,10 @@ class RouteNames {
   static const String adminUsers = 'admin-users';
   static const String adminUserEditor = 'admin-user-editor';
   static const String adminRoles = 'admin-roles';
+  static const String committee = 'committee';
+  static const String adminTempleProfile = 'admin-temple-profile';
+  static const String adminCommittee = 'admin-committee';
+  static const String adminCommitteeMember = 'admin-committee-member';
   static const String adminRolePermissions = 'admin-role-permissions';
   static const String resetPassword = 'reset-password';
 }

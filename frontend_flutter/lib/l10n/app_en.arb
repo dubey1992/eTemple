@@ -1,7 +1,6 @@
 {
   "@@locale": "en",
   "appTitle": "Radha Krishna Thakurbari",
-  "appSubtitle": "Amarpur Pankhoriya, Kurma Panchayat",
   "invocation": "|| Radhe Krishna ||",
   "languageLabel": "Language",
   "languageHindi": "हिन्दी",
@@ -144,5 +143,167 @@
   "fieldState": "State",
   "fieldPostalCode": "Postal code",
   "fieldContactPhone": "Contact phone",
-  "fieldContactEmail": "Contact e-mail"
+  "fieldContactEmail": "Contact e-mail",
+  "@appTitle": {
+    "description": "Application shell fallback for the temple name. Since Phase 3 the real name comes from temple_profile; this is shown only while that request is in flight or has failed."
+  },
+  "navTempleProfile": "Temple profile",
+  "@navTempleProfile": {},
+  "navTempleProfileDesc": "The temple's name, address, history and mission",
+  "@navTempleProfileDesc": {},
+  "navCommittee": "Management committee",
+  "@navCommittee": {},
+  "navCommitteeDesc": "Members, tenure and public visibility",
+  "@navCommitteeDesc": {},
+  "sectionCommittee": "Management committee",
+  "@sectionCommittee": {},
+  "sectionHistory": "History of the temple",
+  "@sectionHistory": {},
+  "sectionMission": "Our mission",
+  "@sectionMission": {},
+  "committeeTitle": "Management committee",
+  "@committeeTitle": {},
+  "committeeSubtitle": "The members who look after the temple.",
+  "@committeeSubtitle": {},
+  "committeeComingSoon": "Details of the committee will be added shortly.",
+  "@committeeComingSoon": {},
+  "viewCommittee": "See the full committee",
+  "@viewCommittee": {},
+  "panchayatLabel": "Panchayat",
+  "@panchayatLabel": {
+    "description": "Prefix for the panchayat in a rendered address line"
+  },
+  "establishedIn": "Established {year}",
+  "@establishedIn": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "tenureSince": "Serving since {from}",
+  "@tenureSince": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      }
+    }
+  },
+  "tenureRange": "Tenure: {from} – {to}",
+  "@tenureRange": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "sectionContact": "Contact details",
+  "@sectionContact": {},
+  "addressLivesInTempleProfile": "The address now lives in the temple profile, so it is kept in one place only.",
+  "@addressLivesInTempleProfile": {},
+  "templeProfileTitle": "Temple profile",
+  "@templeProfileTitle": {},
+  "templeProfileSubtitle": "The temple's name, address and introduction. This name appears at the top of the website.",
+  "@templeProfileSubtitle": {},
+  "sectionIdentity": "Identity",
+  "@sectionIdentity": {},
+  "fieldTempleName": "Temple name",
+  "@fieldTempleName": {},
+  "fieldHistory": "History",
+  "@fieldHistory": {},
+  "fieldMission": "Mission",
+  "@fieldMission": {},
+  "fieldAddressLine1": "Address line 1",
+  "@fieldAddressLine1": {},
+  "fieldAddressLine2": "Address line 2",
+  "@fieldAddressLine2": {},
+  "fieldCountry": "Country",
+  "@fieldCountry": {},
+  "fieldLogoUrl": "Logo URL",
+  "@fieldLogoUrl": {},
+  "fieldMapUrl": "Map URL",
+  "@fieldMapUrl": {},
+  "fieldEstablishedYear": "Year established",
+  "@fieldEstablishedYear": {},
+  "templeNameHint": "This name is used in the site title, header and footer. While it is blank the app's default name is shown.",
+  "@templeNameHint": {},
+  "committeeAdminTitle": "Management committee",
+  "@committeeAdminTitle": {},
+  "committeeAdminSubtitle": "Add committee members and decide which of their details are public.",
+  "@committeeAdminSubtitle": {},
+  "committeeEmpty": "No members have been added yet.",
+  "@committeeEmpty": {},
+  "memberNew": "New member",
+  "@memberNew": {},
+  "memberEdit": "Edit member",
+  "@memberEdit": {},
+  "memberCreate": "Add member",
+  "@memberCreate": {},
+  "memberCreated": "Member added.",
+  "@memberCreated": {},
+  "memberDeleted": "Member removed.",
+  "@memberDeleted": {},
+  "memberDelete": "Remove member",
+  "@memberDelete": {},
+  "memberDeleteConfirmTitle": "Remove this member?",
+  "@memberDeleteConfirmTitle": {},
+  "memberDeleteConfirmBody": "This erases the record permanently. If the term has simply ended, set the tenure end date instead and the record is kept.",
+  "@memberDeleteConfirmBody": {},
+  "memberTenureEnded": "Tenure ended",
+  "@memberTenureEnded": {},
+  "memberNotPublished": "Not published",
+  "@memberNotPublished": {},
+  "actionDelete": "Remove",
+  "@actionDelete": {},
+  "fieldName": "Name",
+  "@fieldName": {},
+  "fieldDesignation": "Designation",
+  "@fieldDesignation": {},
+  "fieldBio": "Short introduction",
+  "@fieldBio": {},
+  "fieldPhone": "Phone",
+  "@fieldPhone": {},
+  "fieldEmail": "Email",
+  "@fieldEmail": {},
+  "fieldPhotoUrl": "Photo URL",
+  "@fieldPhotoUrl": {},
+  "fieldTenureStart": "Tenure start",
+  "@fieldTenureStart": {},
+  "fieldTenureEnd": "Tenure end",
+  "@fieldTenureEnd": {},
+  "fieldSortOrder": "Display order",
+  "@fieldSortOrder": {},
+  "fieldPublished": "Show on the public website",
+  "@fieldPublished": {},
+  "dateHint": "YYYY-MM-DD",
+  "@dateHint": {},
+  "consentTitle": "Consent for personal details",
+  "@consentTitle": {},
+  "consentExplain": "Phone, e-mail and photograph are published only while the member’s consent is on record. Withdrawing consent hides all three immediately.",
+  "@consentExplain": {},
+  "consentRecorded": "The member's consent is on record",
+  "@consentRecorded": {},
+  "consentRecordedOn": "Consent recorded on {date}",
+  "@consentRecordedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "consentMissingHint": "No personal detail can be published until consent is recorded.",
+  "@consentMissingHint": {},
+  "showPhonePublicly": "Show the phone number publicly",
+  "@showPhonePublicly": {},
+  "showEmailPublicly": "Show the e-mail address publicly",
+  "@showEmailPublicly": {},
+  "showPhotoPublicly": "Show the photograph publicly",
+  "@showPhotoPublicly": {},
+  "consentPublicWarning": "Personal details are public",
+  "@consentPublicWarning": {},
+  "sectionTenure": "Tenure",
+  "@sectionTenure": {}
 }

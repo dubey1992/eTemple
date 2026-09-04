@@ -10,6 +10,7 @@ import '../../../core/errors/app_exception.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/language_switch.dart';
 import '../../../core/widgets/page_container.dart';
+import '../../temple/data/temple_providers.dart';
 import '../data/auth_providers.dart';
 
 /// Completes the password reset started by the forgot-password e-mail.
@@ -85,7 +86,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.appTitle),
+        // The temple names its own sign-in page; the ARB string only
+        // stands in while the profile is loading.
+        title: Text(ref.watch(templeNameProvider) ?? l10n.appTitle),
         actions: const [
           LanguageSwitch(compact: true),
           SizedBox(width: AppSpacing.sm),

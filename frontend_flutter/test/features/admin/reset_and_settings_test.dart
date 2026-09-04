@@ -157,13 +157,29 @@ void main() {
       final content = FakeContentRepository()
         ..editableSettings = const EditableSiteSettings(
           taglineHi: 'भक्ति और सेवा',
-          village: 'Amarpur Pankhoriya',
+          contactEmail: 'committee@thakurbari.test',
         );
 
       await pumpSettings(tester, content);
 
       expect(find.text('भक्ति और सेवा'), findsOneWidget);
-      expect(find.text('Amarpur Pankhoriya'), findsOneWidget);
+      expect(find.text('committee@thakurbari.test'), findsOneWidget);
+    });
+
+    testWidgets('the address is not editable here; it links to the profile', (
+      tester,
+    ) async {
+      // One source of truth: this screen must not offer a second set of
+      // address fields once Phase 3 moved them to the temple profile.
+      await pumpSettings(tester, FakeContentRepository());
+
+      expect(find.byKey(const Key('settings-village')), findsNothing);
+      expect(find.byKey(const Key('settings-district')), findsNothing);
+      expect(find.byKey(const Key('settings-address-moved')), findsOneWidget);
+      expect(
+        find.byKey(const Key('settings-open-temple-profile')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('sends blank fields as absent, not empty strings', (
@@ -179,8 +195,8 @@ void main() {
         '  ',
       );
       await tester.enterText(
-        find.byKey(const Key('settings-village')),
-        'Amarpur Pankhoriya',
+        find.byKey(const Key('settings-contact_email')),
+        'committee@thakurbari.test',
       );
       await tester.tap(find.byKey(const Key('settings-save')));
       await tester.pumpAndSettle();
@@ -189,7 +205,7 @@ void main() {
       final json = content.lastSettingsDraft!.toJson();
       // Absent, so the public site shows its empty state rather than a blank line.
       expect(json['tagline_hi'], isNull);
-      expect(json['village'], 'Amarpur Pankhoriya');
+      expect(json['contact_email'], 'committee@thakurbari.test');
     });
 
     testWidgets('a refused save shows the unauthorized state on load', (

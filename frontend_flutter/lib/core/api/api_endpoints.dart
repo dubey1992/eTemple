@@ -19,6 +19,11 @@ class ApiEndpoints {
 
   static String publicPage(String slug) => '/public/pages/$slug';
 
+  // Temple identity and committee (Phase 3)
+  static const String publicTempleProfile = '/public/temple-profile';
+
+  static const String publicCommittee = '/public/committee';
+
   // Protected admin surface (Phase 0 foundation)
   static const String adminPing = '/admin/ping';
 
@@ -45,6 +50,13 @@ class ApiEndpoints {
   static const String adminPermissions = '/admin/permissions';
 
   static String adminRolePermissions(int id) => '/admin/roles/$id/permissions';
+
+  // Temple profile and committee management (Phase 3)
+  static const String adminTempleProfile = '/admin/temple-profile';
+
+  static const String adminCommitteeMembers = '/admin/committee-members';
+
+  static String adminCommitteeMember(int id) => '/admin/committee-members/$id';
 
   static const String resetPassword = '/auth/reset-password';
 

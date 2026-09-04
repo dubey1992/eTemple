@@ -172,12 +172,8 @@ SiteSettings testSettings({
     contact:
         contact ??
         const ContactInfo(
-          village: 'Amarpur Pankhoriya',
-          panchayat: 'Kurma',
-          district: 'Bhagalpur',
-          state: 'Bihar',
-          postalCode: '813204',
-          country: 'India',
+          phone: '+91 90000 00000',
+          email: 'committee@thakurbari.test',
         ),
     navigation:
         navigation ??

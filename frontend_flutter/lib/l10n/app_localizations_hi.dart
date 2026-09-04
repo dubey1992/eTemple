@@ -13,9 +13,6 @@ class AppLocalizationsHi extends AppLocalizations {
   String get appTitle => 'राधा कृष्ण ठाकुरबाड़ी';
 
   @override
-  String get appSubtitle => 'अमरपुर पंखोरिया, कुर्मा पंचायत';
-
-  @override
   String get invocation => '॥ राधे कृष्ण ॥';
 
   @override
@@ -470,4 +467,214 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get fieldContactEmail => 'संपर्क ईमेल';
+
+  @override
+  String get navTempleProfile => 'मंदिर प्रोफ़ाइल';
+
+  @override
+  String get navTempleProfileDesc => 'मंदिर का नाम, पता, इतिहास और उद्देश्य';
+
+  @override
+  String get navCommittee => 'प्रबंध समिति';
+
+  @override
+  String get navCommitteeDesc => 'सदस्य, कार्यकाल और सार्वजनिक दृश्यता';
+
+  @override
+  String get sectionCommittee => 'प्रबंध समिति';
+
+  @override
+  String get sectionHistory => 'मंदिर का इतिहास';
+
+  @override
+  String get sectionMission => 'हमारा उद्देश्य';
+
+  @override
+  String get committeeTitle => 'प्रबंध समिति';
+
+  @override
+  String get committeeSubtitle => 'मंदिर की देखरेख करने वाले समिति सदस्य।';
+
+  @override
+  String get committeeComingSoon => 'समिति की जानकारी शीघ्र ही जोड़ी जाएगी।';
+
+  @override
+  String get viewCommittee => 'पूरी समिति देखें';
+
+  @override
+  String get panchayatLabel => 'पंचायत';
+
+  @override
+  String establishedIn(int year) {
+    return 'स्थापना: $year';
+  }
+
+  @override
+  String tenureSince(String from) {
+    return 'कार्यकाल: $from से';
+  }
+
+  @override
+  String tenureRange(String from, String to) {
+    return 'कार्यकाल: $from – $to';
+  }
+
+  @override
+  String get sectionContact => 'संपर्क विवरण';
+
+  @override
+  String get addressLivesInTempleProfile =>
+      'पता अब मंदिर प्रोफ़ाइल में रखा जाता है, ताकि वह केवल एक ही स्थान पर रहे।';
+
+  @override
+  String get templeProfileTitle => 'मंदिर प्रोफ़ाइल';
+
+  @override
+  String get templeProfileSubtitle =>
+      'मंदिर का नाम, पता और परिचय। यही नाम वेबसाइट के शीर्ष पर दिखाया जाता है।';
+
+  @override
+  String get sectionIdentity => 'पहचान';
+
+  @override
+  String get fieldTempleName => 'मंदिर का नाम';
+
+  @override
+  String get fieldHistory => 'इतिहास';
+
+  @override
+  String get fieldMission => 'उद्देश्य';
+
+  @override
+  String get fieldAddressLine1 => 'पता पंक्ति 1';
+
+  @override
+  String get fieldAddressLine2 => 'पता पंक्ति 2';
+
+  @override
+  String get fieldCountry => 'देश';
+
+  @override
+  String get fieldLogoUrl => 'लोगो का URL';
+
+  @override
+  String get fieldMapUrl => 'मानचित्र का URL';
+
+  @override
+  String get fieldEstablishedYear => 'स्थापना वर्ष';
+
+  @override
+  String get templeNameHint =>
+      'यह नाम वेबसाइट के शीर्षक, हेडर और फुटर में उपयोग होता है। खाली रहने पर ऐप का डिफ़ॉल्ट नाम दिखेगा।';
+
+  @override
+  String get committeeAdminTitle => 'प्रबंध समिति';
+
+  @override
+  String get committeeAdminSubtitle =>
+      'समिति सदस्य जोड़ें और तय करें कि उनकी कौन-सी जानकारी सार्वजनिक हो।';
+
+  @override
+  String get committeeEmpty => 'अभी कोई सदस्य दर्ज नहीं है।';
+
+  @override
+  String get memberNew => 'नया सदस्य';
+
+  @override
+  String get memberEdit => 'सदस्य संपादित करें';
+
+  @override
+  String get memberCreate => 'सदस्य जोड़ें';
+
+  @override
+  String get memberCreated => 'सदस्य जोड़ दिया गया।';
+
+  @override
+  String get memberDeleted => 'सदस्य हटा दिया गया।';
+
+  @override
+  String get memberDelete => 'सदस्य हटाएँ';
+
+  @override
+  String get memberDeleteConfirmTitle => 'सदस्य हटाएँ?';
+
+  @override
+  String get memberDeleteConfirmBody =>
+      'इससे रिकॉर्ड स्थायी रूप से मिट जाएगा। यदि केवल कार्यकाल समाप्त हुआ है तो \"कार्यकाल समाप्त\" तिथि भरें — रिकॉर्ड सुरक्षित रहेगा।';
+
+  @override
+  String get memberTenureEnded => 'कार्यकाल समाप्त';
+
+  @override
+  String get memberNotPublished => 'अप्रकाशित';
+
+  @override
+  String get actionDelete => 'हटाएँ';
+
+  @override
+  String get fieldName => 'नाम';
+
+  @override
+  String get fieldDesignation => 'पद';
+
+  @override
+  String get fieldBio => 'परिचय';
+
+  @override
+  String get fieldPhone => 'दूरभाष';
+
+  @override
+  String get fieldEmail => 'ईमेल';
+
+  @override
+  String get fieldPhotoUrl => 'फ़ोटो का URL';
+
+  @override
+  String get fieldTenureStart => 'कार्यकाल आरंभ';
+
+  @override
+  String get fieldTenureEnd => 'कार्यकाल समाप्त';
+
+  @override
+  String get fieldSortOrder => 'क्रम';
+
+  @override
+  String get fieldPublished => 'सार्वजनिक वेबसाइट पर दिखाएँ';
+
+  @override
+  String get dateHint => 'YYYY-MM-DD';
+
+  @override
+  String get consentTitle => 'व्यक्तिगत जानकारी की सहमति';
+
+  @override
+  String get consentExplain =>
+      'दूरभाष, ईमेल और फ़ोटो तभी सार्वजनिक होंगे जब सदस्य की सहमति दर्ज हो। सहमति हटाते ही तीनों तुरंत छिप जाते हैं।';
+
+  @override
+  String get consentRecorded => 'सदस्य की सहमति दर्ज है';
+
+  @override
+  String consentRecordedOn(String date) {
+    return 'सहमति दर्ज: $date';
+  }
+
+  @override
+  String get consentMissingHint =>
+      'सहमति दर्ज किए बिना कोई भी व्यक्तिगत विवरण सार्वजनिक नहीं किया जा सकता।';
+
+  @override
+  String get showPhonePublicly => 'दूरभाष सार्वजनिक रूप से दिखाएँ';
+
+  @override
+  String get showEmailPublicly => 'ईमेल सार्वजनिक रूप से दिखाएँ';
+
+  @override
+  String get showPhotoPublicly => 'फ़ोटो सार्वजनिक रूप से दिखाएँ';
+
+  @override
+  String get consentPublicWarning => 'व्यक्तिगत विवरण सार्वजनिक';
+
+  @override
+  String get sectionTenure => 'कार्यकाल';
 }

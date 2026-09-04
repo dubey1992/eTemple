@@ -26,6 +26,10 @@ import 'dart:io';
 
 const _defaultSlugs = ['home', 'about'];
 
+/// Used only when the committee has not written the temple's name yet, which
+/// mirrors what the running app shows in the same situation.
+const _fallbackSiteName = 'राधा कृष्ण ठाकुरबाड़ी';
+
 Future<void> main(List<String> args) async {
   final options = _Options.parse(args);
   if (options == null) {
@@ -53,6 +57,16 @@ Future<void> main(List<String> args) async {
   final written = <String>[];
 
   try {
+    // The temple's own name is CMS content from Phase 3 on, so the pre-rendered
+    // head takes it from the profile rather than from a constant in this file.
+    final siteName = await _fetchSiteName(client, options.apiBase);
+    if (siteName == null) {
+      stdout.writeln(
+        'note   temple profile has no name yet; '
+        'falling back to "$_fallbackSiteName"',
+      );
+    }
+
     for (final slug in options.slugs) {
       final page = await _fetchPage(client, options.apiBase, slug);
       if (page == null) {
@@ -63,7 +77,13 @@ Future<void> main(List<String> args) async {
       // The home page is served from the root, every other slug from its path.
       final isHome = slug == 'home';
       final path = isHome ? '/' : '/$slug';
-      final html = _render(template, page, options.siteBase, path);
+      final html = _render(
+        template,
+        page,
+        options.siteBase,
+        path,
+        siteName ?? _fallbackSiteName,
+      );
 
       final target = isHome
           ? indexFile
@@ -82,6 +102,23 @@ Future<void> main(List<String> args) async {
   }
 
   stdout.writeln('done: ${written.length} route(s) pre-rendered');
+}
+
+/// The temple's name as the committee has written it, or null if they have not.
+Future<String?> _fetchSiteName(HttpClient client, String apiBase) async {
+  final uri = Uri.parse('$apiBase/public/temple-profile?lang=hi');
+  final request = await client.getUrl(uri);
+  request.headers.set(HttpHeaders.acceptHeader, 'application/json');
+  final response = await request.close();
+  final body = await response.transform(utf8.decoder).join();
+
+  if (response.statusCode != 200) return null;
+
+  final decoded = jsonDecode(body);
+  if (decoded is! Map || decoded['success'] != true) return null;
+
+  final data = decoded['data'];
+  return data is Map ? _blockValue(data.cast<String, dynamic>(), 'name') : null;
 }
 
 /// Fetches one published page. Returns null for anything not publicly visible,
@@ -119,17 +156,15 @@ String _render(
   Map<String, dynamic> page,
   String siteBase,
   String path,
+  String siteName,
 ) {
-  const siteName = 'राधा कृष्ण ठाकुरबाड़ी | Radha Krishna Thakurbari';
-
   final pageTitle =
       _blockValue(page, 'meta_title') ?? _blockValue(page, 'title');
   // Matched against the page title so an SEO title that already names the
   // temple is not suffixed with the temple's name a second time.
-  const shortName = 'राधा कृष्ण ठाकुरबाड़ी';
   final title = pageTitle == null
       ? siteName
-      : (pageTitle.contains(shortName) ? pageTitle : '$pageTitle | $siteName');
+      : (pageTitle.contains(siteName) ? pageTitle : '$pageTitle | $siteName');
 
   final description =
       _blockValue(page, 'meta_description') ??

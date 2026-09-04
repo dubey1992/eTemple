@@ -2,12 +2,12 @@ openapi: 3.1.0
 
 info:
   title: Radha Krishna Thakurbari API
-  version: 0.3.0
+  version: 0.4.0
   description: |
     REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
     admin console.
 
-    **Scope: Phases 0-2.** Endpoints for events, media, donations, enquiries,
+    **Scope: Phases 0-3.** Endpoints for events, media, donations, enquiries,
     announcements, accounts and reports are added in their own phases and must
     be documented here in the same change that implements them.
 
@@ -77,6 +77,8 @@ tags:
   - name: Content management
   - name: User management
   - name: Roles and permissions
+  - name: Temple profile
+  - name: Committee
 
 paths:
   /api/health:
@@ -749,6 +751,179 @@ paths:
         '403': { description: FORBIDDEN }
         '422': { description: VALIDATION_FAILED - unknown keys, or an attempt to restrict Super Admin }
 
+  /api/public/temple-profile:
+    get:
+      tags: [Temple profile]
+      summary: The temple's public identity
+      description: |
+        Authoritative for the temple's name and postal address. The Flutter
+        client renders its header, hero, footer and page titles from `name`
+        here, falling back to the application shell string only while this
+        request is in flight.
+
+        Always answers, even on a freshly installed site: an unconfigured
+        temple returns empty values so the site shows its empty states rather
+        than an error.
+      security: []
+      parameters:
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en], default: hi } }
+      responses:
+        '200':
+          description: The profile
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/PublicTempleProfile' }
+
+  /api/public/committee:
+    get:
+      tags: [Committee]
+      summary: The management committee
+      description: |
+        Published, currently-serving members only — the filter is in the query,
+        not the serializer, so an unpublished member cannot leak through a
+        presentation mistake. A member whose `tenure_end` has passed drops off
+        this list while their record is kept for the committee.
+
+        **Personal details are consent-gated.** `phone`, `email` and
+        `photo_url` are **omitted entirely** unless the member's consent is on
+        record *and* that specific detail is cleared for publication. An absent
+        key is the contract: it is never sent as null.
+      security: []
+      parameters:
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en], default: hi } }
+      responses:
+        '200':
+          description: The committee, in display order
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/PublicCommitteeMember' }
+
+  /api/admin/temple-profile:
+    get:
+      tags: [Temple profile]
+      summary: The profile with both languages raw
+      description: Requires `content.view`.
+      responses:
+        '200': { description: The profile }
+        '403': { description: FORBIDDEN }
+    put:
+      tags: [Temple profile]
+      summary: Update the temple profile
+      description: |
+        Requires `temple.manage`. Every field is optional: the committee fills
+        the temple's details in over time and a half-configured profile must
+        still save.
+
+        `logo_url` and `map_url` are URLs rather than uploads; file handling
+        with its own MIME and size validation is Phase 5.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TempleProfileInput' }
+      responses:
+        '200': { description: The updated profile }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED }
+
+  /api/admin/committee-members:
+    get:
+      tags: [Committee]
+      summary: Every committee member
+      description: |
+        Requires `content.view`. Includes unpublished members and those whose
+        term has ended — committee membership is village history and is not
+        lost when a term ends. Personal details are present here: consent
+        governs *publication*, not administration.
+      responses:
+        '200':
+          description: The members, in display order
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/AdminCommitteeMember' }
+        '403': { description: FORBIDDEN }
+    post:
+      tags: [Committee]
+      summary: Add a committee member
+      description: |
+        Requires `temple.manage`. A new member is unpublished and unconsented
+        unless the request says otherwise: publishing a person is a decision
+        somebody has to make on purpose.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CommitteeMemberInput' }
+      responses:
+        '201': { description: The member }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED - including a visibility flag set without consent }
+
+  /api/admin/committee-members/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [Committee]
+      summary: One member, raw
+      description: Requires `content.view`.
+      responses:
+        '200': { description: The member }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+    put:
+      tags: [Committee]
+      summary: Update a member
+      description: |
+        Requires `temple.manage`. Two refusals surface as 422 against the named
+        field:
+
+        * a `show_*_publicly` flag set while `has_consent` is false;
+        * `tenure_end` earlier than `tenure_start`.
+
+        Setting `has_consent` to false clears all three visibility flags in the
+        same transaction, so a stale `true` cannot survive a withdrawal.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CommitteeMemberInput' }
+      responses:
+        '200': { description: The updated member }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+        '422': { description: VALIDATION_FAILED }
+    delete:
+      tags: [Committee]
+      summary: Remove a member permanently
+      description: |
+        Requires `temple.manage`. This is **erasure**, distinct from ending a
+        tenure: setting `tenure_end` retires somebody while keeping the record.
+        Deletion exists because a person may ask for their personal data to be
+        removed.
+      responses:
+        '204': { description: Removed }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+
 components:
   securitySchemes:
     sessionCookie:
@@ -903,18 +1078,10 @@ components:
         contact:
           type: object
           description: |
-            Phase 1's source of truth for the temple address. Phase 3 introduces
-            the authoritative temple_profile and these fields move there.
+            How to reach the committee. The postal address is **not** here:
+            Phase 3 moved it to `GET /api/public/temple-profile`, which is now
+            the only source of truth for where the temple is.
           properties:
-            address_line1: { type: [string, 'null'] }
-            address_line2: { type: [string, 'null'] }
-            village: { type: [string, 'null'] }
-            panchayat: { type: [string, 'null'] }
-            police_station: { type: [string, 'null'] }
-            district: { type: [string, 'null'] }
-            state: { type: [string, 'null'] }
-            postal_code: { type: [string, 'null'] }
-            country: { type: [string, 'null'] }
             phone: { type: [string, 'null'] }
             email: { type: [string, 'null'] }
             map_url: { type: [string, 'null'] }
@@ -986,6 +1153,128 @@ components:
         ip_address: { type: [string, 'null'] }
         user_agent: { type: [string, 'null'] }
         created_at: { type: [string, 'null'], format: date-time }
+
+    TempleAddress:
+      type: object
+      description: The temple's postal address. Authoritative since Phase 3.
+      properties:
+        address_line1: { type: [string, 'null'] }
+        address_line2: { type: [string, 'null'] }
+        village: { type: [string, 'null'] }
+        panchayat: { type: [string, 'null'] }
+        police_station: { type: [string, 'null'] }
+        district: { type: [string, 'null'] }
+        state: { type: [string, 'null'] }
+        postal_code: { type: [string, 'null'] }
+        country: { type: [string, 'null'] }
+        map_url: { type: [string, 'null'] }
+
+    PublicTempleProfile:
+      type: object
+      properties:
+        requested_language: { type: string, enum: [hi, en] }
+        name: { $ref: '#/components/schemas/LocalizedText' }
+        history: { $ref: '#/components/schemas/LocalizedText' }
+        mission: { $ref: '#/components/schemas/LocalizedText' }
+        address: { $ref: '#/components/schemas/TempleAddress' }
+        logo_url: { type: [string, 'null'] }
+        established_year: { type: [integer, 'null'] }
+        updated_at: { type: [string, 'null'], format: date-time }
+
+    TempleProfileInput:
+      type: object
+      description: Every field optional; blanks are sent as null, not empty strings.
+      properties:
+        name_hi: { type: [string, 'null'], maxLength: 200 }
+        name_en: { type: [string, 'null'], maxLength: 200 }
+        history_hi: { type: [string, 'null'] }
+        history_en: { type: [string, 'null'] }
+        mission_hi: { type: [string, 'null'] }
+        mission_en: { type: [string, 'null'] }
+        address_line1: { type: [string, 'null'], maxLength: 200 }
+        address_line2: { type: [string, 'null'], maxLength: 200 }
+        village: { type: [string, 'null'], maxLength: 120 }
+        panchayat: { type: [string, 'null'], maxLength: 120 }
+        police_station: { type: [string, 'null'], maxLength: 120 }
+        district: { type: [string, 'null'], maxLength: 120 }
+        state: { type: [string, 'null'], maxLength: 120 }
+        postal_code: { type: [string, 'null'], maxLength: 20 }
+        country: { type: [string, 'null'], maxLength: 120 }
+        logo_url: { type: [string, 'null'], format: uri, maxLength: 500 }
+        map_url: { type: [string, 'null'], format: uri, maxLength: 500 }
+        established_year: { type: [integer, 'null'], minimum: 1000 }
+
+    PublicCommitteeMember:
+      type: object
+      description: |
+        `phone`, `email` and `photo_url` are **absent** unless consent is on
+        record and that detail is cleared for publication. They are never
+        returned as null.
+      properties:
+        id: { type: integer }
+        name: { $ref: '#/components/schemas/LocalizedText' }
+        designation: { $ref: '#/components/schemas/LocalizedText' }
+        bio: { $ref: '#/components/schemas/LocalizedText' }
+        tenure_start: { type: [string, 'null'], format: date }
+        tenure_end: { type: [string, 'null'], format: date }
+        sort_order: { type: integer }
+        phone: { type: string, description: Present only with recorded consent. }
+        email: { type: string, description: Present only with recorded consent. }
+        photo_url: { type: string, description: Present only with recorded consent. }
+
+    AdminCommitteeMember:
+      type: object
+      properties:
+        id: { type: integer }
+        name_hi: { type: string }
+        name_en: { type: [string, 'null'] }
+        designation_hi: { type: string }
+        designation_en: { type: [string, 'null'] }
+        bio_hi: { type: [string, 'null'] }
+        bio_en: { type: [string, 'null'] }
+        phone: { type: [string, 'null'] }
+        email: { type: [string, 'null'] }
+        photo_url: { type: [string, 'null'] }
+        tenure_start: { type: [string, 'null'], format: date }
+        tenure_end: { type: [string, 'null'], format: date }
+        tenure_has_ended: { type: boolean }
+        is_published: { type: boolean }
+        sort_order: { type: integer }
+        has_consent:
+          type: boolean
+          description: Whether the member's consent to publish personal details is on record.
+        contact_consent_at: { type: [string, 'null'], format: date-time }
+        consent_recorded_by: { type: [string, 'null'] }
+        show_phone_publicly: { type: boolean }
+        show_email_publicly: { type: boolean }
+        show_photo_publicly: { type: boolean }
+        updated_at: { type: [string, 'null'], format: date-time }
+
+    CommitteeMemberInput:
+      type: object
+      required: [name_hi, designation_hi]
+      description: |
+        `has_consent` and the three `show_*_publicly` flags are evaluated
+        together: a flag set while consent is absent is refused by name, and
+        withdrawing consent clears all three.
+      properties:
+        name_hi: { type: string, maxLength: 160 }
+        name_en: { type: [string, 'null'], maxLength: 160 }
+        designation_hi: { type: string, maxLength: 160 }
+        designation_en: { type: [string, 'null'], maxLength: 160 }
+        bio_hi: { type: [string, 'null'], maxLength: 5000 }
+        bio_en: { type: [string, 'null'], maxLength: 5000 }
+        phone: { type: [string, 'null'], maxLength: 40 }
+        email: { type: [string, 'null'], format: email }
+        photo_url: { type: [string, 'null'], format: uri }
+        tenure_start: { type: [string, 'null'], format: date }
+        tenure_end: { type: [string, 'null'], format: date }
+        is_published: { type: boolean, default: false }
+        has_consent: { type: boolean, default: false }
+        show_phone_publicly: { type: boolean, default: false }
+        show_email_publicly: { type: boolean, default: false }
+        show_photo_publicly: { type: boolean, default: false }
+        sort_order: { type: integer, minimum: 0, maximum: 9999 }
 
     Health:
       type: object

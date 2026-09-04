@@ -10,13 +10,16 @@ import '../../../core/widgets/language_switch.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../content/data/content_providers.dart';
 import '../../content/domain/site_settings.dart';
+import '../../temple/data/temple_providers.dart';
 
 /// Chrome shared by every public page: header, admin-configured navigation,
 /// language switch and footer.
 ///
-/// The menu and footer come from the CMS, so the committee can change them
-/// without a code release. If site settings fail to load the shell degrades to
-/// no menu rather than blocking the page the visitor came to read.
+/// The temple's name, the locality beneath it, the menu and the footer all come
+/// from the CMS, so the committee can change them without a code release. If
+/// those requests fail the shell degrades — the app's own name stands in for the
+/// temple's, the locality line disappears and the menu is empty — rather than
+/// blocking the page the visitor came to read.
 class PublicShell extends ConsumerWidget {
   const PublicShell({super.key, required this.child});
 
@@ -30,6 +33,12 @@ class PublicShell extends ConsumerWidget {
     final isCompact = formFactor.isCompact;
     final isSignedIn = ref.watch(isAuthenticatedProvider);
     final navigation = ref.watch(navigationProvider);
+    // The temple's own name, authoritative from the profile since Phase 3. The
+    // ARB string is the shell fallback shown only until the profile resolves.
+    final templeName = ref.watch(templeNameProvider) ?? l10n.appTitle;
+    // No fallback for the locality: a village name is temple content, so an
+    // unconfigured profile simply shows no second line.
+    final locality = ref.watch(templeLocalityProvider);
 
     final destination = isSignedIn ? RoutePaths.admin : RoutePaths.login;
     final actionLabel = isSignedIn ? l10n.navAdmin : l10n.signIn;
@@ -46,14 +55,16 @@ class PublicShell extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                l10n.appTitle,
+                templeName,
+                key: const Key('shell-temple-name'),
                 style: theme.textTheme.titleLarge,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              if (!isCompact)
+              if (!isCompact && locality != null)
                 Text(
-                  l10n.appSubtitle,
+                  locality,
+                  key: const Key('shell-temple-locality'),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -127,10 +138,12 @@ class _NavigationDrawer extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Text(
-                context.l10n.appTitle,
-                style: Theme.of(context).textTheme.titleLarge
-                    ?.copyWith(color: Theme.of(context).colorScheme.primary),
+              child: Consumer(
+                builder: (context, ref, _) => Text(
+                  ref.watch(templeNameProvider) ?? context.l10n.appTitle,
+                  style: Theme.of(context).textTheme.titleLarge
+                      ?.copyWith(color: Theme.of(context).colorScheme.primary),
+                ),
               ),
             ),
             for (final item in items)
@@ -158,11 +171,13 @@ class _PublicFooter extends ConsumerWidget {
     final theme = Theme.of(context);
     final l10n = context.l10n;
     final settings = ref.watch(siteSettingsProvider).value;
+    final templeName = ref.watch(templeNameProvider);
+    final locality = ref.watch(templeLocalityProvider);
 
-    // Falls back to the temple's identity, which is not CMS content — it is who
-    // the site is.
-    final footer =
-        settings?.footerText.value ?? '${l10n.appTitle} · ${l10n.appSubtitle}';
+    // Falls back to the temple's own identity from the profile, and only then
+    // to the application shell name.
+    final identity = [templeName ?? l10n.appTitle, ?locality].join(' · ');
+    final footer = settings?.footerText.value ?? identity;
 
     return Material(
       color: theme.colorScheme.surfaceContainerHighest,

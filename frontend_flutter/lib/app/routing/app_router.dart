@@ -20,6 +20,10 @@ import '../../features/content/presentation/home_screen.dart';
 import '../../features/content/presentation/page_screen.dart';
 import '../../features/shell/presentation/not_found_screen.dart';
 import '../../features/shell/presentation/public_shell.dart';
+import '../../features/temple/presentation/admin_committee_member_screen.dart';
+import '../../features/temple/presentation/admin_committee_screen.dart';
+import '../../features/temple/presentation/admin_temple_profile_screen.dart';
+import '../../features/temple/presentation/committee_screen.dart';
 import 'route_paths.dart';
 
 /// Bridges the Riverpod session state to go_router's [Listenable] API so the
@@ -91,6 +95,13 @@ final routerProvider = Provider<GoRouter>((ref) {
             name: RouteNames.home,
             builder: (context, state) => const HomeScreen(),
           ),
+          GoRoute(
+            // Declared here rather than left to the catch-all slug route, so
+            // /committee is never mistaken for a CMS page.
+            path: RoutePaths.committee,
+            name: RouteNames.committee,
+            builder: (context, state) => const CommitteeScreen(),
+          ),
         ],
       ),
 
@@ -160,6 +171,30 @@ final routerProvider = Provider<GoRouter>((ref) {
               final id = int.tryParse(state.pathParameters['id'] ?? '');
               if (id == null) return const NotFoundScreen();
               return AdminRolePermissionsScreen(roleId: id);
+            },
+          ),
+          GoRoute(
+            path: RoutePaths.adminTempleProfile,
+            name: RouteNames.adminTempleProfile,
+            builder: (context, state) => const AdminTempleProfileScreen(),
+          ),
+          GoRoute(
+            path: RoutePaths.adminCommittee,
+            name: RouteNames.adminCommittee,
+            builder: (context, state) => const AdminCommitteeScreen(),
+          ),
+          GoRoute(
+            // Declared before /admin/committee/:id so "new" is not read as an id.
+            path: RoutePaths.adminCommitteeNew,
+            builder: (context, state) => const AdminCommitteeMemberScreen(),
+          ),
+          GoRoute(
+            path: '${RoutePaths.adminCommittee}/:id',
+            name: RouteNames.adminCommitteeMember,
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '');
+              if (id == null) return const NotFoundScreen();
+              return AdminCommitteeMemberScreen(memberId: id);
             },
           ),
           GoRoute(

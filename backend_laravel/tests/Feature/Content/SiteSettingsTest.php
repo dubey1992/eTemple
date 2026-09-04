@@ -102,7 +102,6 @@ class SiteSettingsTest extends TestCase
         $this->actingAs($this->editor, 'web')
             ->putJson('/api/admin/site-settings', [
                 'tagline_hi' => 'नई पंक्ति',
-                'village' => 'Amarpur Pankhoriya',
                 'contact_email' => 'committee@thakurbari.in',
                 'navigation' => [
                     ['label_hi' => 'मुख पृष्ठ', 'label_en' => 'Home', 'route' => '/', 'sort_order' => 0],
@@ -134,13 +133,12 @@ class SiteSettingsTest extends TestCase
         $this->actingAs($this->editor, 'web')
             ->putJson('/api/admin/site-settings', [
                 'contact_email' => 'not-an-email',
-                'map_url' => 'not a url',
                 'navigation' => [['label_en' => 'missing hindi label']],
             ])
             ->assertStatus(422)
             ->assertJsonPath('error.code', 'VALIDATION_FAILED')
             ->assertJsonStructure([
-                'error' => ['details' => ['contact_email', 'map_url', 'navigation.0.label_hi']],
+                'error' => ['details' => ['contact_email', 'navigation.0.label_hi']],
             ]);
     }
 

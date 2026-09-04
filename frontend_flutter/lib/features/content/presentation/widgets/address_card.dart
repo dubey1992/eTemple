@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/localization/locale_controller.dart';
 import '../../../../app/theme/app_spacing.dart';
+import '../../../temple/domain/temple_profile.dart';
 import '../../domain/site_settings.dart';
 
 /// The temple's address and contact details.
 ///
-/// Phase 1 renders this from site settings; Phase 3 moves the data to the
-/// authoritative temple profile without changing this presentation.
+/// Composed from two sources on purpose: the postal address belongs to the
+/// temple profile (authoritative since Phase 3) and the phone and e-mail to
+/// site settings. Joining them is a presentation concern, so it happens here
+/// rather than by duplicating either record.
 class AddressCard extends StatelessWidget {
-  const AddressCard({super.key, required this.contact});
+  const AddressCard({super.key, required this.address, required this.contact});
 
+  final TempleAddress address;
   final ContactInfo contact;
 
   @override
@@ -18,7 +22,9 @@ class AddressCard extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = context.l10n;
 
-    if (contact.isEmpty) {
+    final lines = address.lines(panchayatLabel: l10n.panchayatLabel);
+
+    if (lines.isEmpty && contact.isEmpty) {
       return Card(
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.lg),
@@ -41,11 +47,11 @@ class AddressCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (final line in contact.addressLines) ...[
+            for (final line in lines) ...[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (line == contact.addressLines.first)
+                  if (line == lines.first)
                     Icon(
                       Icons.place_outlined,
                       size: 20,
@@ -73,13 +79,12 @@ class AddressCard extends StatelessWidget {
                 value: contact.email!,
               ),
 
-            if (contact.mapUrl != null) ...[
+            if (address.mapUrl != null) ...[
               const SizedBox(height: AppSpacing.md),
               // Rendered as plain text rather than a launcher: opening external
-              // URLs is not a Phase 1 requirement and url_launcher is not a
-              // dependency yet.
+              // URLs still needs no dependency, and Phase 3 does not add one.
               Text(
-                '${l10n.contactMap}: ${contact.mapUrl}',
+                '${l10n.contactMap}: ${address.mapUrl}',
                 key: const Key('address-map'),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.secondary,

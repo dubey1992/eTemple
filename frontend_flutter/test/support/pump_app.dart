@@ -8,7 +8,10 @@ import 'package:go_router/go_router.dart';
 import 'package:rkt_web/app/localization/locale_controller.dart';
 import 'package:rkt_web/app/routing/route_paths.dart';
 import 'package:rkt_web/app/theme/app_theme.dart';
+import 'package:rkt_web/features/temple/data/temple_providers.dart';
 import 'package:rkt_web/l10n/app_localizations.dart';
+
+import 'fake_temple_repository.dart';
 
 /// Key on the stand-in screen the admin route renders in these tests.
 const adminPlaceholderKey = Key('test-admin-placeholder');
@@ -16,16 +19,25 @@ const adminPlaceholderKey = Key('test-admin-placeholder');
 /// Key on the stand-in screen the forgot-password route renders.
 const forgotPasswordPlaceholderKey = Key('test-forgot-password-placeholder');
 
+/// Key on the stand-in screen the committee-list route renders.
+const committeeListPlaceholderKey = Key('test-committee-placeholder');
+
 /// Pumps a single screen inside the real theme and localization setup.
 ///
 /// A minimal router is provided so screens that navigate (the login screen, for
 /// example) behave as they do in the application instead of throwing.
+///
+/// Since Phase 3 the temple's own name is CMS content read by the header, the
+/// hero and even the sign-in page, so a stub temple repository is always
+/// supplied — otherwise every widget test would attempt a real HTTP request.
+/// Pass [temple] to script that profile, including making it fail.
 Future<void> pumpScreen(
   WidgetTester tester,
   Widget child, {
   List<Override> overrides = const [],
   Locale locale = AppLocales.hindi,
   Size? surfaceSize,
+  FakeTempleRepository? temple,
 }) async {
   if (surfaceSize != null) {
     // Set the logical size directly: devicePixelRatio 1.0 makes the physical
@@ -52,13 +64,33 @@ Future<void> pumpScreen(
           body: SizedBox.shrink(),
         ),
       ),
+      GoRoute(
+        path: RoutePaths.adminCommittee,
+        builder: (_, _) => const Scaffold(
+          key: committeeListPlaceholderKey,
+          body: SizedBox.shrink(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.adminTempleProfile,
+        builder: (_, _) => const Scaffold(body: SizedBox.shrink()),
+      ),
+      GoRoute(
+        path: RoutePaths.committee,
+        builder: (_, _) => const Scaffold(body: SizedBox.shrink()),
+      ),
     ],
   );
   addTearDown(router.dispose);
 
   await tester.pumpWidget(
     ProviderScope(
-      overrides: overrides,
+      overrides: [
+        templeRepositoryProvider.overrideWithValue(
+          temple ?? FakeTempleRepository(profile: testProfile()),
+        ),
+        ...overrides,
+      ],
       child: MaterialApp.router(
         routerConfig: router,
         theme: AppTheme.light(),

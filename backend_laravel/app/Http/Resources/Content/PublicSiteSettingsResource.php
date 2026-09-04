@@ -13,11 +13,12 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * Site-wide public content: hero tagline, footer, contact block, navigation and
- * default SEO metadata, all resolved for one language.
+ * Site-wide public content: hero tagline, footer, contact details, navigation
+ * and default SEO metadata, all resolved for one language.
  *
- * The address block is Phase 1's source of truth and moves to the authoritative
- * temple_profile in Phase 3 (PHASE_1_PLAN assumption B2).
+ * The postal address is served by `GET /api/public/temple-profile` instead —
+ * Phase 3 moved it to the authoritative temple_profile row, completing
+ * PHASE_1_PLAN assumption B2.
  *
  * @mixin SiteSetting
  */
@@ -46,18 +47,8 @@ class PublicSiteSettingsResource extends JsonResource
                 $this->footer_text_hi, $this->footer_text_en, $this->language
             )->toArray(),
             'contact' => [
-                'address_line1' => $this->address_line1,
-                'address_line2' => $this->address_line2,
-                'village' => $this->village,
-                'panchayat' => $this->panchayat,
-                'police_station' => $this->police_station,
-                'district' => $this->district,
-                'state' => $this->state,
-                'postal_code' => $this->postal_code,
-                'country' => $this->country,
                 'phone' => $this->contact_phone,
                 'email' => $this->contact_email,
-                'map_url' => $this->map_url,
             ],
             'social_links' => $this->social_links ?? [],
             'default_meta_title' => LocalizedText::resolve(

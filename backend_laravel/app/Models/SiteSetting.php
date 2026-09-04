@@ -10,7 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Singleton row of site-wide configurable content.
+ * Singleton row of site-wide configurable content: tagline, footer, contact
+ * details, social links and default SEO metadata.
+ *
+ * The postal address is **not** here. Phase 1 kept it in this table as a
+ * stopgap; Phase 3 moved it to the authoritative `temple_profiles` row, so
+ * there is exactly one source of truth for where the temple is.
  *
  * Always read through SiteSettingService::current() so exactly one row exists.
  */
@@ -23,9 +28,7 @@ class SiteSetting extends Model
     protected $fillable = [
         'tagline_hi', 'tagline_en',
         'footer_text_hi', 'footer_text_en',
-        'address_line1', 'address_line2', 'village', 'panchayat',
-        'police_station', 'district', 'state', 'postal_code', 'country',
-        'contact_phone', 'contact_email', 'map_url', 'social_links',
+        'contact_phone', 'contact_email', 'social_links',
         'default_meta_title_hi', 'default_meta_title_en',
         'default_meta_description_hi', 'default_meta_description_en',
     ];

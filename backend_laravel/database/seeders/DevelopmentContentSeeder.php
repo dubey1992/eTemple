@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\CommitteeMember;
 use App\Models\NavigationItem;
 use App\Models\Page;
 use App\Models\SiteSetting;
+use App\Models\TempleProfile;
 use Illuminate\Database\Seeder;
 
 /**
@@ -59,6 +61,20 @@ class DevelopmentContentSeeder extends Seeder
             'tagline_en' => 'A centre of devotion, service and village community',
             'footer_text_hi' => 'यह एक विकास-परिवेश की नमूना पंक्ति है।',
             'footer_text_en' => 'This is a sample development-environment line.',
+            'contact_email' => 'committee@thakurbari.local',
+        ])->save();
+
+        // The temple's own identity and address, authoritative since Phase 3.
+        $profile = TempleProfile::query()->oldest('id')->first()
+            ?? TempleProfile::query()->create([]);
+        $profile->forceFill([
+            'name_hi' => 'राधा कृष्ण ठाकुरबाड़ी',
+            'name_en' => 'Radha Krishna Thakurbari',
+            'history_hi' => 'यह नमूना पाठ है। मंदिर की स्थापना और इतिहास समिति द्वारा जोड़ा जाएगा।',
+            // Hindi only on purpose, so the English fallback path is visible locally.
+            'history_en' => null,
+            'mission_hi' => 'भक्ति, सेवा और ग्राम समुदाय की सेवा।',
+            'mission_en' => 'Devotion, service, and service to the village community.',
             'village' => 'Amarpur Pankhoriya',
             'panchayat' => 'Kurma',
             'police_station' => 'Rasulpur Ekchari',
@@ -68,14 +84,56 @@ class DevelopmentContentSeeder extends Seeder
             'country' => 'India',
         ])->save();
 
+        // Sample committee members. The consent gate is exercised deliberately:
+        // one member has consented and is fully visible, one has consented to
+        // nothing, and one is not published at all.
+        CommitteeMember::query()->delete();
+        CommitteeMember::query()->create([
+            'name_hi' => 'नमूना अध्यक्ष',
+            'name_en' => 'Sample President',
+            'designation_hi' => 'अध्यक्ष',
+            'designation_en' => 'President',
+            'phone' => '+91 90000 00001',
+            'email' => 'president@thakurbari.local',
+            'tenure_start' => now()->subYears(2)->toDateString(),
+            'is_published' => true,
+            'sort_order' => 0,
+        ])->forceFill([
+            'contact_consent_at' => now()->subMonths(3),
+            'show_phone_publicly' => true,
+            'show_email_publicly' => true,
+        ])->save();
+
+        CommitteeMember::query()->create([
+            'name_hi' => 'नमूना कोषाध्यक्ष',
+            'name_en' => 'Sample Treasurer',
+            'designation_hi' => 'कोषाध्यक्ष',
+            'designation_en' => 'Treasurer',
+            'phone' => '+91 90000 00002',
+            'tenure_start' => now()->subYear()->toDateString(),
+            'is_published' => true,
+            'sort_order' => 1,
+        ]);
+
+        CommitteeMember::query()->create([
+            'name_hi' => 'नमूना सदस्य (अप्रकाशित)',
+            'designation_hi' => 'सदस्य',
+            'tenure_start' => now()->subMonths(6)->toDateString(),
+            'is_published' => false,
+            'sort_order' => 2,
+        ]);
+
         NavigationItem::query()->delete();
         foreach ([
             ['label_hi' => 'मुख पृष्ठ', 'label_en' => 'Home', 'route' => '/', 'sort_order' => 0],
             ['label_hi' => 'हमारे बारे में', 'label_en' => 'About', 'route' => '/about', 'sort_order' => 1],
+            ['label_hi' => 'प्रबंध समिति', 'label_en' => 'Committee', 'route' => '/committee', 'sort_order' => 2],
         ] as $item) {
             NavigationItem::query()->create($item + ['is_visible' => true]);
         }
 
-        $this->command?->info('[dev-seed] Sample public content, settings and navigation ready.');
+        $this->command?->info(
+            '[dev-seed] Sample public content, temple profile, committee, settings and navigation ready.'
+        );
     }
 }

@@ -95,11 +95,17 @@ Explicitly **out** of Phase 0: CMS pages, home/about content, user CRUD screens,
 
 ## Phase 3 — Temple Profile & Committee
 
-- [ ] `temple_profile` (name/address/history/mission bilingual, `logo_url`, `map_url`)
-- [ ] `committee_members` with designation, tenure dates, public/private visibility
-- [ ] `GET /api/public/temple-profile`, `PUT /api/admin/temple-profile`
-- [ ] `GET /api/public/committee`, `POST /api/admin/committee-members`
-- [ ] Consent-gated publication of member personal details
+- [x] `temple_profile` (name/address/history/mission bilingual, `logo_url`, `map_url`)
+- [x] `committee_members` with designation, tenure dates, public/private visibility
+- [x] `GET /api/public/temple-profile`, `PUT /api/admin/temple-profile`
+- [x] `GET /api/public/committee`, `POST /api/admin/committee-members` (+ show/update/delete)
+- [x] Consent-gated publication of member personal details — enforced in three
+      independent layers, each tested separately
+- [x] Carried from Phase 1: the address **moved** out of `site_settings`, columns dropped
+- [x] Carried from Phase 2: the temple name and village **taken over** from the ARB files
+
+**Phase 3 is COMPLETE.** 258 Flutter tests, 216 Laravel tests; see
+`phase-reports/PHASE_3_COMPLETION.md`.
 
 ## Phase 4 — Puja, Events & Calendar
 

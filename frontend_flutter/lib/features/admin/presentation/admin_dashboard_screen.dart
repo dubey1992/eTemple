@@ -43,6 +43,30 @@ class AdminDashboardScreen extends ConsumerWidget {
           description: l10n.navSiteSettingsDesc,
           route: RoutePaths.adminSiteSettings,
         ),
+      // Reading the profile and committee needs only content.view; changing
+      // them needs temple.manage. Either is reason to offer the door.
+      if (permissions.canAny(const [
+        Permissions.templeManage,
+        Permissions.contentView,
+      ]))
+        _Entry(
+          key: const Key('dash-temple-profile'),
+          icon: Icons.temple_hindu_outlined,
+          title: l10n.navTempleProfile,
+          description: l10n.navTempleProfileDesc,
+          route: RoutePaths.adminTempleProfile,
+        ),
+      if (permissions.canAny(const [
+        Permissions.templeManage,
+        Permissions.contentView,
+      ]))
+        _Entry(
+          key: const Key('dash-committee'),
+          icon: Icons.groups_outlined,
+          title: l10n.navCommittee,
+          description: l10n.navCommitteeDesc,
+          route: RoutePaths.adminCommittee,
+        ),
       if (permissions.can(Permissions.usersView))
         _Entry(
           key: const Key('dash-users'),

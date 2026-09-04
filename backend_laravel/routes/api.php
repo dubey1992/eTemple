@@ -3,14 +3,17 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\Admin\AdminPingController;
+use App\Http\Controllers\Api\Admin\CommitteeMemberController;
 use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\SiteSettingsController as AdminSiteSettingsController;
+use App\Http\Controllers\Api\Admin\TempleProfileController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\PublicSite\PageController as PublicPageController;
 use App\Http\Controllers\Api\PublicSite\SiteSettingsController as PublicSiteSettingsController;
+use App\Http\Controllers\Api\PublicSite\TempleController as PublicTempleController;
 use App\Support\Permission;
 use Illuminate\Support\Facades\Route;
 
@@ -63,6 +66,16 @@ Route::prefix('public')
     ->group(function () {
         Route::get('/site-settings', [PublicSiteSettingsController::class, 'show'])
             ->name('site-settings');
+
+        // Temple identity and committee (Phase 3). The profile is authoritative
+        // for the temple's name and address. The committee list carries only the
+        // personal details each member has consented to publish — the filter is
+        // in the query and the consent check is repeated in the serializer.
+        Route::get('/temple-profile', [PublicTempleController::class, 'profile'])
+            ->name('temple-profile');
+
+        Route::get('/committee', [PublicTempleController::class, 'committee'])
+            ->name('committee');
 
         Route::get('/pages/{slug}', [PublicPageController::class, 'show'])
             ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')
@@ -117,4 +130,23 @@ Route::prefix('admin')
             ->middleware('can:'.Permission::ROLES_VIEW)->name('permissions.index');
         Route::put('/roles/{role}/permissions', [RoleController::class, 'updatePermissions'])
             ->middleware('can:'.Permission::ROLES_MANAGE)->name('roles.permissions.update');
+
+        // --- Temple profile and committee (Phase 3) --------------------
+        // Reading is granted with content.view so a Viewer can see the committee
+        // without being able to change it; every write needs temple.manage.
+        Route::get('/temple-profile', [TempleProfileController::class, 'show'])
+            ->middleware('can:'.Permission::CONTENT_VIEW)->name('temple-profile.show');
+        Route::put('/temple-profile', [TempleProfileController::class, 'update'])
+            ->middleware('can:'.Permission::TEMPLE_MANAGE)->name('temple-profile.update');
+
+        Route::get('/committee-members', [CommitteeMemberController::class, 'index'])
+            ->middleware('can:'.Permission::CONTENT_VIEW)->name('committee-members.index');
+        Route::get('/committee-members/{member}', [CommitteeMemberController::class, 'show'])
+            ->middleware('can:'.Permission::CONTENT_VIEW)->name('committee-members.show');
+        Route::post('/committee-members', [CommitteeMemberController::class, 'store'])
+            ->middleware('can:'.Permission::TEMPLE_MANAGE)->name('committee-members.store');
+        Route::put('/committee-members/{member}', [CommitteeMemberController::class, 'update'])
+            ->middleware('can:'.Permission::TEMPLE_MANAGE)->name('committee-members.update');
+        Route::delete('/committee-members/{member}', [CommitteeMemberController::class, 'destroy'])
+            ->middleware('can:'.Permission::TEMPLE_MANAGE)->name('committee-members.destroy');
     });

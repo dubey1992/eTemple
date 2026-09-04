@@ -85,12 +85,16 @@ void main() {
       );
     });
 
-    testWidgets('hides the subtitle in the header on a phone', (tester) async {
+    testWidgets('hides the locality line in the header on a phone', (
+      tester,
+    ) async {
+      // The line is the temple profile's village and panchayat, not a compiled
+      // string, so this also proves the profile reaches the header.
       await pumpAt(tester, _desktop);
       expect(
         find.descendant(
           of: find.byType(AppBar),
-          matching: find.text('अमरपुर पंखोरिया, कुर्मा पंचायत'),
+          matching: find.byKey(const Key('shell-temple-locality')),
         ),
         findsOneWidget,
       );
@@ -99,7 +103,7 @@ void main() {
       expect(
         find.descendant(
           of: find.byType(AppBar),
-          matching: find.text('अमरपुर पंखोरिया, कुर्मा पंचायत'),
+          matching: find.byKey(const Key('shell-temple-locality')),
         ),
         findsNothing,
       );

@@ -13,6 +13,7 @@ import 'package:rkt_web/features/shell/presentation/public_shell.dart';
 
 import '../../support/fake_auth_repository.dart';
 import '../../support/fake_content_repository.dart';
+import '../../support/fake_temple_repository.dart';
 import '../../support/pump_app.dart';
 
 Future<void> pumpContent(
@@ -20,11 +21,13 @@ Future<void> pumpContent(
   Widget screen,
   FakeContentRepository content, {
   Size? surfaceSize,
+  FakeTempleRepository? temple,
 }) async {
   await pumpScreen(
     tester,
     screen,
     surfaceSize: surfaceSize,
+    temple: temple,
     overrides: [
       authRepositoryProvider.overrideWithValue(FakeAuthRepository()),
       contentRepositoryProvider.overrideWithValue(content),
@@ -53,7 +56,13 @@ void main() {
       expect(find.text('पहला अनुच्छेद।'), findsOneWidget);
       expect(find.text('दूसरा अनुच्छेद।'), findsNothing);
       expect(find.byKey(const Key('address-card')), findsOneWidget);
+      // The address now comes from the temple profile, not from site settings.
       expect(find.text('Amarpur Pankhoriya, पंचायत: Kurma'), findsOneWidget);
+      expect(
+        find.text('राधा कृष्ण ठाकुरबाड़ी'),
+        findsWidgets,
+        reason: 'the hero renders the temple name from the profile',
+      );
     });
 
     testWidgets('shows a loading state while settings load', (tester) async {
@@ -78,13 +87,21 @@ void main() {
         tester,
         const HomeScreen(),
         FakeContentRepository(), // nothing configured, no about page
+        // The temple profile is unconfigured too, which is what a brand new
+        // installation actually looks like.
+        temple: FakeTempleRepository(),
       );
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('hero-title')), findsOneWidget);
-      // No tagline written yet, so the block is simply absent.
+      // With no temple name on record the hero falls back to the app's own
+      // name rather than rendering blank.
+      expect(find.text('राधा कृष्ण ठाकुरबाड़ी'), findsWidgets);
+      // Nothing written yet, so each block is simply absent or says so.
       expect(find.byKey(const Key('hero-tagline')), findsNothing);
+      expect(find.byKey(const Key('hero-locality')), findsNothing);
       expect(find.byKey(const Key('about-coming-soon')), findsOneWidget);
+      expect(find.byKey(const Key('committee-coming-soon')), findsOneWidget);
       expect(find.byKey(const Key('address-empty')), findsOneWidget);
     });
 

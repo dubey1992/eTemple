@@ -13,12 +13,15 @@ import '../../../core/widgets/state_views.dart';
 import '../data/content_providers.dart';
 import '../domain/site_settings.dart';
 
-/// Edits the site-wide content: hero tagline, footer and the temple's address.
+/// Edits the site-wide content: hero tagline, footer and contact details.
 ///
-/// Closes the gap left at the end of Phase 1, where this was reachable by API
-/// but had no screen. The navigation menu is edited through the same endpoint
-/// and is deliberately left for a later pass — replacing the whole menu needs a
-/// reorderable editor rather than a text field.
+/// The temple's address is **not** edited here. Phase 3 moved it to the temple
+/// profile so there is one source of truth for it; this screen links there
+/// rather than offering a second set of address fields.
+///
+/// The navigation menu is edited through the same endpoint and is deliberately
+/// left for a later pass — replacing the whole menu needs a reorderable editor
+/// rather than a text field.
 class AdminSiteSettingsScreen extends ConsumerWidget {
   const AdminSiteSettingsScreen({super.key});
 
@@ -71,12 +74,6 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
       'tagline_en': TextEditingController(text: s.taglineEn ?? ''),
       'footer_text_hi': TextEditingController(text: s.footerHi ?? ''),
       'footer_text_en': TextEditingController(text: s.footerEn ?? ''),
-      'village': TextEditingController(text: s.village ?? ''),
-      'panchayat': TextEditingController(text: s.panchayat ?? ''),
-      'police_station': TextEditingController(text: s.policeStation ?? ''),
-      'district': TextEditingController(text: s.district ?? ''),
-      'state': TextEditingController(text: s.state ?? ''),
-      'postal_code': TextEditingController(text: s.postalCode ?? ''),
       'contact_phone': TextEditingController(text: s.contactPhone ?? ''),
       'contact_email': TextEditingController(text: s.contactEmail ?? ''),
     };
@@ -190,15 +187,28 @@ class _SettingsFormState extends ConsumerState<_SettingsForm> {
               ),
 
               const SizedBox(height: AppSpacing.md),
-              Text(l10n.sectionAddress, style: theme.textTheme.titleMedium),
+              Text(l10n.sectionContact, style: theme.textTheme.titleMedium),
+              const SizedBox(height: AppSpacing.xs),
+              // The address deliberately lives in one place only.
+              Text(
+                l10n.addressLivesInTempleProfile,
+                key: const Key('settings-address-moved'),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  key: const Key('settings-open-temple-profile'),
+                  onPressed: () => context.go(RoutePaths.adminTempleProfile),
+                  icon: const Icon(Icons.temple_hindu_outlined, size: 18),
+                  label: Text(l10n.navTempleProfile),
+                ),
+              ),
               const SizedBox(height: AppSpacing.md),
 
-              _field('village', l10n.fieldVillage),
-              _field('panchayat', l10n.fieldPanchayat),
-              _field('police_station', l10n.fieldPoliceStation),
-              _field('district', l10n.fieldDistrict),
-              _field('state', l10n.fieldState),
-              _field('postal_code', l10n.fieldPostalCode),
               _field('contact_phone', l10n.fieldContactPhone),
               _field(
                 'contact_email',
