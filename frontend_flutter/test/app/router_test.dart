@@ -19,6 +19,7 @@ import 'package:rkt_web/l10n/app_localizations.dart';
 import 'package:rkt_web/features/content/data/content_providers.dart';
 import 'package:rkt_web/features/accounts/data/accounts_providers.dart';
 import 'package:rkt_web/features/announcements/data/announcement_providers.dart';
+import 'package:rkt_web/features/reports/data/reports_providers.dart';
 import 'package:rkt_web/features/donations/data/donation_providers.dart';
 import 'package:rkt_web/features/enquiries/data/enquiry_providers.dart';
 import 'package:rkt_web/features/events/data/event_providers.dart';
@@ -29,6 +30,7 @@ import '../support/fake_auth_repository.dart';
 import '../support/fake_content_repository.dart';
 import '../support/fake_accounts_repository.dart';
 import '../support/fake_announcement_repository.dart';
+import '../support/fake_reports_repository.dart';
 import '../support/fake_donation_repository.dart';
 import '../support/fake_enquiry_repository.dart';
 import '../support/fake_event_repository.dart';
@@ -67,6 +69,7 @@ Future<(GoRouter, ProviderContainer)> bootRouter(
         FakeAnnouncementRepository(),
       ),
       accountsRepositoryProvider.overrideWithValue(FakeAccountsRepository()),
+      reportsRepositoryProvider.overrideWithValue(FakeReportsRepository()),
     ],
   );
 

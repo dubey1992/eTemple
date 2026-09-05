@@ -55,6 +55,15 @@ enum ErrorCode {
   /// column of zeros that would read as "the temple received nothing".
   accountsNotPublished('ACCOUNTS_NOT_PUBLISHED'),
 
+  /// A report was asked for personal columns by an account that may not see
+  /// them (Phase 10). Recoverable: the report itself runs without them, and
+  /// the screen says so rather than looking broken.
+  reportDisclosureRefused('REPORT_DISCLOSURE_REFUSED'),
+
+  /// An export matched more rows than one file should carry (Phase 10). The
+  /// screen's move is to suggest a shorter period.
+  reportTooLarge('REPORT_TOO_LARGE'),
+
   serverError('SERVER_ERROR'),
 
   // --- Client-only ----------------------------------------------------------

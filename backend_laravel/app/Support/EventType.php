@@ -40,4 +40,21 @@ final class EventType
     {
         return in_array($type, self::all(), true);
     }
+
+    /**
+     * Bilingual labels, for the same reason {@see PaymentMode::label()} has
+     * them: the Flutter client translates these codes from its own ARB files
+     * and cannot help when the **server** is the one rendering the document —
+     * a printed events report, or a spreadsheet a committee opens offline.
+     */
+    public static function label(string $type): string
+    {
+        return match ($type) {
+            self::AARTI => 'आरती / Aarti',
+            self::BHAJAN_KIRTAN => 'भजन-कीर्तन / Bhajan-kirtan',
+            self::FESTIVAL => 'त्योहार / Festival',
+            self::PUJA => 'पूजा / Puja',
+            default => 'अन्य / Other',
+        };
+    }
 }

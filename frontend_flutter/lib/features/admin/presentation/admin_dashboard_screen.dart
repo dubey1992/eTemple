@@ -7,6 +7,7 @@ import '../../../app/theme/app_spacing.dart';
 import '../../../core/widgets/breakpoints.dart';
 import '../../../core/widgets/page_container.dart';
 import '../../auth/presentation/auth_controller.dart';
+import '../../reports/presentation/widgets/overview_panels.dart';
 import '../data/admin_providers.dart';
 import 'admin_destinations.dart';
 
@@ -18,8 +19,8 @@ import 'admin_destinations.dart';
 /// one-line descriptions the menu's tooltips already give.
 ///
 /// It stays because a committee member who signs in twice a year needs to see
-/// what they are allowed to do, and because it is where Phase 10's at-a-glance
-/// figures will go.
+/// what they are allowed to do — and since Phase 10 it carries the at-a-glance
+/// figures above the shortcuts.
 ///
 /// The entries come from [AdminDestinations] — the same list the menu reads, so
 /// the two cannot disagree about what this account may open.
@@ -61,6 +62,13 @@ class AdminDashboardScreen extends ConsumerWidget {
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
+            const SizedBox(height: AppSpacing.xl),
+
+            // Phase 10's figures, above the shortcuts: somebody signing in
+            // wants to know how the temple stands before they want a menu.
+            // Renders nothing at all for an account with no reports key, so
+            // this is not an empty band on a Content Manager's screen.
+            const OverviewPanels(),
             const SizedBox(height: AppSpacing.xl),
 
             if (entries.isEmpty)

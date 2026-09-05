@@ -671,7 +671,9 @@ class _BillField extends ConsumerWidget {
                   // sends it as a download with `nosniff`, so nothing that got
                   // past the byte check can execute in this origin.
                   const opener = LinkOpener();
-                  opener.open(
+                  // `openOwn`: the bill is on our own authenticated endpoint,
+                  // and a stripped Referer makes the request anonymous.
+                  opener.openOwn(
                     ref
                         .read(accountsRepositoryProvider)
                         .attachmentUrl(existing!.id),

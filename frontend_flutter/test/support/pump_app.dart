@@ -10,6 +10,7 @@ import 'package:rkt_web/app/routing/route_paths.dart';
 import 'package:rkt_web/app/theme/app_theme.dart';
 import 'package:rkt_web/features/accounts/data/accounts_providers.dart';
 import 'package:rkt_web/features/announcements/data/announcement_providers.dart';
+import 'package:rkt_web/features/reports/data/reports_providers.dart';
 import 'package:rkt_web/features/donations/data/donation_providers.dart';
 import 'package:rkt_web/features/enquiries/data/enquiry_providers.dart';
 import 'package:rkt_web/features/events/data/event_providers.dart';
@@ -19,6 +20,7 @@ import 'package:rkt_web/l10n/app_localizations.dart';
 
 import 'fake_accounts_repository.dart';
 import 'fake_announcement_repository.dart';
+import 'fake_reports_repository.dart';
 import 'fake_donation_repository.dart';
 import 'fake_enquiry_repository.dart';
 import 'fake_event_repository.dart';
@@ -68,6 +70,9 @@ const accountsPlaceholderKey = Key('test-accounts-placeholder');
 /// Key on the stand-in screen the accounting categories render.
 const accountingCategoriesPlaceholderKey = Key('test-categories-placeholder');
 
+/// Key on the stand-in screen the report catalogue renders.
+const reportsPlaceholderKey = Key('test-reports-placeholder');
+
 /// Pumps a single screen inside the real theme and localization setup.
 ///
 /// A minimal router is provided so screens that navigate (the login screen, for
@@ -96,6 +101,7 @@ Future<void> pumpScreen(
   FakeEnquiryRepository? enquiries,
   FakeAnnouncementRepository? announcements,
   FakeAccountsRepository? accounts,
+  FakeReportsRepository? reports,
 }) async {
   if (surfaceSize != null) {
     // Set the logical size directly: devicePixelRatio 1.0 makes the physical
@@ -216,6 +222,15 @@ Future<void> pumpScreen(
         path: RoutePaths.adminAccountingSettings,
         builder: (_, _) => const Scaffold(body: SizedBox.shrink()),
       ),
+      GoRoute(
+        path: RoutePaths.adminReports,
+        builder: (_, _) =>
+            const Scaffold(key: reportsPlaceholderKey, body: SizedBox.shrink()),
+      ),
+      GoRoute(
+        path: RoutePaths.adminEvents,
+        builder: (_, _) => const Scaffold(body: SizedBox.shrink()),
+      ),
     ],
   );
   addTearDown(router.dispose);
@@ -238,6 +253,9 @@ Future<void> pumpScreen(
         ),
         accountsRepositoryProvider.overrideWithValue(
           accounts ?? FakeAccountsRepository(),
+        ),
+        reportsRepositoryProvider.overrideWithValue(
+          reports ?? FakeReportsRepository(),
         ),
         mediaRepositoryProvider.overrideWithValue(
           media ?? FakeMediaRepository(),

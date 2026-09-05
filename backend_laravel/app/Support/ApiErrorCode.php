@@ -93,5 +93,20 @@ final class ApiErrorCode
      */
     public const ACCOUNTS_NOT_PUBLISHED = 'ACCOUNTS_NOT_PUBLISHED';
 
+    /**
+     * A report was asked for personal columns by an account that may not see
+     * them (spec Phase 10). Refused rather than answered with a quietly
+     * narrower file: dropping columns somebody explicitly asked for is how a
+     * treasurer concludes the export is broken.
+     */
+    public const REPORT_DISCLOSURE_REFUSED = 'REPORT_DISCLOSURE_REFUSED';
+
+    /**
+     * An export matched more rows than the cap allows (spec Phase 10). The
+     * message names a narrower period; a file quietly missing its last rows
+     * would be worse than one that refused.
+     */
+    public const REPORT_TOO_LARGE = 'REPORT_TOO_LARGE';
+
     public const SERVER_ERROR = 'SERVER_ERROR';
 }

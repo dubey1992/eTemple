@@ -3997,6 +3997,264 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'मंदिर ने अभी अपना लेखा-जोखा प्रकाशित नहीं किया है।'**
   String get errorAccountsNotPublished;
+
+  /// No description provided for @navReports.
+  ///
+  /// In hi, this message translates to:
+  /// **'रिपोर्ट'**
+  String get navReports;
+
+  /// No description provided for @navReportsDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान, बही, कार्यक्रम एवं पूछताछ की मानक रिपोर्ट'**
+  String get navReportsDesc;
+
+  /// No description provided for @reportsTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'रिपोर्ट'**
+  String get reportsTitle;
+
+  /// No description provided for @reportsSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर के अभिलेखों की मानक रिपोर्ट, और उनकी प्रति'**
+  String get reportsSubtitle;
+
+  /// No description provided for @reportsEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस खाते के लिए कोई रिपोर्ट उपलब्ध नहीं है।'**
+  String get reportsEmpty;
+
+  /// No description provided for @reportOpen.
+  ///
+  /// In hi, this message translates to:
+  /// **'खोलें'**
+  String get reportOpen;
+
+  /// No description provided for @reportHasPersonal.
+  ///
+  /// In hi, this message translates to:
+  /// **'इसमें व्यक्तिगत विवरण के स्तंभ हैं'**
+  String get reportHasPersonal;
+
+  /// No description provided for @reportFilterPeriod.
+  ///
+  /// In hi, this message translates to:
+  /// **'अवधि'**
+  String get reportFilterPeriod;
+
+  /// No description provided for @reportFilterYear.
+  ///
+  /// In hi, this message translates to:
+  /// **'वित्तीय वर्ष'**
+  String get reportFilterYear;
+
+  /// No description provided for @reportFilterFrom.
+  ///
+  /// In hi, this message translates to:
+  /// **'से'**
+  String get reportFilterFrom;
+
+  /// No description provided for @reportFilterTo.
+  ///
+  /// In hi, this message translates to:
+  /// **'तक'**
+  String get reportFilterTo;
+
+  /// No description provided for @reportFilterApply.
+  ///
+  /// In hi, this message translates to:
+  /// **'लागू करें'**
+  String get reportFilterApply;
+
+  /// No description provided for @reportFilterClear.
+  ///
+  /// In hi, this message translates to:
+  /// **'छाँट हटाएँ'**
+  String get reportFilterClear;
+
+  /// No description provided for @reportFiltersApplied.
+  ///
+  /// In hi, this message translates to:
+  /// **'लागू छाँट: {filters}'**
+  String reportFiltersApplied(String filters);
+
+  /// No description provided for @reportRowCount.
+  ///
+  /// In hi, this message translates to:
+  /// **'{count, plural, =0{कोई पंक्ति नहीं} =1{1 पंक्ति} other{{count} पंक्तियाँ}}'**
+  String reportRowCount(int count);
+
+  /// No description provided for @reportEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस छाँट के अनुसार कोई प्रविष्टि नहीं मिली।'**
+  String get reportEmpty;
+
+  /// No description provided for @reportIncludePersonal.
+  ///
+  /// In hi, this message translates to:
+  /// **'व्यक्तिगत विवरण सम्मिलित करें'**
+  String get reportIncludePersonal;
+
+  /// No description provided for @reportIncludePersonalHelp.
+  ///
+  /// In hi, this message translates to:
+  /// **'नाम, दूरभाष और पता। बंद रहने पर ये स्तंभ प्रतिक्रिया में होते ही नहीं — छिपाए नहीं जाते। फ़ाइल में इसका उल्लेख भी होता है।'**
+  String get reportIncludePersonalHelp;
+
+  /// No description provided for @reportPersonalIncluded.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस दृश्य में व्यक्तिगत विवरण सम्मिलित हैं'**
+  String get reportPersonalIncluded;
+
+  /// No description provided for @reportExport.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रति लें'**
+  String get reportExport;
+
+  /// No description provided for @reportExportCsv.
+  ///
+  /// In hi, this message translates to:
+  /// **'CSV'**
+  String get reportExportCsv;
+
+  /// No description provided for @reportExportXlsx.
+  ///
+  /// In hi, this message translates to:
+  /// **'Excel'**
+  String get reportExportXlsx;
+
+  /// No description provided for @reportExportPdf.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रिंट / PDF'**
+  String get reportExportPdf;
+
+  /// No description provided for @reportExportNote.
+  ///
+  /// In hi, this message translates to:
+  /// **'फ़ाइल में वही पंक्तियाँ आती हैं जो यहाँ दिख रही हैं — वही छाँट, वही अवधि।'**
+  String get reportExportNote;
+
+  /// No description provided for @reportExportForbidden.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस खाते को रिपोर्ट की प्रति लेने की अनुमति नहीं है।'**
+  String get reportExportForbidden;
+
+  /// No description provided for @reportExportLimit.
+  ///
+  /// In hi, this message translates to:
+  /// **'एक फ़ाइल में अधिकतम {count} पंक्तियाँ आती हैं। इससे अधिक होने पर छोटी अवधि चुनें।'**
+  String reportExportLimit(int count);
+
+  /// No description provided for @overviewTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'एक नज़र में'**
+  String get overviewTitle;
+
+  /// No description provided for @overviewYear.
+  ///
+  /// In hi, this message translates to:
+  /// **'वित्तीय वर्ष {label}'**
+  String overviewYear(String label);
+
+  /// No description provided for @overviewDonations.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान से प्राप्त'**
+  String get overviewDonations;
+
+  /// No description provided for @overviewIncome.
+  ///
+  /// In hi, this message translates to:
+  /// **'कुल आय'**
+  String get overviewIncome;
+
+  /// No description provided for @overviewExpense.
+  ///
+  /// In hi, this message translates to:
+  /// **'कुल व्यय'**
+  String get overviewExpense;
+
+  /// No description provided for @overviewBalance.
+  ///
+  /// In hi, this message translates to:
+  /// **'वर्तमान शेष'**
+  String get overviewBalance;
+
+  /// No description provided for @overviewDonationCount.
+  ///
+  /// In hi, this message translates to:
+  /// **'{count, plural, =0{कोई दान नहीं} =1{1 दान} other{{count} दान}}'**
+  String overviewDonationCount(int count);
+
+  /// No description provided for @overviewTrend.
+  ///
+  /// In hi, this message translates to:
+  /// **'पिछले 12 माह में दान'**
+  String get overviewTrend;
+
+  /// No description provided for @overviewTrendEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'पिछले बारह माह में कोई दान दर्ज नहीं है।'**
+  String get overviewTrendEmpty;
+
+  /// No description provided for @overviewEnquiries.
+  ///
+  /// In hi, this message translates to:
+  /// **'लंबित पूछताछ'**
+  String get overviewEnquiries;
+
+  /// No description provided for @overviewEnquiriesNew.
+  ///
+  /// In hi, this message translates to:
+  /// **'{count, plural, =0{कोई नया संदेश नहीं} =1{1 नया संदेश} other{{count} नए संदेश}}'**
+  String overviewEnquiriesNew(int count);
+
+  /// No description provided for @overviewUpcoming.
+  ///
+  /// In hi, this message translates to:
+  /// **'आगामी कार्यक्रम'**
+  String get overviewUpcoming;
+
+  /// No description provided for @overviewUpcomingEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'अगले तीस दिनों में कोई कार्यक्रम नहीं है।'**
+  String get overviewUpcomingEmpty;
+
+  /// No description provided for @overviewEventCancelled.
+  ///
+  /// In hi, this message translates to:
+  /// **'रद्द'**
+  String get overviewEventCancelled;
+
+  /// No description provided for @overviewOpenReports.
+  ///
+  /// In hi, this message translates to:
+  /// **'सभी रिपोर्ट देखें'**
+  String get overviewOpenReports;
+
+  /// No description provided for @errorReportDisclosureRefused.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह रिपोर्ट देखी जा सकती है, पर व्यक्तिगत विवरण के लिए अनुमति चाहिए जो इस खाते के पास नहीं है।'**
+  String get errorReportDisclosureRefused;
+
+  /// No description provided for @errorReportTooLarge.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह अवधि एक फ़ाइल के लिए बहुत बड़ी है। छोटी अवधि चुनकर भागों में प्रति लें।'**
+  String get errorReportTooLarge;
 }
 
 class _AppLocalizationsDelegate

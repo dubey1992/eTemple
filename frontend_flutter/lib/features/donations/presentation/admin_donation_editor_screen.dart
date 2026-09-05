@@ -343,7 +343,9 @@ class _DonationFormState extends ConsumerState<_DonationForm> {
     // A new tab rather than an in-app view: the receipt is a document the
     // browser prints, and the browser is also what shapes the Devanagari in a
     // donor's name correctly.
-    (widget.opener ?? const LinkOpener()).open(
+    // `openOwn`: the receipt is our own authenticated endpoint, and a
+    // stripped Referer makes the request anonymous.
+    (widget.opener ?? const LinkOpener()).openOwn(
       ref.read(donationRepositoryProvider).receiptUrl(donation.id),
     );
   }

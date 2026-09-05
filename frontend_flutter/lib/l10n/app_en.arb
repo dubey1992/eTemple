@@ -995,5 +995,90 @@
   "accountsNoteEn": "Note (English)",
   "accountsIntroHelp": "This sentence appears at the top of the accounts page.",
   "errorTransactionLocked": "This entry has already been approved or reversed, so that is no longer possible.",
-  "errorAccountsNotPublished": "The temple has not published its accounts."
+  "errorAccountsNotPublished": "The temple has not published its accounts.",
+  "navReports": "Reports",
+  "navReportsDesc": "Standard reports on donations, the ledger, events and enquiries",
+  "reportsTitle": "Reports",
+  "reportsSubtitle": "Standard reports on the temple's records, and copies of them",
+  "reportsEmpty": "No reports are available to this account.",
+  "reportOpen": "Open",
+  "reportHasPersonal": "Has columns with personal details",
+  "reportFilterPeriod": "Period",
+  "reportFilterYear": "Financial year",
+  "reportFilterFrom": "From",
+  "reportFilterTo": "To",
+  "reportFilterApply": "Apply",
+  "reportFilterClear": "Clear filters",
+  "reportFiltersApplied": "Filters applied: {filters}",
+  "@reportFiltersApplied": {
+    "placeholders": {
+      "filters": {
+        "type": "String"
+      }
+    }
+  },
+  "reportRowCount": "{count, plural, =0{No rows} =1{1 row} other{{count} rows}}",
+  "@reportRowCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reportEmpty": "No entries match this filter.",
+  "reportIncludePersonal": "Include personal details",
+  "reportIncludePersonalHelp": "Names, telephone numbers and addresses. While it is off those columns are not in the response at all — they are not merely hidden. A file that includes them says so.",
+  "reportPersonalIncluded": "This view includes personal details",
+  "reportExport": "Take a copy",
+  "reportExportCsv": "CSV",
+  "reportExportXlsx": "Excel",
+  "reportExportPdf": "Print / PDF",
+  "reportExportNote": "The file contains exactly the rows shown here — the same filters, the same period.",
+  "reportExportForbidden": "This account may read reports but not take copies away.",
+  "reportExportLimit": "A file carries at most {count} rows. Choose a shorter period if there are more.",
+  "@reportExportLimit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "overviewTitle": "At a glance",
+  "overviewYear": "Financial year {label}",
+  "@overviewYear": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "overviewDonations": "Received as donations",
+  "overviewIncome": "Total received",
+  "overviewExpense": "Total spent",
+  "overviewBalance": "Current balance",
+  "overviewDonationCount": "{count, plural, =0{No donations} =1{1 donation} other{{count} donations}}",
+  "@overviewDonationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "overviewTrend": "Donations over the last 12 months",
+  "overviewTrendEmpty": "No donations were recorded in the last twelve months.",
+  "overviewEnquiries": "Enquiries waiting",
+  "overviewEnquiriesNew": "{count, plural, =0{No new messages} =1{1 new message} other{{count} new messages}}",
+  "@overviewEnquiriesNew": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "overviewUpcoming": "Upcoming events",
+  "overviewUpcomingEmpty": "Nothing is scheduled in the next thirty days.",
+  "overviewEventCancelled": "Cancelled",
+  "overviewOpenReports": "See all reports",
+  "errorReportDisclosureRefused": "This report can be read, but personal details need a permission this account does not have.",
+  "errorReportTooLarge": "That period is too large for one file. Choose a shorter one and take the copy in parts."
 }

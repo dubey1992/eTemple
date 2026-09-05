@@ -13,7 +13,9 @@ use App\Http\Controllers\Api\Admin\DonationSettingsController;
 use App\Http\Controllers\Api\Admin\EnquiryController as AdminEnquiryController;
 use App\Http\Controllers\Api\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Api\Admin\MediaController as AdminMediaController;
+use App\Http\Controllers\Api\Admin\OverviewController;
 use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
+use App\Http\Controllers\Api\Admin\ReportController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\SiteSettingsController as AdminSiteSettingsController;
 use App\Http\Controllers\Api\Admin\TempleProfileController;
@@ -424,4 +426,32 @@ Route::prefix('admin')
             ->middleware('can:'.Permission::ACCOUNTS_VIEW)->name('accounting-settings.show');
         Route::put('/accounting-settings', [AccountingSettingsController::class, 'update'])
             ->middleware('can:'.Permission::ACCOUNTS_MANAGE)->name('accounting-settings.update');
+
+        // --- Reports and analytics (Phase 10) --------------------------
+        // Everything here is a GET; nothing in this module writes.
+        //
+        // `reports.view` is the ticket in, and each report declares the domain
+        // key it also needs — so a report of the ledger needs accounts.view and
+        // one of the inbox needs enquiries.manage. The catalogue lists only
+        // what the caller may actually run.
+        //
+        // Downloading is a **separate** permission from reading: a Viewer may
+        // read a report on screen and not take a copy away. And the export
+        // shares the screen's query string and its runner, which is what makes
+        // "the export applies exactly the on-screen filters" true of the code
+        // rather than a promise (PHASE_10_PLAN assumption N1).
+        Route::get('/reports', [ReportController::class, 'index'])
+            ->middleware('can:'.Permission::REPORTS_VIEW)->name('reports.index');
+        Route::get('/reports/{key}', [ReportController::class, 'show'])
+            ->where('key', '[a-z0-9-]+')
+            ->middleware('can:'.Permission::REPORTS_VIEW)->name('reports.show');
+        Route::get('/reports/{key}/export', [ReportController::class, 'export'])
+            ->where('key', '[a-z0-9-]+')
+            ->middleware('can:'.Permission::REPORTS_VIEW)->name('reports.export');
+
+        // The dashboard's figures. Each panel is gated again by the module it
+        // reads, so an account with no money keys gets a dashboard with no
+        // money on it rather than one full of zeros.
+        Route::get('/overview', [OverviewController::class, 'show'])
+            ->middleware('can:'.Permission::REPORTS_VIEW)->name('overview');
     });

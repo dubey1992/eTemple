@@ -2,13 +2,14 @@ openapi: 3.1.0
 
 info:
   title: Radha Krishna Thakurbari API
-  version: 0.10.0
+  version: 0.11.0
   description: |
     REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
     admin console.
 
-    **Scope: Phases 0-9.** Endpoints for reports are added in their own phase
-    and must be documented here in the same change that implements them.
+    **Scope: Phases 0-10.** Phases 11 and 12 add no new endpoints of their own;
+    anything they do add must be documented here in the same change that
+    implements it.
 
     ## Authorization
 
@@ -96,6 +97,13 @@ tags:
       is counted anywhere; the public endpoint carries totals and no person's
       name; and there is no DELETE on a transaction, because reversal - which
       keeps the row, its bill and a stated reason - is the only undo.
+  - name: Reports
+    description: |
+      The standard reports, the files made from them, and the dashboard's
+      figures. Everything here is a GET; nothing in this module writes. The
+      export runs the same report with the same filters as the screen, and
+      personal columns are absent unless they were both permitted and asked
+      for.
 
 paths:
   /api/health:
@@ -2559,6 +2567,189 @@ paths:
         '403': { description: FORBIDDEN }
         '422': { description: VALIDATION_FAILED }
 
+  /api/admin/reports:
+    get:
+      tags: [Reports]
+      summary: The report catalogue
+      description: |
+        Requires `reports.view`. Lists **only the reports this account may
+        actually run**: each report declares the module key it reads on top of
+        `reports.view`, and the server filters the list, so the console is never
+        offered a door that will not open. A courtesy, never the access control
+        - every other endpoint checks again.
+
+        Also says whether this account may download at all. Reading and
+        downloading are separate permissions: a Viewer may read a report on
+        screen and not take a copy away.
+      parameters:
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en] } }
+      responses:
+        '200':
+          description: What this account may run
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/ReportCatalogue' }
+        '401': { description: UNAUTHENTICATED }
+        '403': { description: FORBIDDEN }
+
+  /api/admin/reports/{key}:
+    parameters:
+      - { name: key, in: path, required: true, schema: { type: string, enum: [donations, donation-summary, income-expenditure, ledger, events, enquiries] } }
+    get:
+      tags: [Reports]
+      summary: Run a report
+      description: |
+        Requires `reports.view` **and** the report's own key. A report that is
+        not listed in the catalogue is a 403 here rather than a 404: pretending
+        it is absent would be obscurity standing in for a permission.
+
+        ## The period
+
+        `year` names an Indian financial year - `2026` is 2026-27 - and is the
+        ordinary way to ask. `from`/`to` are for a month or a festival week and
+        override it. **When neither is given the report covers the current
+        financial year**, not all of history: an unbounded first click is a scan
+        of every row the temple has ever recorded.
+
+        ## Personal columns
+
+        `include_personal` defaults to **false**, and while it is false those
+        columns are **absent from the response** - not blank, not masked. A
+        masked column is still a column somebody can widen.
+
+        Asking for them without the permission is **refused**, not answered with
+        a quietly narrower payload: silently dropping columns somebody asked for
+        is how a treasurer concludes the report is broken.
+
+        Money travels as both the integer paise and a formatted string. The
+        paise are the authority; only the server divides by a hundred.
+      parameters:
+        - { name: year, in: query, schema: { type: integer }, description: 'The April a financial year starts in' }
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+        - { name: status, in: query, schema: { type: string } }
+        - { name: type, in: query, schema: { type: string } }
+        - { name: purpose, in: query, schema: { type: string } }
+        - { name: mode, in: query, schema: { type: string } }
+        - { name: category_id, in: query, schema: { type: integer } }
+        - { name: q, in: query, schema: { type: string } }
+        - { name: include_personal, in: query, schema: { type: boolean, default: false } }
+        - { name: page, in: query, schema: { type: integer, default: 1 } }
+        - { name: per_page, in: query, schema: { type: integer, default: 50, maximum: 200 } }
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en] } }
+      responses:
+        '200':
+          description: The report
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Report' }
+                      meta: { $ref: '#/components/schemas/PaginationMeta' }
+        '403':
+          description: |
+            FORBIDDEN - the account may not run this report; or
+            REPORT_DISCLOSURE_REFUSED - it may run it, but not with its personal
+            columns.
+        '404': { description: NOT_FOUND }
+
+  /api/admin/reports/{key}/export:
+    parameters:
+      - { name: key, in: path, required: true, schema: { type: string } }
+    get:
+      tags: [Reports]
+      summary: A report as a file
+      description: |
+        Requires `reports.export` on top of everything the report itself needs.
+
+        **The file is the screen.** This endpoint takes the *same* query string
+        as the report above, parses it with the *same* code and runs the *same*
+        report; the only difference is that paging is dropped, because a file is
+        the whole filter rather than the page somebody happened to be looking
+        at. The client never uploads rows to be exported, so "the export applies
+        exactly the on-screen filters" is a property of the code.
+
+        Three formats:
+
+        * **`csv`** - UTF-8 **with a byte-order mark**, because without one
+          Excel on Windows opens it as Windows-1252 and every Hindi name becomes
+          mojibake. CRLF line endings. A cell beginning `=`, `+`, `-`, `@`, tab
+          or carriage return is prefixed with an apostrophe: a donor recorded as
+          `=HYPERLINK(...)` is an attack carried out by the reader's own
+          spreadsheet. Money is a plain decimal - the rupee sign would make the
+          column text and every total would silently fail.
+        * **`xlsx`** - a real workbook, written directly with `ZipArchive`
+          rather than by adding a library. Numbers are numbers, so a column can
+          be summed.
+        * **`pdf`** - a **print-ready HTML document**, served inline. No PHP PDF
+          library shapes Devanagari; every browser does, and the person
+          exporting already has one open. Ctrl-P, "Save as PDF".
+
+        Every file carries a header block: the temple, the report, **the filters
+        applied**, when it was made and by whom - and, when it contains personal
+        data, a line saying so.
+
+        Capped at 10,000 rows. When the cap bites the file says so on itself
+        rather than being quietly short.
+      parameters:
+        - { name: format, in: query, required: true, schema: { type: string, enum: [csv, xlsx, pdf], default: csv } }
+        - { name: include_personal, in: query, schema: { type: boolean, default: false } }
+      responses:
+        '200':
+          description: |
+            The file. `csv` and `xlsx` as `Content-Disposition: attachment` with
+            a dated name; `pdf` inline, to be printed. All three carry
+            `X-Content-Type-Options: nosniff` and `Cache-Control: private,
+            no-store`.
+        '403':
+          description: |
+            FORBIDDEN - this account may read reports but not download them; or
+            REPORT_DISCLOSURE_REFUSED.
+        '422': { description: VALIDATION_FAILED - an unknown format }
+
+  /api/admin/overview:
+    get:
+      tags: [Reports]
+      summary: The dashboard's figures
+      description: |
+        Requires `reports.view`, and then **each panel is gated again by the
+        module it reads**: money by `accounts.view`, the donation trend by
+        `donations.view`, the inbox count by `enquiries.manage`, the calendar by
+        `content.view`.
+
+        A panel this account may not see is **absent from the response**, not
+        zero. An absent panel says "not yours"; an empty one says "the temple
+        received nothing", and only one of those is true.
+
+        The money comes from the same service as the public transparency page
+        and the income & expenditure statement, so the three cannot disagree.
+
+        The trend carries **twelve months including the empty ones**: a chart
+        that omitted them would compress the gap and show a steady trickle where
+        there was a festival and then silence.
+      parameters:
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en] } }
+      responses:
+        '200':
+          description: What this account may see of it
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Overview' }
+        '403': { description: FORBIDDEN }
+
 components:
   securitySchemes:
     sessionCookie:
@@ -3654,6 +3845,131 @@ components:
         code: { type: string }
         name: { $ref: '#/components/schemas/LocalizedText' }
         total_paise: { type: integer }
+
+    ReportCatalogue:
+      type: object
+      properties:
+        reports:
+          type: array
+          description: Only what this account may run.
+          items:
+            type: object
+            properties:
+              key: { type: string }
+              title: { type: string }
+              description: { type: string }
+              has_personal_columns:
+                type: boolean
+                description: Whether the report *has* such columns, so a screen can offer the switch.
+              may_see_personal:
+                type: boolean
+                description: Whether this account may turn that switch on.
+        may_export: { type: boolean, description: Reading and downloading are separate permissions }
+        formats:
+          type: array
+          items: { type: string, enum: [csv, xlsx, pdf] }
+        export_limit: { type: integer }
+
+    Report:
+      type: object
+      properties:
+        key: { type: string }
+        title: { type: string }
+        description: { type: string }
+        filters:
+          type: array
+          description: The filters this run was made under, in words - the same sentence the file's header block carries.
+          items: { type: string }
+        includes_personal: { type: boolean }
+        has_personal_columns: { type: boolean }
+        columns:
+          type: array
+          items: { $ref: '#/components/schemas/ReportColumn' }
+        rows:
+          type: array
+          description: |
+            One object per row, keyed by column. A money cell is
+            `{paise, display}`; everything else is a string or null. A personal
+            column that was not disclosed is **absent from the object**.
+          items: { type: object, additionalProperties: true }
+        summary:
+          type: array
+          items: { $ref: '#/components/schemas/ReportFigure' }
+
+    ReportColumn:
+      type: object
+      properties:
+        key: { type: string }
+        label: { type: string, description: In the requested language }
+        type: { type: string, enum: [text, money, number, date, datetime] }
+        personal:
+          type: boolean
+          description: |
+            True for a column naming a person. Such a column only appears at all
+            when it was asked for and allowed - so this flag describes what
+            arrived, never what was withheld.
+
+    ReportFigure:
+      type: object
+      properties:
+        key: { type: string }
+        label: { type: string }
+        type: { type: string }
+        value: { description: The raw figure - integer paise for money }
+        display: { type: string, description: What a person reads }
+
+    Overview:
+      type: object
+      description: |
+        Every block below is optional, and its absence means "this account may
+        not see it" rather than "it is zero".
+      properties:
+        financial_year:
+          type: object
+          properties:
+            year: { type: integer }
+            label: { type: string }
+        money:
+          type: object
+          description: Needs `accounts.view`.
+          properties:
+            donations_paise: { type: integer }
+            other_income_paise: { type: integer }
+            total_income_paise: { type: integer }
+            total_expense_paise: { type: integer }
+            closing_balance_paise: { type: integer }
+            donation_count: { type: integer }
+            donations_display: { type: string }
+            total_income_display: { type: string }
+            total_expense_display: { type: string }
+            closing_balance_display: { type: string }
+        donation_trend:
+          type: array
+          description: Needs `donations.view`. Twelve months, oldest first, including the empty ones.
+          items:
+            type: object
+            properties:
+              month: { type: string, description: 'YYYY-MM' }
+              label: { type: string }
+              total_paise: { type: integer }
+              display: { type: string }
+        enquiries:
+          type: object
+          description: Needs `enquiries.manage`.
+          properties:
+            new: { type: integer }
+            in_progress: { type: integer }
+            open: { type: integer }
+        upcoming_events:
+          type: array
+          description: Needs `content.view`. Cancelled occurrences are listed and flagged, never dropped.
+          items:
+            type: object
+            properties:
+              date: { type: string, format: date }
+              time: { type: string }
+              title: { type: string }
+              is_cancelled: { type: boolean }
 
 security:
   - sessionCookie: []

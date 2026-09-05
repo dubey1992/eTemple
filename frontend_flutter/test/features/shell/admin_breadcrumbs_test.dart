@@ -167,6 +167,8 @@ void main() {
         RoutePaths.adminAccountDetail(1),
         RoutePaths.adminAccountingCategories,
         RoutePaths.adminAccountingSettings,
+        RoutePaths.adminReports,
+        RoutePaths.adminReport('donations'),
       ];
 
       for (final route in routes) {

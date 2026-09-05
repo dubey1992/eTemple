@@ -2151,4 +2151,175 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorAccountsNotPublished =>
       'The temple has not published its accounts.';
+
+  @override
+  String get navReports => 'Reports';
+
+  @override
+  String get navReportsDesc =>
+      'Standard reports on donations, the ledger, events and enquiries';
+
+  @override
+  String get reportsTitle => 'Reports';
+
+  @override
+  String get reportsSubtitle =>
+      'Standard reports on the temple\'s records, and copies of them';
+
+  @override
+  String get reportsEmpty => 'No reports are available to this account.';
+
+  @override
+  String get reportOpen => 'Open';
+
+  @override
+  String get reportHasPersonal => 'Has columns with personal details';
+
+  @override
+  String get reportFilterPeriod => 'Period';
+
+  @override
+  String get reportFilterYear => 'Financial year';
+
+  @override
+  String get reportFilterFrom => 'From';
+
+  @override
+  String get reportFilterTo => 'To';
+
+  @override
+  String get reportFilterApply => 'Apply';
+
+  @override
+  String get reportFilterClear => 'Clear filters';
+
+  @override
+  String reportFiltersApplied(String filters) {
+    return 'Filters applied: $filters';
+  }
+
+  @override
+  String reportRowCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows',
+      one: '1 row',
+      zero: 'No rows',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reportEmpty => 'No entries match this filter.';
+
+  @override
+  String get reportIncludePersonal => 'Include personal details';
+
+  @override
+  String get reportIncludePersonalHelp =>
+      'Names, telephone numbers and addresses. While it is off those columns are not in the response at all — they are not merely hidden. A file that includes them says so.';
+
+  @override
+  String get reportPersonalIncluded => 'This view includes personal details';
+
+  @override
+  String get reportExport => 'Take a copy';
+
+  @override
+  String get reportExportCsv => 'CSV';
+
+  @override
+  String get reportExportXlsx => 'Excel';
+
+  @override
+  String get reportExportPdf => 'Print / PDF';
+
+  @override
+  String get reportExportNote =>
+      'The file contains exactly the rows shown here — the same filters, the same period.';
+
+  @override
+  String get reportExportForbidden =>
+      'This account may read reports but not take copies away.';
+
+  @override
+  String reportExportLimit(int count) {
+    return 'A file carries at most $count rows. Choose a shorter period if there are more.';
+  }
+
+  @override
+  String get overviewTitle => 'At a glance';
+
+  @override
+  String overviewYear(String label) {
+    return 'Financial year $label';
+  }
+
+  @override
+  String get overviewDonations => 'Received as donations';
+
+  @override
+  String get overviewIncome => 'Total received';
+
+  @override
+  String get overviewExpense => 'Total spent';
+
+  @override
+  String get overviewBalance => 'Current balance';
+
+  @override
+  String overviewDonationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count donations',
+      one: '1 donation',
+      zero: 'No donations',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get overviewTrend => 'Donations over the last 12 months';
+
+  @override
+  String get overviewTrendEmpty =>
+      'No donations were recorded in the last twelve months.';
+
+  @override
+  String get overviewEnquiries => 'Enquiries waiting';
+
+  @override
+  String overviewEnquiriesNew(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count new messages',
+      one: '1 new message',
+      zero: 'No new messages',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get overviewUpcoming => 'Upcoming events';
+
+  @override
+  String get overviewUpcomingEmpty =>
+      'Nothing is scheduled in the next thirty days.';
+
+  @override
+  String get overviewEventCancelled => 'Cancelled';
+
+  @override
+  String get overviewOpenReports => 'See all reports';
+
+  @override
+  String get errorReportDisclosureRefused =>
+      'This report can be read, but personal details need a permission this account does not have.';
+
+  @override
+  String get errorReportTooLarge =>
+      'That period is too large for one file. Choose a shorter one and take the copy in parts.';
 }

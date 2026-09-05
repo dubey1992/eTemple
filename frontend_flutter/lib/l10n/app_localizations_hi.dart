@@ -2144,4 +2144,174 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get errorAccountsNotPublished =>
       'मंदिर ने अभी अपना लेखा-जोखा प्रकाशित नहीं किया है।';
+
+  @override
+  String get navReports => 'रिपोर्ट';
+
+  @override
+  String get navReportsDesc => 'दान, बही, कार्यक्रम एवं पूछताछ की मानक रिपोर्ट';
+
+  @override
+  String get reportsTitle => 'रिपोर्ट';
+
+  @override
+  String get reportsSubtitle =>
+      'मंदिर के अभिलेखों की मानक रिपोर्ट, और उनकी प्रति';
+
+  @override
+  String get reportsEmpty => 'इस खाते के लिए कोई रिपोर्ट उपलब्ध नहीं है।';
+
+  @override
+  String get reportOpen => 'खोलें';
+
+  @override
+  String get reportHasPersonal => 'इसमें व्यक्तिगत विवरण के स्तंभ हैं';
+
+  @override
+  String get reportFilterPeriod => 'अवधि';
+
+  @override
+  String get reportFilterYear => 'वित्तीय वर्ष';
+
+  @override
+  String get reportFilterFrom => 'से';
+
+  @override
+  String get reportFilterTo => 'तक';
+
+  @override
+  String get reportFilterApply => 'लागू करें';
+
+  @override
+  String get reportFilterClear => 'छाँट हटाएँ';
+
+  @override
+  String reportFiltersApplied(String filters) {
+    return 'लागू छाँट: $filters';
+  }
+
+  @override
+  String reportRowCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count पंक्तियाँ',
+      one: '1 पंक्ति',
+      zero: 'कोई पंक्ति नहीं',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reportEmpty => 'इस छाँट के अनुसार कोई प्रविष्टि नहीं मिली।';
+
+  @override
+  String get reportIncludePersonal => 'व्यक्तिगत विवरण सम्मिलित करें';
+
+  @override
+  String get reportIncludePersonalHelp =>
+      'नाम, दूरभाष और पता। बंद रहने पर ये स्तंभ प्रतिक्रिया में होते ही नहीं — छिपाए नहीं जाते। फ़ाइल में इसका उल्लेख भी होता है।';
+
+  @override
+  String get reportPersonalIncluded =>
+      'इस दृश्य में व्यक्तिगत विवरण सम्मिलित हैं';
+
+  @override
+  String get reportExport => 'प्रति लें';
+
+  @override
+  String get reportExportCsv => 'CSV';
+
+  @override
+  String get reportExportXlsx => 'Excel';
+
+  @override
+  String get reportExportPdf => 'प्रिंट / PDF';
+
+  @override
+  String get reportExportNote =>
+      'फ़ाइल में वही पंक्तियाँ आती हैं जो यहाँ दिख रही हैं — वही छाँट, वही अवधि।';
+
+  @override
+  String get reportExportForbidden =>
+      'इस खाते को रिपोर्ट की प्रति लेने की अनुमति नहीं है।';
+
+  @override
+  String reportExportLimit(int count) {
+    return 'एक फ़ाइल में अधिकतम $count पंक्तियाँ आती हैं। इससे अधिक होने पर छोटी अवधि चुनें।';
+  }
+
+  @override
+  String get overviewTitle => 'एक नज़र में';
+
+  @override
+  String overviewYear(String label) {
+    return 'वित्तीय वर्ष $label';
+  }
+
+  @override
+  String get overviewDonations => 'दान से प्राप्त';
+
+  @override
+  String get overviewIncome => 'कुल आय';
+
+  @override
+  String get overviewExpense => 'कुल व्यय';
+
+  @override
+  String get overviewBalance => 'वर्तमान शेष';
+
+  @override
+  String overviewDonationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count दान',
+      one: '1 दान',
+      zero: 'कोई दान नहीं',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get overviewTrend => 'पिछले 12 माह में दान';
+
+  @override
+  String get overviewTrendEmpty => 'पिछले बारह माह में कोई दान दर्ज नहीं है।';
+
+  @override
+  String get overviewEnquiries => 'लंबित पूछताछ';
+
+  @override
+  String overviewEnquiriesNew(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count नए संदेश',
+      one: '1 नया संदेश',
+      zero: 'कोई नया संदेश नहीं',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get overviewUpcoming => 'आगामी कार्यक्रम';
+
+  @override
+  String get overviewUpcomingEmpty =>
+      'अगले तीस दिनों में कोई कार्यक्रम नहीं है।';
+
+  @override
+  String get overviewEventCancelled => 'रद्द';
+
+  @override
+  String get overviewOpenReports => 'सभी रिपोर्ट देखें';
+
+  @override
+  String get errorReportDisclosureRefused =>
+      'यह रिपोर्ट देखी जा सकती है, पर व्यक्तिगत विवरण के लिए अनुमति चाहिए जो इस खाते के पास नहीं है।';
+
+  @override
+  String get errorReportTooLarge =>
+      'यह अवधि एक फ़ाइल के लिए बहुत बड़ी है। छोटी अवधि चुनकर भागों में प्रति लें।';
 }

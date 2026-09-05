@@ -16,9 +16,42 @@ Legend: `NOT STARTED` · `IN PROGRESS` · `PARTIAL` · `BLOCKED` · `COMPLETE`
 | 7 | Devotee Contact & Enquiries | **COMPLETE** | The public contact form, protected by four layers none of which is a third-party CAPTCHA: an IP rate limit with a daily ceiling, a honeypot, a timed single-use ticket, and a server-issued question after a threshold. No public read of an enquiry at any status, and no delete — `spam` keeps the row. Also fixed two defects carried in from earlier phases — `phase-reports/PHASE_7_COMPLETION.md`. |
 | 8 | Announcements & Notifications | **COMPLETE** | Publishing and sending are separate acts: saving sends nothing, publishing sends nothing, and a send needs an explicit channel choice and can happen once. The schedule is a `where` clause with no cron behind it. E-mail reaches committee accounts only. Also replaced the admin card grid with a side menu — `phase-reports/PHASE_8_COMPLETION.md`. |
 | 9 | Accounts & Transparency | **COMPLETE** | The ledger, and the figures the village reads. Only approved money counts in any total; donations are read from their own register and the `donation` category code is refused, so nothing is published twice; bills live on a private disk with no URL to them; no delete anywhere. The public page carries totals by heading and **no person's name** — the consent question `donations.is_anonymous` could not answer. Also fixed a defect found by screenshotting: the console's net excluded donations while the public page included them, unlabelled — `phase-reports/PHASE_9_COMPLETION.md`. |
-| 10 | Reports & Analytics | NOT STARTED | Keys `reports.*` exist. |
+| 10 | Reports & Analytics | **COMPLETE** | Six standard reports over donations, the ledger, events and enquiries, in three formats. The export runs the *same* report with the *same* filters as the screen — a property of the code, not a promise. Personal columns are absent unless both permitted and asked for, and asking without the permission is refused rather than quietly narrowed. Reading and downloading are separate permissions. The dashboard gained the at-a-glance figures Phase 8 promised it — `phase-reports/PHASE_10_COMPLETION.md`. |
 | 11 | Security, Backup & Audit | NOT STARTED | |
 | 12 | Testing, Deployment & Handover | NOT STARTED | |
+
+## Verification log — Phase 10 (2026-09-14)
+
+| Check | Result |
+|---|---|
+| `flutter analyze` | ✅ No issues found |
+| `dart format --set-exit-if-changed` | ✅ 0 of 217 files changed |
+| `flutter test` | ✅ **549/549** passed |
+| `flutter build web --release` | ✅ built |
+| `./vendor/bin/pint --test` | ✅ passed |
+| `php artisan test` | ✅ **664** passed (2395 assertions) |
+| The export applies exactly the on-screen filters | ✅ same query string, same parser, same runner — asserted by counting a downloaded CSV's rows against the JSON's, and again after adding a filter |
+| A file is the whole filter, not the page | ✅ paging is the one thing an export does not inherit |
+| Personal columns are absent unless asked for | ✅ absent from the response, not blank or masked — on the screen and in the file |
+| Asking without the permission is refused | ✅ 403 `REPORT_DISCLOSURE_REFUSED`, not a quietly narrower payload |
+| A file containing personal data says so on itself | ✅ in its header block, in all three formats |
+| An anonymous donor is never named | ✅ at any permission; the row says `(गुप्त)` |
+| The enquiry address hash reaches no report | ✅ asserted by name |
+| Reading and downloading are separate permissions | ✅ a Viewer reads on screen and is refused the export |
+| A Content Manager is refused the whole module | ✅ catalogue, reports, exports and overview all 403 |
+| A report not in the catalogue is refused when asked for | ✅ 403, not 404 — obscurity is not a permission |
+| CSV opens correctly in Excel on Windows | ✅ UTF-8 **with a BOM**, CRLF |
+| No CSV cell can execute | ✅ `=`, `+`, `-`, `@`, tab and CR are neutralised |
+| Money in a file is a plain decimal | ✅ so a column can be summed; the screen still formats it |
+| **The workbook is real, and opens** | ✅ written by hand with `ZipArchive`, then **read back with `openpyxl`** — sheet, headings, Devanagari, numbers as numbers, bold row |
+| The PDF is print-ready HTML | ✅ no PHP library shapes Devanagari; heading row repeats across pages |
+| Reports are read-only | ✅ POST, PUT and DELETE are all 405 |
+| The dashboard, the statement and the public page agree | ✅ one service computes all three |
+| A dashboard panel this account may not see is absent, not zero | ✅ on the server and in the widget |
+| The trend keeps its empty months | ✅ twelve, always |
+| Live, through the running API | ✅ **79 checks** — waiting out the rate limit rather than configuring it away |
+| Phase 0–9 tests | ✅ pass unchanged |
+| Every admin route has a breadcrumb trail | ✅ still asserted, now including the two report routes |
 
 ## Verification log — Phase 9 (2026-09-13)
 
@@ -227,9 +260,15 @@ MariaDB 12.3.3 · live health and 401 checks.
 - An announcement sent with no queue worker running records itself as sent and
   delivers nothing; it cannot be detected from inside the request (Phase 8 §10).
 - The home banner's dismissal lasts the session only.
-- No CSV/PDF/Excel export of the ledger or the published figures — Phase 10.
 - Accounting approvals and reversals are not in an append-only audit log; the
   columns on the row record who and when (Phase 11).
+- **Exports of personal data are not logged.** Phase 10 made this more urgent:
+  "who took a copy of the donor list, and when" is exactly what an audit log
+  exists to answer (Phase 11).
+- No scheduled or e-mailed reports, and no report builder (Phase 10 §10).
+- The export cap of 10,000 rows is not configurable.
+- The events report is expanded in PHP rather than the database, because
+  occurrences come from rules; a wide range over many years will be slow.
 - No bank statement import or reconciliation; matching is done by eye.
 - A transfer between the cash box and the bank cannot be recorded — deliberately,
   since as an income and an expense it would inflate both published figures
@@ -239,4 +278,4 @@ MariaDB 12.3.3 · live health and 401 checks.
 - Pre-render tool not wired into CI.
 - No cross-stack end-to-end test (Phase 12).
 
-Phase 10 must not begin without explicit approval.
+Phase 11 must not begin without explicit approval.

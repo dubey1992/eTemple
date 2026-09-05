@@ -157,9 +157,9 @@ Explicitly **out** of Phase 0: CMS pages, home/about content, user CRUD screens,
 
 ## Phase 10 — Reports & Analytics
 
-- [ ] Donation, accounts, events, enquiries report endpoints
-- [ ] PDF/CSV/Excel export applying exactly the on-screen filters
-- [ ] Role-gated access; sensitive donor columns excluded without explicit permission
+- [x] Donation, accounts, events, enquiries report endpoints — six standard reports, one endpoint family (PHASE_10_COMPLETION §2)
+- [x] PDF/CSV/Excel export applying exactly the on-screen filters — the same query string, parser and runner; PDF is print-ready HTML because no PHP library shapes Devanagari (§3, §4)
+- [x] Role-gated access; sensitive donor columns excluded without explicit permission — gated twice, defaulting to absent, and refused rather than narrowed (§5, §6)
 
 ## Phase 11 — Security, Audit, Backup & Privacy
 

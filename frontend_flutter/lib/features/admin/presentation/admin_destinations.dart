@@ -157,6 +157,17 @@ class AdminDestinations {
       route: RoutePaths.adminEnquiries,
       permissions: const [Permissions.enquiriesManage],
     ),
+    // Reading a report needs reports.view; each report additionally declares
+    // the module key it reads, and the server filters the catalogue — so this
+    // door opens onto a list that is never empty for anyone who is offered it.
+    AdminDestination(
+      id: 'reports',
+      icon: Icons.insert_chart_outlined,
+      title: l10n.reportsTitle,
+      description: l10n.navReportsDesc,
+      route: RoutePaths.adminReports,
+      permissions: const [Permissions.reportsView],
+    ),
     AdminDestination(
       id: 'users',
       icon: Icons.group_outlined,

@@ -85,6 +85,16 @@ acceptance and handover are Phase 12.
 - [ ] **No scheduler and no queue worker are needed for the accounts.** Every
       published figure is computed from the database at request time; nothing in
       Phase 9 is sent, queued or timed
+- [ ] **Reports need no scheduler or worker either.** Every report is computed
+      at request time and every route is a `GET`; nothing in Phase 10 is sent,
+      queued or timed
+- [ ] **Decide who holds `reports.export`.** It is separate from `reports.view`
+      on purpose: it is the permission that lets a copy of the donor register
+      leave the building. The Treasurer holds it by default and the Viewer does
+      not
+- [ ] `php.ini` `memory_limit` is at least 128M. An export of ten thousand rows
+      is built in memory before it is sent, and a shared host's 64M default is
+      the one place this phase can fail on hardware rather than on logic
 
 ## Backend server
 
@@ -172,6 +182,13 @@ acceptance and handover are Phase 12.
       and no individual entry; the totals match what the console shows
 - [ ] A bill uploaded in the console is **not** reachable at any URL under
       `/storage`, and downloads only for a signed-in account
+- [ ] A CSV export **opens in Excel with its Hindi intact** — this is the check
+      that catches a lost byte-order mark, and it needs a real Windows machine
+- [ ] An `.xlsx` export opens in Excel without a repair prompt, and a money
+      column can be summed
+- [ ] A PDF export prints with its heading row repeating on the second page
+- [ ] An account holding `reports.view` but not `reports.export` is offered no
+      download, and is told why
 - [ ] Layout checked at 360 px, 768 px and 1440 px widths
 - [ ] Checked in Chrome/Edge on desktop and in a common Android mobile browser
 

@@ -108,6 +108,10 @@ class RoutePaths {
 
   static const String adminAccountingSettings = '/admin/accounting-settings';
 
+  static const String adminReports = '/admin/reports';
+
+  static String adminReport(String key) => '/admin/reports/$key';
+
   static const String adminEnquiries = '/admin/enquiries';
 
   static String adminEnquiryDetail(int id) => '/admin/enquiries/$id';
@@ -152,6 +156,8 @@ class RouteNames {
   static const String donate = 'donate';
   static const String contact = 'contact';
   static const String transparency = 'transparency';
+  static const String adminReports = 'admin-reports';
+  static const String adminReport = 'admin-report';
   static const String adminAccounts = 'admin-accounts';
   static const String adminAccountEditor = 'admin-account-editor';
   static const String adminAccountingCategories = 'admin-accounting-categories';

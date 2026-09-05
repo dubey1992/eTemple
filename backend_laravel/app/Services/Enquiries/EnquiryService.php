@@ -189,6 +189,19 @@ class EnquiryService
             $query->where('category', $filters['category']);
         }
 
+        // The period. Added for the Phase 10 report, and put here rather than
+        // in the report because a filter the caller asks for and the service
+        // silently ignores is worse than one that does not exist: the rows
+        // would be all-time data under a heading naming a period
+        // (PHASE_10_PLAN assumption N9).
+        if (isset($filters['from'])) {
+            $query->whereDate('created_at', '>=', $filters['from']);
+        }
+
+        if (isset($filters['to'])) {
+            $query->whereDate('created_at', '<=', $filters['to']);
+        }
+
         if (isset($filters['assigned_to'])) {
             $assigned = $filters['assigned_to'];
             $assigned === 'unassigned'

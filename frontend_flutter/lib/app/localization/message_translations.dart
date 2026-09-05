@@ -30,6 +30,8 @@ extension AppExceptionMessage on AppException {
     ErrorCode.announcementNotPublished => l10n.errorAnnouncementNotPublished,
     ErrorCode.transactionLocked => l10n.errorTransactionLocked,
     ErrorCode.accountsNotPublished => l10n.errorAccountsNotPublished,
+    ErrorCode.reportDisclosureRefused => l10n.errorReportDisclosureRefused,
+    ErrorCode.reportTooLarge => l10n.errorReportTooLarge,
     ErrorCode.serverError => l10n.errorServer,
     ErrorCode.cancelled => l10n.errorUnknown,
     ErrorCode.malformedResponse => l10n.errorServer,

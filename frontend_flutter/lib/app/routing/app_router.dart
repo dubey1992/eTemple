@@ -36,6 +36,8 @@ import '../../features/accounts/presentation/admin_accounting_settings_screen.da
 import '../../features/accounts/presentation/admin_accounts_screen.dart';
 import '../../features/accounts/presentation/admin_transaction_editor_screen.dart';
 import '../../features/accounts/presentation/transparency_screen.dart';
+import '../../features/reports/presentation/admin_report_screen.dart';
+import '../../features/reports/presentation/admin_reports_screen.dart';
 import '../../features/media/presentation/admin_album_editor_screen.dart';
 import '../../features/media/presentation/admin_albums_screen.dart';
 import '../../features/media/presentation/admin_media_editor_screen.dart';
@@ -396,6 +398,24 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: RoutePaths.adminAccountingSettings,
             name: RouteNames.adminAccountingSettings,
             builder: (context, state) => const AdminAccountingSettingsScreen(),
+          ),
+          // Reports (Phase 10). The key is a slug, matched narrowly so it can
+          // never swallow a sibling route.
+          GoRoute(
+            path: RoutePaths.adminReports,
+            name: RouteNames.adminReports,
+            builder: (context, state) => const AdminReportsScreen(),
+          ),
+          GoRoute(
+            path: '${RoutePaths.adminReports}/:key',
+            name: RouteNames.adminReport,
+            builder: (context, state) {
+              final key = state.pathParameters['key'];
+              if (key == null || !RegExp(r'^[a-z0-9-]+$').hasMatch(key)) {
+                return const NotFoundScreen();
+              }
+              return AdminReportScreen(reportKey: key);
+            },
           ),
           GoRoute(
             path: RoutePaths.adminEnquiries,

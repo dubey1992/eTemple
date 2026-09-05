@@ -1172,5 +1172,90 @@
   "accountsNoteEn": "टिप्पणी (अंग्रेज़ी)",
   "accountsIntroHelp": "यह वाक्य आय-व्यय पृष्ठ के आरंभ में दिखेगा।",
   "errorTransactionLocked": "यह प्रविष्टि स्वीकृत या निरस्त हो चुकी है, इसलिए यह कार्य अब संभव नहीं है।",
-  "errorAccountsNotPublished": "मंदिर ने अभी अपना लेखा-जोखा प्रकाशित नहीं किया है।"
+  "errorAccountsNotPublished": "मंदिर ने अभी अपना लेखा-जोखा प्रकाशित नहीं किया है।",
+  "navReports": "रिपोर्ट",
+  "navReportsDesc": "दान, बही, कार्यक्रम एवं पूछताछ की मानक रिपोर्ट",
+  "reportsTitle": "रिपोर्ट",
+  "reportsSubtitle": "मंदिर के अभिलेखों की मानक रिपोर्ट, और उनकी प्रति",
+  "reportsEmpty": "इस खाते के लिए कोई रिपोर्ट उपलब्ध नहीं है।",
+  "reportOpen": "खोलें",
+  "reportHasPersonal": "इसमें व्यक्तिगत विवरण के स्तंभ हैं",
+  "reportFilterPeriod": "अवधि",
+  "reportFilterYear": "वित्तीय वर्ष",
+  "reportFilterFrom": "से",
+  "reportFilterTo": "तक",
+  "reportFilterApply": "लागू करें",
+  "reportFilterClear": "छाँट हटाएँ",
+  "reportFiltersApplied": "लागू छाँट: {filters}",
+  "@reportFiltersApplied": {
+    "placeholders": {
+      "filters": {
+        "type": "String"
+      }
+    }
+  },
+  "reportRowCount": "{count, plural, =0{कोई पंक्ति नहीं} =1{1 पंक्ति} other{{count} पंक्तियाँ}}",
+  "@reportRowCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reportEmpty": "इस छाँट के अनुसार कोई प्रविष्टि नहीं मिली।",
+  "reportIncludePersonal": "व्यक्तिगत विवरण सम्मिलित करें",
+  "reportIncludePersonalHelp": "नाम, दूरभाष और पता। बंद रहने पर ये स्तंभ प्रतिक्रिया में होते ही नहीं — छिपाए नहीं जाते। फ़ाइल में इसका उल्लेख भी होता है।",
+  "reportPersonalIncluded": "इस दृश्य में व्यक्तिगत विवरण सम्मिलित हैं",
+  "reportExport": "प्रति लें",
+  "reportExportCsv": "CSV",
+  "reportExportXlsx": "Excel",
+  "reportExportPdf": "प्रिंट / PDF",
+  "reportExportNote": "फ़ाइल में वही पंक्तियाँ आती हैं जो यहाँ दिख रही हैं — वही छाँट, वही अवधि।",
+  "reportExportForbidden": "इस खाते को रिपोर्ट की प्रति लेने की अनुमति नहीं है।",
+  "reportExportLimit": "एक फ़ाइल में अधिकतम {count} पंक्तियाँ आती हैं। इससे अधिक होने पर छोटी अवधि चुनें।",
+  "@reportExportLimit": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "overviewTitle": "एक नज़र में",
+  "overviewYear": "वित्तीय वर्ष {label}",
+  "@overviewYear": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "overviewDonations": "दान से प्राप्त",
+  "overviewIncome": "कुल आय",
+  "overviewExpense": "कुल व्यय",
+  "overviewBalance": "वर्तमान शेष",
+  "overviewDonationCount": "{count, plural, =0{कोई दान नहीं} =1{1 दान} other{{count} दान}}",
+  "@overviewDonationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "overviewTrend": "पिछले 12 माह में दान",
+  "overviewTrendEmpty": "पिछले बारह माह में कोई दान दर्ज नहीं है।",
+  "overviewEnquiries": "लंबित पूछताछ",
+  "overviewEnquiriesNew": "{count, plural, =0{कोई नया संदेश नहीं} =1{1 नया संदेश} other{{count} नए संदेश}}",
+  "@overviewEnquiriesNew": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "overviewUpcoming": "आगामी कार्यक्रम",
+  "overviewUpcomingEmpty": "अगले तीस दिनों में कोई कार्यक्रम नहीं है।",
+  "overviewEventCancelled": "रद्द",
+  "overviewOpenReports": "सभी रिपोर्ट देखें",
+  "errorReportDisclosureRefused": "यह रिपोर्ट देखी जा सकती है, पर व्यक्तिगत विवरण के लिए अनुमति चाहिए जो इस खाते के पास नहीं है।",
+  "errorReportTooLarge": "यह अवधि एक फ़ाइल के लिए बहुत बड़ी है। छोटी अवधि चुनकर भागों में प्रति लें।"
 }

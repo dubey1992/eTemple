@@ -178,6 +178,21 @@ class ApiEndpoints {
 
   static const String adminAccountingSettings = '/admin/accounting-settings';
 
+  // Reports and analytics (Phase 10)
+
+  /// The catalogue, filtered by the server to what this account may run.
+  static const String adminReports = '/admin/reports';
+
+  static String adminReport(String key) => '/admin/reports/$key';
+
+  /// The same key and the same query string as the report itself — which is
+  /// what makes the file and the screen agree (PHASE_10_PLAN assumption N1).
+  static String adminReportExport(String key) => '/admin/reports/$key/export';
+
+  /// The dashboard's at-a-glance figures. Panels are gated server-side by the
+  /// module each one reads.
+  static const String adminOverview = '/admin/overview';
+
   static const String resetPassword = '/auth/reset-password';
 
   /// Served from the application root, not from under `/api`.

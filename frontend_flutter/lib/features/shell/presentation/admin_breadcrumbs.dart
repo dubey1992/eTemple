@@ -93,6 +93,13 @@ List<Crumb> adminTrail(String location, AppLocalizations l10n) {
         ),
       ];
 
+    case 'reports':
+      final reports = Crumb(l10n.reportsTitle, RoutePaths.adminReports);
+      if (rest.isEmpty) return [dashboard, Crumb(l10n.reportsTitle)];
+      // The report's own title comes from the server, so the trail names the
+      // module rather than guessing at a translated title it does not have.
+      return [dashboard, reports, Crumb(l10n.reportOpen)];
+
     case 'accounts':
       final accounts = Crumb(l10n.accountsTitle, RoutePaths.adminAccounts);
       if (rest.isEmpty) return [dashboard, Crumb(l10n.accountsTitle)];

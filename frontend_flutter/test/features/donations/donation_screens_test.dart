@@ -489,8 +489,15 @@ void main() {
 
       // A new tab, because the browser is what shapes the Devanagari in a
       // donor's name and what writes the PDF.
-      expect(opener.opened, hasLength(1));
-      expect(opener.opened.single, endsWith('/api/admin/donations/1/receipt'));
+      // `openedOwn`, not `opened`: the receipt is our own authenticated
+      // endpoint, and opening it with `noreferrer` would make the request
+      // anonymous — the defect this stub now pins.
+      expect(opener.opened, isEmpty);
+      expect(opener.openedOwn, hasLength(1));
+      expect(
+        opener.openedOwn.single,
+        endsWith('/api/admin/donations/1/receipt'),
+      );
     });
 
     testWidgets('a viewer sees the record read-only', (tester) async {
@@ -635,12 +642,24 @@ void main() {
 }
 
 /// Records what would have been opened, since the VM has no browser.
+///
+/// Both doors are recorded, but separately: the receipt is our own
+/// authenticated endpoint and must go through [openOwn], because `noreferrer`
+/// would leave the API unable to see that the request came from this signed-in
+/// app. `opened` staying empty is part of what the receipt test asserts.
 class _RecordingOpener implements LinkOpener {
   final List<String> opened = [];
+  final List<String> openedOwn = [];
 
   @override
   bool open(String url) {
     opened.add(url);
+    return true;
+  }
+
+  @override
+  bool openOwn(String url) {
+    openedOwn.add(url);
     return true;
   }
 }
