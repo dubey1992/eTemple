@@ -1110,4 +1110,293 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get mediaPickerHint =>
       'Choose from the gallery, or type an external URL below.';
+
+  @override
+  String get navDonate => 'Donate';
+
+  @override
+  String get donateTitle => 'Support / Donation';
+
+  @override
+  String get donateSubtitle =>
+      'Your contribution supports worship arrangements, maintenance, festivals and community service.';
+
+  @override
+  String get donateHeading => 'Transparent Community Donation System';
+
+  @override
+  String get donateComingSoon => 'Donation details will be added here shortly.';
+
+  @override
+  String get donateAction => 'Donate';
+
+  @override
+  String get viewDonate => 'See donation details';
+
+  @override
+  String get fieldUpiId => 'UPI ID';
+
+  @override
+  String get fieldBankName => 'Bank';
+
+  @override
+  String get fieldAccountName => 'Account name';
+
+  @override
+  String get fieldAccountNumber => 'A/C No.';
+
+  @override
+  String get fieldIfsc => 'IFSC';
+
+  @override
+  String get donateQrLabel => 'UPI QR';
+
+  @override
+  String donateCopied(String label) {
+    return '$label copied.';
+  }
+
+  @override
+  String get actionCopy => 'Copy';
+
+  @override
+  String get navDonations => 'Donations and receipts';
+
+  @override
+  String get navDonationsDesc =>
+      'Record donations, verify them and issue receipts';
+
+  @override
+  String get donationsAdminTitle => 'Donations and receipts';
+
+  @override
+  String get donationsAdminSubtitle =>
+      'Record donations here. A receipt number is issued once a donation is verified, and its details cannot be changed after that.';
+
+  @override
+  String get donationsEmpty => 'No donations have been recorded yet.';
+
+  @override
+  String get donationNew => 'Record a donation';
+
+  @override
+  String get donationEdit => 'Donation';
+
+  @override
+  String get donationSearchHint => 'Search a name, receipt number or reference';
+
+  @override
+  String get summaryReceived => 'Total received';
+
+  @override
+  String get summaryPending => 'Awaiting verification';
+
+  @override
+  String get summaryDonors => 'Donors';
+
+  @override
+  String get summaryReversed => 'Reversed';
+
+  @override
+  String get statusPending => 'Awaiting verification';
+
+  @override
+  String get statusReversed => 'Reversed';
+
+  @override
+  String get statusConfirmed => 'Verified';
+
+  @override
+  String get fieldDonorName => 'Donor name';
+
+  @override
+  String get fieldDonorPhone => 'Phone';
+
+  @override
+  String get fieldDonorAddress => 'Address';
+
+  @override
+  String get fieldAmount => 'Amount (₹)';
+
+  @override
+  String get amountHint => 'For example 501 or 501.50';
+
+  @override
+  String get fieldDonationDate => 'Date of the donation';
+
+  @override
+  String get fieldPaymentMode => 'Payment mode';
+
+  @override
+  String get fieldReferenceNumber => 'Reference number';
+
+  @override
+  String get referenceHint =>
+      'Required for everything but cash — the UPI reference, cheque number or transfer id.';
+
+  @override
+  String get fieldPurpose => 'Purpose';
+
+  @override
+  String get fieldNotes => 'Notes';
+
+  @override
+  String get fieldAnonymous => 'Do not name this donor publicly';
+
+  @override
+  String get anonymousHint =>
+      'The receipt still names them: it is their own receipt.';
+
+  @override
+  String get modeCash => 'Cash';
+
+  @override
+  String get modeUpi => 'UPI';
+
+  @override
+  String get modeBankTransfer => 'Bank transfer';
+
+  @override
+  String get modeCheque => 'Cheque';
+
+  @override
+  String get modeCard => 'Card';
+
+  @override
+  String get modeOther => 'Other';
+
+  @override
+  String get purposeGeneral => 'General';
+
+  @override
+  String get purposePuja => 'Worship arrangements';
+
+  @override
+  String get purposeMaintenance => 'Maintenance';
+
+  @override
+  String get purposeFestival => 'Festival';
+
+  @override
+  String get purposeAnnadan => 'Community meals';
+
+  @override
+  String get purposeConstruction => 'Construction';
+
+  @override
+  String get purposeOther => 'Other';
+
+  @override
+  String get fieldReceiptNumber => 'Receipt number';
+
+  @override
+  String get receiptNotIssued => 'Issued once verified';
+
+  @override
+  String get donationConfirm => 'Verify';
+
+  @override
+  String get donationConfirmTitle => 'Verify this donation?';
+
+  @override
+  String get donationConfirmBody =>
+      'Verifying issues a receipt number. After that the amount, the date and the donor cannot be changed.';
+
+  @override
+  String donationConfirmed(String receipt) {
+    return 'Verified. Receipt $receipt issued.';
+  }
+
+  @override
+  String get donationReverse => 'Reverse this donation';
+
+  @override
+  String get donationReverseTitle => 'Reverse this donation?';
+
+  @override
+  String get donationReverseBody =>
+      'The entry is not deleted: it stays, with its receipt number, and stops counting towards every total. A reason is required.';
+
+  @override
+  String get fieldReversalReason => 'Reason for reversing';
+
+  @override
+  String get donationReversed => 'Donation reversed.';
+
+  @override
+  String get donationRecorded => 'Donation recorded.';
+
+  @override
+  String get donationPrintReceipt => 'Print the receipt';
+
+  @override
+  String get donationLockedNotice =>
+      'A receipt has been issued, so only the notes can be changed now. To correct it, reverse it and record it again.';
+
+  @override
+  String donationReversedNotice(String date, String reason) {
+    return 'Reversed on $date: $reason';
+  }
+
+  @override
+  String get recordedByLabel => 'Recorded by';
+
+  @override
+  String get confirmedByLabel => 'Verified by';
+
+  @override
+  String get navDonationSettings => 'Donation details';
+
+  @override
+  String get navDonationSettingsDesc =>
+      'The UPI, bank details and QR shown on the website';
+
+  @override
+  String get donationSettingsTitle => 'Donation details';
+
+  @override
+  String get donationSettingsSubtitle =>
+      'These appear in the donation section of the website. The account number is shown exactly as typed here — mask it yourself if you want it masked.';
+
+  @override
+  String get donationSettingsSaved => 'Donation details saved.';
+
+  @override
+  String get fieldQrImage => 'UPI QR image';
+
+  @override
+  String get fieldDonateIntroHindi => 'Introduction (Hindi)';
+
+  @override
+  String get fieldDonateIntroEnglish => 'Introduction (English)';
+
+  @override
+  String get fieldDonateNoteHindi => 'Note (Hindi)';
+
+  @override
+  String get fieldDonateNoteEnglish => 'Note (English)';
+
+  @override
+  String get fieldPublishDonationDetails => 'Show on the public website';
+
+  @override
+  String get donationSettingsIncomplete =>
+      'Published, but nothing payable has been filled in — so nothing appears on the website.';
+
+  @override
+  String get mediaReferenceDonationQr => 'Donation QR code';
+
+  @override
+  String get errorDonationLocked => 'This entry can no longer be changed.';
+
+  @override
+  String paginationPage(int current, int last) {
+    return 'Page $current of $last';
+  }
+
+  @override
+  String get actionPrevious => 'Previous';
+
+  @override
+  String get actionNext => 'Next';
 }

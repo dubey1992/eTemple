@@ -89,6 +89,20 @@ class AdminDashboardScreen extends ConsumerWidget {
           description: l10n.navMediaDesc,
           route: RoutePaths.adminMedia,
         ),
+      // Reading the register needs donations.view; recording needs
+      // donations.manage. Either is reason to offer the door — and a Content
+      // Manager, who holds neither, is not shown one.
+      if (permissions.canAny(const [
+        Permissions.donationsView,
+        Permissions.donationsManage,
+      ]))
+        _Entry(
+          key: const Key('dash-donations'),
+          icon: Icons.volunteer_activism_outlined,
+          title: l10n.navDonations,
+          description: l10n.navDonationsDesc,
+          route: RoutePaths.adminDonations,
+        ),
       if (permissions.can(Permissions.usersView))
         _Entry(
           key: const Key('dash-users'),

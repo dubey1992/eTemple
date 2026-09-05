@@ -40,5 +40,13 @@ final class ApiErrorCode
      */
     public const MEDIA_IN_USE = 'MEDIA_IN_USE';
 
+    /**
+     * A donation cannot be changed, confirmed or reversed because of the state
+     * it is already in (spec Phase 6). Distinct from VALIDATION_FAILED: the
+     * request was well formed, and it is the history that refuses it — so the
+     * client shows it as a fact about the record rather than a field error.
+     */
+    public const DONATION_LOCKED = 'DONATION_LOCKED';
+
     public const SERVER_ERROR = 'SERVER_ERROR';
 }

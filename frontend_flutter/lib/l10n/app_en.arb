@@ -530,5 +530,129 @@
   "mediaPickerChoose": "Choose from the gallery",
   "mediaPickerClear": "Clear",
   "mediaPickerEmpty": "There are no published photographs in the gallery yet.",
-  "mediaPickerHint": "Choose from the gallery, or type an external URL below."
+  "mediaPickerHint": "Choose from the gallery, or type an external URL below.",
+  "navDonate": "Donate",
+  "donateTitle": "Support / Donation",
+  "donateSubtitle": "Your contribution supports worship arrangements, maintenance, festivals and community service.",
+  "donateHeading": "Transparent Community Donation System",
+  "donateComingSoon": "Donation details will be added here shortly.",
+  "donateAction": "Donate",
+  "viewDonate": "See donation details",
+  "fieldUpiId": "UPI ID",
+  "fieldBankName": "Bank",
+  "fieldAccountName": "Account name",
+  "fieldAccountNumber": "A/C No.",
+  "fieldIfsc": "IFSC",
+  "donateQrLabel": "UPI QR",
+  "donateCopied": "{label} copied.",
+  "@donateCopied": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "actionCopy": "Copy",
+  "navDonations": "Donations and receipts",
+  "navDonationsDesc": "Record donations, verify them and issue receipts",
+  "donationsAdminTitle": "Donations and receipts",
+  "donationsAdminSubtitle": "Record donations here. A receipt number is issued once a donation is verified, and its details cannot be changed after that.",
+  "donationsEmpty": "No donations have been recorded yet.",
+  "donationNew": "Record a donation",
+  "donationEdit": "Donation",
+  "donationSearchHint": "Search a name, receipt number or reference",
+  "summaryReceived": "Total received",
+  "summaryPending": "Awaiting verification",
+  "summaryDonors": "Donors",
+  "summaryReversed": "Reversed",
+  "statusPending": "Awaiting verification",
+  "statusReversed": "Reversed",
+  "statusConfirmed": "Verified",
+  "fieldDonorName": "Donor name",
+  "fieldDonorPhone": "Phone",
+  "fieldDonorAddress": "Address",
+  "fieldAmount": "Amount (₹)",
+  "amountHint": "For example 501 or 501.50",
+  "fieldDonationDate": "Date of the donation",
+  "fieldPaymentMode": "Payment mode",
+  "fieldReferenceNumber": "Reference number",
+  "referenceHint": "Required for everything but cash — the UPI reference, cheque number or transfer id.",
+  "fieldPurpose": "Purpose",
+  "fieldNotes": "Notes",
+  "fieldAnonymous": "Do not name this donor publicly",
+  "anonymousHint": "The receipt still names them: it is their own receipt.",
+  "modeCash": "Cash",
+  "modeUpi": "UPI",
+  "modeBankTransfer": "Bank transfer",
+  "modeCheque": "Cheque",
+  "modeCard": "Card",
+  "modeOther": "Other",
+  "purposeGeneral": "General",
+  "purposePuja": "Worship arrangements",
+  "purposeMaintenance": "Maintenance",
+  "purposeFestival": "Festival",
+  "purposeAnnadan": "Community meals",
+  "purposeConstruction": "Construction",
+  "purposeOther": "Other",
+  "fieldReceiptNumber": "Receipt number",
+  "receiptNotIssued": "Issued once verified",
+  "donationConfirm": "Verify",
+  "donationConfirmTitle": "Verify this donation?",
+  "donationConfirmBody": "Verifying issues a receipt number. After that the amount, the date and the donor cannot be changed.",
+  "donationConfirmed": "Verified. Receipt {receipt} issued.",
+  "@donationConfirmed": {
+    "placeholders": {
+      "receipt": {
+        "type": "String"
+      }
+    }
+  },
+  "donationReverse": "Reverse this donation",
+  "donationReverseTitle": "Reverse this donation?",
+  "donationReverseBody": "The entry is not deleted: it stays, with its receipt number, and stops counting towards every total. A reason is required.",
+  "fieldReversalReason": "Reason for reversing",
+  "donationReversed": "Donation reversed.",
+  "donationRecorded": "Donation recorded.",
+  "donationPrintReceipt": "Print the receipt",
+  "donationLockedNotice": "A receipt has been issued, so only the notes can be changed now. To correct it, reverse it and record it again.",
+  "donationReversedNotice": "Reversed on {date}: {reason}",
+  "@donationReversedNotice": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "recordedByLabel": "Recorded by",
+  "confirmedByLabel": "Verified by",
+  "navDonationSettings": "Donation details",
+  "navDonationSettingsDesc": "The UPI, bank details and QR shown on the website",
+  "donationSettingsTitle": "Donation details",
+  "donationSettingsSubtitle": "These appear in the donation section of the website. The account number is shown exactly as typed here — mask it yourself if you want it masked.",
+  "donationSettingsSaved": "Donation details saved.",
+  "fieldQrImage": "UPI QR image",
+  "fieldDonateIntroHindi": "Introduction (Hindi)",
+  "fieldDonateIntroEnglish": "Introduction (English)",
+  "fieldDonateNoteHindi": "Note (Hindi)",
+  "fieldDonateNoteEnglish": "Note (English)",
+  "fieldPublishDonationDetails": "Show on the public website",
+  "donationSettingsIncomplete": "Published, but nothing payable has been filled in — so nothing appears on the website.",
+  "mediaReferenceDonationQr": "Donation QR code",
+  "errorDonationLocked": "This entry can no longer be changed.",
+  "paginationPage": "Page {current} of {last}",
+  "@paginationPage": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "last": {
+        "type": "int"
+      }
+    }
+  },
+  "actionPrevious": "Previous",
+  "actionNext": "Next"
 }

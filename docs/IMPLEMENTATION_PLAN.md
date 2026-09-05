@@ -130,10 +130,10 @@ Explicitly **out** of Phase 0: CMS pages, home/about content, user CRUD screens,
 
 ## Phase 6 — Donations & Receipts
 
-- [ ] `donations` (`receipt_number`, `donor_name`, `amount`, `donation_date`, `payment_mode`, `reference_number`, `purpose`, `notes`, `status`, `recorded_by`)
-- [ ] `donation_settings` (public bank/UPI details)
-- [ ] Admin donation endpoints + receipt endpoint; printable/PDF receipt
-- [ ] Rules: amount &gt; 0; receipt number unique and immutable; no hard delete (reversal records); donor privacy
+- [x] `donations` (`receipt_number`, `donor_name`, `amount`, `donation_date`, `payment_mode`, `reference_number`, `purpose`, `notes`, `status`, `recorded_by`)
+- [x] `donation_settings` (public bank/UPI details)
+- [x] Admin donation endpoints + receipt endpoint; printable/PDF receipt
+- [x] Rules: amount &gt; 0; receipt number unique and immutable; no hard delete (reversal records); donor privacy
 
 ## Phase 7 — Devotee Contact & Enquiries
 

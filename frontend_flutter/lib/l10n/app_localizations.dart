@@ -2167,6 +2167,546 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'गैलरी से चुनें, या नीचे कोई बाहरी यूआरएल लिखें।'**
   String get mediaPickerHint;
+
+  /// No description provided for @navDonate.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान'**
+  String get navDonate;
+
+  /// No description provided for @donateTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर सहयोग / दान'**
+  String get donateTitle;
+
+  /// No description provided for @donateSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'आपका सहयोग मंदिर की पूजा व्यवस्था, रखरखाव, त्योहार और सेवा कार्यों में उपयोग होगा।'**
+  String get donateSubtitle;
+
+  /// No description provided for @donateHeading.
+  ///
+  /// In hi, this message translates to:
+  /// **'पारदर्शी एवं सामुदायिक दान व्यवस्था'**
+  String get donateHeading;
+
+  /// No description provided for @donateComingSoon.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान संबंधी जानकारी शीघ्र ही यहाँ जोड़ी जाएगी।'**
+  String get donateComingSoon;
+
+  /// No description provided for @donateAction.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान करें'**
+  String get donateAction;
+
+  /// No description provided for @viewDonate.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान विवरण देखें'**
+  String get viewDonate;
+
+  /// No description provided for @fieldUpiId.
+  ///
+  /// In hi, this message translates to:
+  /// **'UPI ID'**
+  String get fieldUpiId;
+
+  /// No description provided for @fieldBankName.
+  ///
+  /// In hi, this message translates to:
+  /// **'बैंक'**
+  String get fieldBankName;
+
+  /// No description provided for @fieldAccountName.
+  ///
+  /// In hi, this message translates to:
+  /// **'खाता नाम'**
+  String get fieldAccountName;
+
+  /// No description provided for @fieldAccountNumber.
+  ///
+  /// In hi, this message translates to:
+  /// **'खाता संख्या'**
+  String get fieldAccountNumber;
+
+  /// No description provided for @fieldIfsc.
+  ///
+  /// In hi, this message translates to:
+  /// **'IFSC'**
+  String get fieldIfsc;
+
+  /// No description provided for @donateQrLabel.
+  ///
+  /// In hi, this message translates to:
+  /// **'UPI QR'**
+  String get donateQrLabel;
+
+  /// No description provided for @donateCopied.
+  ///
+  /// In hi, this message translates to:
+  /// **'{label} कॉपी हो गया।'**
+  String donateCopied(String label);
+
+  /// No description provided for @actionCopy.
+  ///
+  /// In hi, this message translates to:
+  /// **'कॉपी करें'**
+  String get actionCopy;
+
+  /// No description provided for @navDonations.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान एवं रसीदें'**
+  String get navDonations;
+
+  /// No description provided for @navDonationsDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान दर्ज करें, सत्यापित करें और रसीद जारी करें'**
+  String get navDonationsDesc;
+
+  /// No description provided for @donationsAdminTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान एवं रसीदें'**
+  String get donationsAdminTitle;
+
+  /// No description provided for @donationsAdminSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान यहाँ दर्ज करें। सत्यापन के बाद रसीद संख्या जारी होती है और उसके बाद विवरण नहीं बदला जा सकता।'**
+  String get donationsAdminSubtitle;
+
+  /// No description provided for @donationsEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी कोई दान दर्ज नहीं किया गया है।'**
+  String get donationsEmpty;
+
+  /// No description provided for @donationNew.
+  ///
+  /// In hi, this message translates to:
+  /// **'नया दान दर्ज करें'**
+  String get donationNew;
+
+  /// No description provided for @donationEdit.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान विवरण'**
+  String get donationEdit;
+
+  /// No description provided for @donationSearchHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'नाम, रसीद संख्या या संदर्भ खोजें'**
+  String get donationSearchHint;
+
+  /// No description provided for @summaryReceived.
+  ///
+  /// In hi, this message translates to:
+  /// **'कुल प्राप्त दान'**
+  String get summaryReceived;
+
+  /// No description provided for @summaryPending.
+  ///
+  /// In hi, this message translates to:
+  /// **'सत्यापन शेष'**
+  String get summaryPending;
+
+  /// No description provided for @summaryDonors.
+  ///
+  /// In hi, this message translates to:
+  /// **'दानदाता'**
+  String get summaryDonors;
+
+  /// No description provided for @summaryReversed.
+  ///
+  /// In hi, this message translates to:
+  /// **'निरस्त'**
+  String get summaryReversed;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In hi, this message translates to:
+  /// **'सत्यापन शेष'**
+  String get statusPending;
+
+  /// No description provided for @statusReversed.
+  ///
+  /// In hi, this message translates to:
+  /// **'निरस्त'**
+  String get statusReversed;
+
+  /// No description provided for @statusConfirmed.
+  ///
+  /// In hi, this message translates to:
+  /// **'सत्यापित'**
+  String get statusConfirmed;
+
+  /// No description provided for @fieldDonorName.
+  ///
+  /// In hi, this message translates to:
+  /// **'दानदाता का नाम'**
+  String get fieldDonorName;
+
+  /// No description provided for @fieldDonorPhone.
+  ///
+  /// In hi, this message translates to:
+  /// **'दूरभाष'**
+  String get fieldDonorPhone;
+
+  /// No description provided for @fieldDonorAddress.
+  ///
+  /// In hi, this message translates to:
+  /// **'पता'**
+  String get fieldDonorAddress;
+
+  /// No description provided for @fieldAmount.
+  ///
+  /// In hi, this message translates to:
+  /// **'राशि (₹)'**
+  String get fieldAmount;
+
+  /// No description provided for @amountHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'जैसे 501 या 501.50'**
+  String get amountHint;
+
+  /// No description provided for @fieldDonationDate.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान की तिथि'**
+  String get fieldDonationDate;
+
+  /// No description provided for @fieldPaymentMode.
+  ///
+  /// In hi, this message translates to:
+  /// **'भुगतान माध्यम'**
+  String get fieldPaymentMode;
+
+  /// No description provided for @fieldReferenceNumber.
+  ///
+  /// In hi, this message translates to:
+  /// **'संदर्भ संख्या'**
+  String get fieldReferenceNumber;
+
+  /// No description provided for @referenceHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'नकद के अलावा हर माध्यम के लिए आवश्यक — UPI संदर्भ, चेक संख्या या ट्रांसफर आईडी।'**
+  String get referenceHint;
+
+  /// No description provided for @fieldPurpose.
+  ///
+  /// In hi, this message translates to:
+  /// **'उद्देश्य'**
+  String get fieldPurpose;
+
+  /// No description provided for @fieldNotes.
+  ///
+  /// In hi, this message translates to:
+  /// **'टिप्पणी'**
+  String get fieldNotes;
+
+  /// No description provided for @fieldAnonymous.
+  ///
+  /// In hi, this message translates to:
+  /// **'दानदाता का नाम सार्वजनिक न करें'**
+  String get fieldAnonymous;
+
+  /// No description provided for @anonymousHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'रसीद पर नाम फिर भी रहेगा — वह दानदाता की अपनी रसीद है।'**
+  String get anonymousHint;
+
+  /// No description provided for @modeCash.
+  ///
+  /// In hi, this message translates to:
+  /// **'नकद'**
+  String get modeCash;
+
+  /// No description provided for @modeUpi.
+  ///
+  /// In hi, this message translates to:
+  /// **'UPI'**
+  String get modeUpi;
+
+  /// No description provided for @modeBankTransfer.
+  ///
+  /// In hi, this message translates to:
+  /// **'बैंक ट्रांसफर'**
+  String get modeBankTransfer;
+
+  /// No description provided for @modeCheque.
+  ///
+  /// In hi, this message translates to:
+  /// **'चेक'**
+  String get modeCheque;
+
+  /// No description provided for @modeCard.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्ड'**
+  String get modeCard;
+
+  /// No description provided for @modeOther.
+  ///
+  /// In hi, this message translates to:
+  /// **'अन्य'**
+  String get modeOther;
+
+  /// No description provided for @purposeGeneral.
+  ///
+  /// In hi, this message translates to:
+  /// **'सामान्य'**
+  String get purposeGeneral;
+
+  /// No description provided for @purposePuja.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूजा व्यवस्था'**
+  String get purposePuja;
+
+  /// No description provided for @purposeMaintenance.
+  ///
+  /// In hi, this message translates to:
+  /// **'रखरखाव'**
+  String get purposeMaintenance;
+
+  /// No description provided for @purposeFestival.
+  ///
+  /// In hi, this message translates to:
+  /// **'त्योहार'**
+  String get purposeFestival;
+
+  /// No description provided for @purposeAnnadan.
+  ///
+  /// In hi, this message translates to:
+  /// **'भंडारा एवं प्रसाद'**
+  String get purposeAnnadan;
+
+  /// No description provided for @purposeConstruction.
+  ///
+  /// In hi, this message translates to:
+  /// **'निर्माण कार्य'**
+  String get purposeConstruction;
+
+  /// No description provided for @purposeOther.
+  ///
+  /// In hi, this message translates to:
+  /// **'अन्य'**
+  String get purposeOther;
+
+  /// No description provided for @fieldReceiptNumber.
+  ///
+  /// In hi, this message translates to:
+  /// **'रसीद संख्या'**
+  String get fieldReceiptNumber;
+
+  /// No description provided for @receiptNotIssued.
+  ///
+  /// In hi, this message translates to:
+  /// **'सत्यापन के बाद जारी होगी'**
+  String get receiptNotIssued;
+
+  /// No description provided for @donationConfirm.
+  ///
+  /// In hi, this message translates to:
+  /// **'सत्यापित करें'**
+  String get donationConfirm;
+
+  /// No description provided for @donationConfirmTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस दान को सत्यापित करें?'**
+  String get donationConfirmTitle;
+
+  /// No description provided for @donationConfirmBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'सत्यापित करते ही रसीद संख्या जारी हो जाएगी और उसके बाद राशि, तिथि या दानदाता का नाम नहीं बदला जा सकेगा।'**
+  String get donationConfirmBody;
+
+  /// No description provided for @donationConfirmed.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान सत्यापित। रसीद संख्या {receipt} जारी हुई।'**
+  String donationConfirmed(String receipt);
+
+  /// No description provided for @donationReverse.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान निरस्त करें'**
+  String get donationReverse;
+
+  /// No description provided for @donationReverseTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस दान को निरस्त करें?'**
+  String get donationReverseTitle;
+
+  /// No description provided for @donationReverseBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रविष्टि मिटाई नहीं जाती — वह रसीद संख्या सहित बनी रहती है और किसी योग में नहीं गिनी जाती। कारण लिखना आवश्यक है।'**
+  String get donationReverseBody;
+
+  /// No description provided for @fieldReversalReason.
+  ///
+  /// In hi, this message translates to:
+  /// **'निरस्त करने का कारण'**
+  String get fieldReversalReason;
+
+  /// No description provided for @donationReversed.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान निरस्त कर दिया गया।'**
+  String get donationReversed;
+
+  /// No description provided for @donationRecorded.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान दर्ज हो गया।'**
+  String get donationRecorded;
+
+  /// No description provided for @donationPrintReceipt.
+  ///
+  /// In hi, this message translates to:
+  /// **'रसीद प्रिंट करें'**
+  String get donationPrintReceipt;
+
+  /// No description provided for @donationLockedNotice.
+  ///
+  /// In hi, this message translates to:
+  /// **'रसीद जारी हो चुकी है, इसलिए अब केवल टिप्पणी बदली जा सकती है। सुधार के लिए इसे निरस्त करके दोबारा दर्ज करें।'**
+  String get donationLockedNotice;
+
+  /// No description provided for @donationReversedNotice.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह दान {date} को निरस्त किया गया: {reason}'**
+  String donationReversedNotice(String date, String reason);
+
+  /// No description provided for @recordedByLabel.
+  ///
+  /// In hi, this message translates to:
+  /// **'दर्ज किया'**
+  String get recordedByLabel;
+
+  /// No description provided for @confirmedByLabel.
+  ///
+  /// In hi, this message translates to:
+  /// **'सत्यापित किया'**
+  String get confirmedByLabel;
+
+  /// No description provided for @navDonationSettings.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान विवरण'**
+  String get navDonationSettings;
+
+  /// No description provided for @navDonationSettingsDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'UPI, बैंक विवरण और QR जो वेबसाइट पर दिखते हैं'**
+  String get navDonationSettingsDesc;
+
+  /// No description provided for @donationSettingsTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान विवरण'**
+  String get donationSettingsTitle;
+
+  /// No description provided for @donationSettingsSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'ये विवरण वेबसाइट के दान अनुभाग में दिखाई देते हैं। खाता संख्या ठीक वैसी ही दिखेगी जैसी यहाँ लिखी जाए — छिपाना है तो स्वयं छिपाकर लिखें।'**
+  String get donationSettingsSubtitle;
+
+  /// No description provided for @donationSettingsSaved.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान विवरण सहेज दिए गए।'**
+  String get donationSettingsSaved;
+
+  /// No description provided for @fieldQrImage.
+  ///
+  /// In hi, this message translates to:
+  /// **'UPI QR चित्र'**
+  String get fieldQrImage;
+
+  /// No description provided for @fieldDonateIntroHindi.
+  ///
+  /// In hi, this message translates to:
+  /// **'परिचय (हिन्दी)'**
+  String get fieldDonateIntroHindi;
+
+  /// No description provided for @fieldDonateIntroEnglish.
+  ///
+  /// In hi, this message translates to:
+  /// **'परिचय (अंग्रेज़ी)'**
+  String get fieldDonateIntroEnglish;
+
+  /// No description provided for @fieldDonateNoteHindi.
+  ///
+  /// In hi, this message translates to:
+  /// **'सूचना (हिन्दी)'**
+  String get fieldDonateNoteHindi;
+
+  /// No description provided for @fieldDonateNoteEnglish.
+  ///
+  /// In hi, this message translates to:
+  /// **'सूचना (अंग्रेज़ी)'**
+  String get fieldDonateNoteEnglish;
+
+  /// No description provided for @fieldPublishDonationDetails.
+  ///
+  /// In hi, this message translates to:
+  /// **'वेबसाइट पर दिखाएँ'**
+  String get fieldPublishDonationDetails;
+
+  /// No description provided for @donationSettingsIncomplete.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रकाशित है, पर कोई भुगतान विवरण नहीं भरा गया — इसलिए वेबसाइट पर कुछ नहीं दिखेगा।'**
+  String get donationSettingsIncomplete;
+
+  /// No description provided for @mediaReferenceDonationQr.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान QR'**
+  String get mediaReferenceDonationQr;
+
+  /// No description provided for @errorDonationLocked.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह प्रविष्टि अब बदली नहीं जा सकती।'**
+  String get errorDonationLocked;
+
+  /// No description provided for @paginationPage.
+  ///
+  /// In hi, this message translates to:
+  /// **'पृष्ठ {current} / {last}'**
+  String paginationPage(int current, int last);
+
+  /// No description provided for @actionPrevious.
+  ///
+  /// In hi, this message translates to:
+  /// **'पिछला'**
+  String get actionPrevious;
+
+  /// No description provided for @actionNext.
+  ///
+  /// In hi, this message translates to:
+  /// **'अगला'**
+  String get actionNext;
 }
 
 class _AppLocalizationsDelegate

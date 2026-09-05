@@ -11,6 +11,9 @@ import '../../../core/widgets/section_band.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../events/data/event_providers.dart';
 import '../../events/presentation/widgets/event_card.dart';
+import '../../donations/data/donation_providers.dart';
+import '../../donations/presentation/donate_screen.dart';
+import '../../donations/presentation/widgets/donation_details_card.dart';
 import '../../media/data/media_providers.dart';
 import '../../media/presentation/widgets/gallery_mosaic.dart';
 import '../../media/presentation/widgets/media_lightbox.dart';
@@ -74,11 +77,12 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 const SectionBand(child: _AboutSection()),
                 const SectionBand.alternate(child: _UpcomingEventsSection()),
-                // The prototype puts the gallery between the events and the
-                // committee, so it goes there.
-                const SectionBand(child: _GallerySection()),
-                const SectionBand.alternate(child: _CommitteeSection()),
-                SectionBand(
+                // The prototype's order: events, then the donation block, then
+                // the gallery, then the committee.
+                const SectionBand(child: _DonateSection()),
+                const SectionBand.alternate(child: _GallerySection()),
+                const SectionBand(child: _CommitteeSection()),
+                SectionBand.alternate(
                   child: ContentSection(
                     title: l10n.sectionAddress,
                     child: AddressCard(
@@ -177,6 +181,43 @@ class _UpcomingEventsSection extends ConsumerWidget {
           limit: 3,
           emptyMessage: l10n.noUpcomingEvents,
         ),
+      ),
+    );
+  }
+}
+
+/// The prototype's `दान` block.
+///
+/// Loaded separately from the rest so an unreachable set of bank details
+/// degrades one section rather than the whole page — and never shows an account
+/// number it could not load.
+class _DonateSection extends ConsumerWidget {
+  const _DonateSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final details = ref.watch(donationDetailsProvider);
+
+    return ContentSection(
+      title: l10n.donateTitle,
+      subtitle: l10n.donateSubtitle,
+      trailing: (details.value != null)
+          ? TextButton(
+              key: const Key('donate-see-all'),
+              onPressed: () => context.go(RoutePaths.donate),
+              child: Text(l10n.viewDonate),
+            )
+          : null,
+      child: details.when(
+        loading: () => const Padding(
+          padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+          child: LoadingView(),
+        ),
+        error: (_, _) => const DonationDetailsUnavailable(),
+        data: (data) => data == null
+            ? const DonationDetailsUnavailable()
+            : DonationDetailsCard(details: data),
       ),
     );
   }

@@ -707,5 +707,129 @@
   "mediaPickerChoose": "गैलरी से चुनें",
   "mediaPickerClear": "हटाएँ",
   "mediaPickerEmpty": "गैलरी में अभी कोई प्रकाशित तस्वीर नहीं है।",
-  "mediaPickerHint": "गैलरी से चुनें, या नीचे कोई बाहरी यूआरएल लिखें।"
+  "mediaPickerHint": "गैलरी से चुनें, या नीचे कोई बाहरी यूआरएल लिखें।",
+  "navDonate": "दान",
+  "donateTitle": "मंदिर सहयोग / दान",
+  "donateSubtitle": "आपका सहयोग मंदिर की पूजा व्यवस्था, रखरखाव, त्योहार और सेवा कार्यों में उपयोग होगा।",
+  "donateHeading": "पारदर्शी एवं सामुदायिक दान व्यवस्था",
+  "donateComingSoon": "दान संबंधी जानकारी शीघ्र ही यहाँ जोड़ी जाएगी।",
+  "donateAction": "दान करें",
+  "viewDonate": "दान विवरण देखें",
+  "fieldUpiId": "UPI ID",
+  "fieldBankName": "बैंक",
+  "fieldAccountName": "खाता नाम",
+  "fieldAccountNumber": "खाता संख्या",
+  "fieldIfsc": "IFSC",
+  "donateQrLabel": "UPI QR",
+  "donateCopied": "{label} कॉपी हो गया।",
+  "@donateCopied": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "actionCopy": "कॉपी करें",
+  "navDonations": "दान एवं रसीदें",
+  "navDonationsDesc": "दान दर्ज करें, सत्यापित करें और रसीद जारी करें",
+  "donationsAdminTitle": "दान एवं रसीदें",
+  "donationsAdminSubtitle": "दान यहाँ दर्ज करें। सत्यापन के बाद रसीद संख्या जारी होती है और उसके बाद विवरण नहीं बदला जा सकता।",
+  "donationsEmpty": "अभी कोई दान दर्ज नहीं किया गया है।",
+  "donationNew": "नया दान दर्ज करें",
+  "donationEdit": "दान विवरण",
+  "donationSearchHint": "नाम, रसीद संख्या या संदर्भ खोजें",
+  "summaryReceived": "कुल प्राप्त दान",
+  "summaryPending": "सत्यापन शेष",
+  "summaryDonors": "दानदाता",
+  "summaryReversed": "निरस्त",
+  "statusPending": "सत्यापन शेष",
+  "statusReversed": "निरस्त",
+  "statusConfirmed": "सत्यापित",
+  "fieldDonorName": "दानदाता का नाम",
+  "fieldDonorPhone": "दूरभाष",
+  "fieldDonorAddress": "पता",
+  "fieldAmount": "राशि (₹)",
+  "amountHint": "जैसे 501 या 501.50",
+  "fieldDonationDate": "दान की तिथि",
+  "fieldPaymentMode": "भुगतान माध्यम",
+  "fieldReferenceNumber": "संदर्भ संख्या",
+  "referenceHint": "नकद के अलावा हर माध्यम के लिए आवश्यक — UPI संदर्भ, चेक संख्या या ट्रांसफर आईडी।",
+  "fieldPurpose": "उद्देश्य",
+  "fieldNotes": "टिप्पणी",
+  "fieldAnonymous": "दानदाता का नाम सार्वजनिक न करें",
+  "anonymousHint": "रसीद पर नाम फिर भी रहेगा — वह दानदाता की अपनी रसीद है।",
+  "modeCash": "नकद",
+  "modeUpi": "UPI",
+  "modeBankTransfer": "बैंक ट्रांसफर",
+  "modeCheque": "चेक",
+  "modeCard": "कार्ड",
+  "modeOther": "अन्य",
+  "purposeGeneral": "सामान्य",
+  "purposePuja": "पूजा व्यवस्था",
+  "purposeMaintenance": "रखरखाव",
+  "purposeFestival": "त्योहार",
+  "purposeAnnadan": "भंडारा एवं प्रसाद",
+  "purposeConstruction": "निर्माण कार्य",
+  "purposeOther": "अन्य",
+  "fieldReceiptNumber": "रसीद संख्या",
+  "receiptNotIssued": "सत्यापन के बाद जारी होगी",
+  "donationConfirm": "सत्यापित करें",
+  "donationConfirmTitle": "इस दान को सत्यापित करें?",
+  "donationConfirmBody": "सत्यापित करते ही रसीद संख्या जारी हो जाएगी और उसके बाद राशि, तिथि या दानदाता का नाम नहीं बदला जा सकेगा।",
+  "donationConfirmed": "दान सत्यापित। रसीद संख्या {receipt} जारी हुई।",
+  "@donationConfirmed": {
+    "placeholders": {
+      "receipt": {
+        "type": "String"
+      }
+    }
+  },
+  "donationReverse": "दान निरस्त करें",
+  "donationReverseTitle": "इस दान को निरस्त करें?",
+  "donationReverseBody": "प्रविष्टि मिटाई नहीं जाती — वह रसीद संख्या सहित बनी रहती है और किसी योग में नहीं गिनी जाती। कारण लिखना आवश्यक है।",
+  "fieldReversalReason": "निरस्त करने का कारण",
+  "donationReversed": "दान निरस्त कर दिया गया।",
+  "donationRecorded": "दान दर्ज हो गया।",
+  "donationPrintReceipt": "रसीद प्रिंट करें",
+  "donationLockedNotice": "रसीद जारी हो चुकी है, इसलिए अब केवल टिप्पणी बदली जा सकती है। सुधार के लिए इसे निरस्त करके दोबारा दर्ज करें।",
+  "donationReversedNotice": "यह दान {date} को निरस्त किया गया: {reason}",
+  "@donationReversedNotice": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "recordedByLabel": "दर्ज किया",
+  "confirmedByLabel": "सत्यापित किया",
+  "navDonationSettings": "दान विवरण",
+  "navDonationSettingsDesc": "UPI, बैंक विवरण और QR जो वेबसाइट पर दिखते हैं",
+  "donationSettingsTitle": "दान विवरण",
+  "donationSettingsSubtitle": "ये विवरण वेबसाइट के दान अनुभाग में दिखाई देते हैं। खाता संख्या ठीक वैसी ही दिखेगी जैसी यहाँ लिखी जाए — छिपाना है तो स्वयं छिपाकर लिखें।",
+  "donationSettingsSaved": "दान विवरण सहेज दिए गए।",
+  "fieldQrImage": "UPI QR चित्र",
+  "fieldDonateIntroHindi": "परिचय (हिन्दी)",
+  "fieldDonateIntroEnglish": "परिचय (अंग्रेज़ी)",
+  "fieldDonateNoteHindi": "सूचना (हिन्दी)",
+  "fieldDonateNoteEnglish": "सूचना (अंग्रेज़ी)",
+  "fieldPublishDonationDetails": "वेबसाइट पर दिखाएँ",
+  "donationSettingsIncomplete": "प्रकाशित है, पर कोई भुगतान विवरण नहीं भरा गया — इसलिए वेबसाइट पर कुछ नहीं दिखेगा।",
+  "mediaReferenceDonationQr": "दान QR",
+  "errorDonationLocked": "यह प्रविष्टि अब बदली नहीं जा सकती।",
+  "paginationPage": "पृष्ठ {current} / {last}",
+  "@paginationPage": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "last": {
+        "type": "int"
+      }
+    }
+  },
+  "actionPrevious": "पिछला",
+  "actionNext": "अगला"
 }

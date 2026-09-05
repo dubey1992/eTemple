@@ -7,6 +7,7 @@ namespace App\Services\Media;
 use App\Exceptions\MediaGuardException;
 use App\Models\Album;
 use App\Models\CommitteeMember;
+use App\Models\DonationSetting;
 use App\Models\Event;
 use App\Models\Media;
 use App\Models\Page;
@@ -287,6 +288,18 @@ class MediaService
                 'type' => 'event_poster',
                 'label' => $event->title_hi,
                 'id' => $event->id,
+            ];
+        }
+
+        // The donation QR code (Phase 6). A new referrer that does not register
+        // itself here is a silent hole in the guard, so it is added in the same
+        // change that starts pointing at media.
+        $donationSettings = DonationSetting::query()->whereIn('qr_url', $urls)->first();
+        if ($donationSettings !== null) {
+            $references[] = [
+                'type' => 'donation_qr',
+                'label' => (string) ($donationSettings->upi_id ?? 'Donation details'),
+                'id' => $donationSettings->id,
             ];
         }
 

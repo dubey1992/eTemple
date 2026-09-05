@@ -19,6 +19,9 @@ class RoutePaths {
 
   static const String eventDetailPattern = '/events/:id';
 
+  /// The public donation page. Declared before the catch-all slug route.
+  static const String donate = '/donate';
+
   /// The public gallery. Declared before the catch-all slug route.
   static const String gallery = '/gallery';
 
@@ -74,6 +77,13 @@ class RoutePaths {
 
   static String adminAlbumEditor(int id) => '/admin/albums/$id';
 
+  static const String adminDonations = '/admin/donations';
+  static const String adminDonationNew = '/admin/donations/new';
+
+  static String adminDonationDetail(int id) => '/admin/donations/$id';
+
+  static const String adminDonationSettings = '/admin/donation-settings';
+
   static String adminRolePermissions(int id) => '/admin/roles/$id';
 
   // --- Public (completes the Phase 0 password-reset flow) -------------------
@@ -111,6 +121,10 @@ class RouteNames {
   static const String adminMediaEditor = 'admin-media-editor';
   static const String adminAlbums = 'admin-albums';
   static const String adminAlbumEditor = 'admin-album-editor';
+  static const String donate = 'donate';
+  static const String adminDonations = 'admin-donations';
+  static const String adminDonationDetail = 'admin-donation-detail';
+  static const String adminDonationSettings = 'admin-donation-settings';
   static const String adminRolePermissions = 'admin-role-permissions';
   static const String resetPassword = 'reset-password';
 }

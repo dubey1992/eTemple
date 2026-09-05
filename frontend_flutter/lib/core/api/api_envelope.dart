@@ -43,10 +43,20 @@ class PageMeta {
 
 /// A decoded success envelope: `{"success": true, "data": ..., "meta": ...}`.
 class ApiEnvelope<T> {
-  const ApiEnvelope({required this.data, this.meta});
+  const ApiEnvelope({required this.data, this.meta, this.rawMeta});
 
   final T data;
+
+  /// The pagination block, when the endpoint sent one.
   final PageMeta? meta;
+
+  /// The whole `meta` object, unparsed.
+  ///
+  /// Some endpoints put more than pagination there — the donation register
+  /// sends its totals beside the page numbers, so the screen never has to add
+  /// up the rows in view and call that the total. Parsing those extras is the
+  /// repository's job, so the envelope simply carries them through.
+  final Map<String, dynamic>? rawMeta;
 }
 
 /// Parses the API's JSON envelope.
@@ -82,6 +92,7 @@ class ApiEnvelopeParser {
       meta: metaJson != null && metaJson.containsKey('current_page')
           ? PageMeta.fromJson(metaJson)
           : null,
+      rawMeta: metaJson,
     );
   }
 

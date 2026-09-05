@@ -6,6 +6,7 @@ namespace Tests\Feature\Media;
 
 use App\Models\Album;
 use App\Models\CommitteeMember;
+use App\Models\DonationSetting;
 use App\Models\Event;
 use App\Models\Media;
 use App\Models\Page;
@@ -338,6 +339,24 @@ class MediaManagementTest extends TestCase
         $this->deleteJson("/api/admin/media/{$media->id}")
             ->assertStatus(409)
             ->assertJsonPath('error.details.references.0.type', 'album_cover');
+    }
+
+    public function test_the_donation_qr_code_blocks_deletion(): void
+    {
+        // Phase 6 started pointing at the media library, so the guard learned
+        // about it in the same change. A referrer that does not register itself
+        // here is a hole nobody notices until a QR code disappears from the
+        // donation page.
+        $media = Media::factory()->published()->create();
+        DonationSetting::query()->create([
+            'upi_id' => 'thakurbari@upi',
+            'qr_url' => $media->fileUrl(),
+            'is_published' => true,
+        ]);
+
+        $this->deleteJson("/api/admin/media/{$media->id}")
+            ->assertStatus(409)
+            ->assertJsonPath('error.details.references.0.type', 'donation_qr');
     }
 
     public function test_a_page_that_embeds_the_image_blocks_deletion(): void

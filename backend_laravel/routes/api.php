@@ -5,6 +5,8 @@ declare(strict_types=1);
 use App\Http\Controllers\Api\Admin\AdminPingController;
 use App\Http\Controllers\Api\Admin\AlbumController;
 use App\Http\Controllers\Api\Admin\CommitteeMemberController;
+use App\Http\Controllers\Api\Admin\DonationController as AdminDonationController;
+use App\Http\Controllers\Api\Admin\DonationSettingsController;
 use App\Http\Controllers\Api\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Api\Admin\MediaController as AdminMediaController;
 use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
@@ -14,6 +16,7 @@ use App\Http\Controllers\Api\Admin\TempleProfileController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\PublicSite\DonationController as PublicDonationController;
 use App\Http\Controllers\Api\PublicSite\EventController as PublicEventController;
 use App\Http\Controllers\Api\PublicSite\MediaController as PublicMediaController;
 use App\Http\Controllers\Api\PublicSite\PageController as PublicPageController;
@@ -104,6 +107,13 @@ Route::prefix('public')
 
         Route::get('/albums', [PublicMediaController::class, 'albums'])
             ->name('albums.index');
+
+        // Where devotees may send money (Phase 6). This is the *whole* public
+        // donation surface: no list, no count, no total, no donor. Donor detail
+        // reaches no public endpoint at any status, and aggregate transparency
+        // is Phase 9's requirement rather than an omission here.
+        Route::get('/donation-settings', [PublicDonationController::class, 'settings'])
+            ->name('donation-settings');
 
         Route::get('/pages/{slug}', [PublicPageController::class, 'show'])
             ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')
@@ -225,4 +235,41 @@ Route::prefix('admin')
             ->middleware('can:'.Permission::MEDIA_MANAGE)->name('albums.update');
         Route::delete('/albums/{album}', [AlbumController::class, 'destroy'])
             ->middleware('can:'.Permission::MEDIA_MANAGE)->name('albums.destroy');
+
+        // --- Donations and receipts (Phase 6) --------------------------
+        // Reading the register needs donations.view; recording, confirming and
+        // reversing need donations.manage. There is deliberately **no DELETE**
+        // on any of these: nothing is ever deleted, and reversal — which keeps
+        // the row, its receipt number and a stated reason — is the only undo.
+        Route::get('/donations', [AdminDonationController::class, 'index'])
+            ->middleware('can:'.Permission::DONATIONS_VIEW)->name('donations.index');
+        Route::get('/donations/summary', [AdminDonationController::class, 'summary'])
+            ->middleware('can:'.Permission::DONATIONS_VIEW)->name('donations.summary');
+        Route::get('/donations/{donation}', [AdminDonationController::class, 'show'])
+            ->whereNumber('donation')
+            ->middleware('can:'.Permission::DONATIONS_VIEW)->name('donations.show');
+        Route::get('/donations/{donation}/receipt', [AdminDonationController::class, 'receipt'])
+            ->whereNumber('donation')
+            ->middleware('can:'.Permission::DONATIONS_VIEW)->name('donations.receipt');
+
+        Route::post('/donations', [AdminDonationController::class, 'store'])
+            ->middleware('can:'.Permission::DONATIONS_MANAGE)->name('donations.store');
+        Route::put('/donations/{donation}', [AdminDonationController::class, 'update'])
+            ->whereNumber('donation')
+            ->middleware('can:'.Permission::DONATIONS_MANAGE)->name('donations.update');
+        Route::post('/donations/{donation}/confirm', [AdminDonationController::class, 'confirm'])
+            ->whereNumber('donation')
+            ->middleware('can:'.Permission::DONATIONS_MANAGE)->name('donations.confirm');
+        Route::post('/donations/{donation}/reverse', [AdminDonationController::class, 'reverse'])
+            ->whereNumber('donation')
+            ->middleware('can:'.Permission::DONATIONS_MANAGE)->name('donations.reverse');
+
+        // The published bank/UPI block sits behind the **money** permission,
+        // not the content one: a compromised Content Manager account can
+        // rewrite the About page but must not be able to redirect the temple's
+        // donations (PHASE_6_PLAN assumption N6).
+        Route::get('/donation-settings', [DonationSettingsController::class, 'show'])
+            ->middleware('can:'.Permission::DONATIONS_VIEW)->name('donation-settings.show');
+        Route::put('/donation-settings', [DonationSettingsController::class, 'update'])
+            ->middleware('can:'.Permission::DONATIONS_MANAGE)->name('donation-settings.update');
     });

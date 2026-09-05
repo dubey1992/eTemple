@@ -89,6 +89,23 @@ class ApiEndpoints {
 
   static String adminAlbum(int id) => '/admin/albums/$id';
 
+  // Donations and receipts (Phase 6)
+  static const String publicDonationSettings = '/public/donation-settings';
+
+  static const String adminDonations = '/admin/donations';
+
+  static String adminDonation(int id) => '/admin/donations/$id';
+
+  static String adminDonationConfirm(int id) => '/admin/donations/$id/confirm';
+
+  static String adminDonationReverse(int id) => '/admin/donations/$id/reverse';
+
+  /// A printable HTML document rather than JSON, opened in a new tab — see
+  /// `ReceiptRenderer` for why the browser, not the server, makes the PDF.
+  static String adminDonationReceipt(int id) => '/admin/donations/$id/receipt';
+
+  static const String adminDonationSettings = '/admin/donation-settings';
+
   static const String resetPassword = '/auth/reset-password';
 
   /// Served from the application root, not from under `/api`.

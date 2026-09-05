@@ -2,14 +2,14 @@ openapi: 3.1.0
 
 info:
   title: Radha Krishna Thakurbari API
-  version: 0.6.0
+  version: 0.7.0
   description: |
     REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
     admin console.
 
-    **Scope: Phases 0-5.** Endpoints for donations, enquiries,
-    announcements, accounts and reports are added in their own phases and must
-    be documented here in the same change that implements them.
+    **Scope: Phases 0-6.** Endpoints for enquiries, announcements, accounts
+    and reports are added in their own phases and must be documented here in the
+    same change that implements them.
 
     ## Authorization
 
@@ -1487,6 +1487,300 @@ paths:
         '403': { description: FORBIDDEN }
         '404': { description: NOT_FOUND }
 
+  # --- Donations and receipts (Phase 6) -------------------------------------
+
+  /api/public/donation-settings:
+    get:
+      tags: [Donations]
+      summary: Where devotees may send money
+      security: []
+      description: |
+        The **whole** public donation surface. There is no list, no count, no
+        total and no donor: donor detail reaches no public endpoint at any
+        status, in any aggregate. Aggregate transparency is Phase 9, which is a
+        separate requirement with its own consent question.
+
+        `data` is `null` — a success, not an error — when the committee has not
+        published anything, or has published a block with nothing payable in it.
+        An empty box on the public page reads as a broken site rather than an
+        unconfigured one.
+
+        `account_number` is returned **exactly as the committee typed it**.
+        Whether to mask it, and how, is their decision and their bank's policy.
+      parameters:
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en] } }
+      responses:
+        '200':
+          description: The published details, or null
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        oneOf:
+                          - $ref: '#/components/schemas/PublicDonationSettings'
+                          - type: 'null'
+
+  /api/admin/donations:
+    get:
+      tags: [Donations]
+      summary: The donation register, paginated, with its totals
+      description: |
+        Requires `donations.view`. A Content Manager holds neither donation key
+        and is refused: the specification says they cannot see sensitive
+        financial detail.
+
+        `meta.summary` carries the count and total for the **whole filter**,
+        computed by the database over confirmed donations — not by adding up the
+        page in view, which would report the total of one page as the total of
+        everything. The status filter is deliberately ignored by the summary, so
+        the register does not say "received: ₹0.00" to somebody looking at the
+        pending tab.
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [pending, confirmed, reversed] } }
+        - { name: mode, in: query, schema: { type: string, enum: [cash, upi, bank_transfer, cheque, card, other] } }
+        - { name: purpose, in: query, schema: { type: string } }
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+        - { name: q, in: query, schema: { type: string }, description: Donor name, receipt number or payment reference }
+        - { name: page, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: per_page, in: query, schema: { type: integer, minimum: 1, maximum: 100 } }
+      responses:
+        '200':
+          description: One page of the register
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/Donation' }
+                      meta:
+                        allOf:
+                          - $ref: '#/components/schemas/PageMeta'
+                          - type: object
+                            properties:
+                              summary: { $ref: '#/components/schemas/DonationSummary' }
+        '403': { description: FORBIDDEN }
+    post:
+      tags: [Donations]
+      summary: Record a donation
+      description: |
+        Requires `donations.manage`. The donation is recorded as **pending**
+        with no receipt number: a number is issued only on verification, so
+        every number that exists corresponds to a receipt that was really given.
+
+        `amount` is a **string** — "501", "501.50", "1,25,500" or "₹501" — and
+        is parsed into integer paise in exactly one place on the server. A JSON
+        number would be a float, and a rupee total that is exact until it is
+        summed is not exact.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DonationInput' }
+      responses:
+        '201': { description: The recorded donation }
+        '403': { description: FORBIDDEN }
+        '422':
+          description: |
+            VALIDATION_FAILED — the amount is not a positive sum, the date is in
+            the future or absurdly past, or a non-cash donation arrived without
+            the reference the treasurer needs to match it to a statement.
+
+  /api/admin/donations/summary:
+    get:
+      tags: [Donations]
+      summary: Count and total for a filter, without the rows
+      description: Requires `donations.view`.
+      parameters:
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+        - { name: mode, in: query, schema: { type: string } }
+        - { name: purpose, in: query, schema: { type: string } }
+      responses:
+        '200':
+          description: The totals
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/DonationSummary' }
+        '403': { description: FORBIDDEN }
+
+  /api/admin/donations/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [Donations]
+      summary: One donation, with who recorded, verified and reversed it
+      description: Requires `donations.view`.
+      responses:
+        '200': { description: The donation }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+    put:
+      tags: [Donations]
+      summary: Correct a donation
+      description: |
+        Requires `donations.manage`.
+
+        **Once a receipt has been issued only `notes` may change.** Changing the
+        amount, the date, the payer or the mode after a receipt is in somebody's
+        hand would make the paper and the database disagree, so anything else is
+        refused with 409 `DONATION_LOCKED` and a message saying to reverse and
+        record again — which is how a receipt book works, and which leaves both
+        the mistake and the correction visible.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DonationInput' }
+      responses:
+        '200': { description: The updated donation }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+        '409': { description: DONATION_LOCKED }
+        '422': { description: VALIDATION_FAILED }
+
+  /api/admin/donations/{id}/confirm:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    post:
+      tags: [Donations]
+      summary: Verify a donation and issue its receipt number
+      description: |
+        Requires `donations.manage`. This is the moment a receipt number comes
+        into existence, and it never changes afterwards.
+
+        The number is `PREFIX/FY/NNNN` — `RKT/2026-27/0001` — where the
+        financial year runs April to March and comes from the **donation's own
+        date**, so confirming a March donation in April does not move it into
+        next year's book. Uniqueness is guaranteed by a unique index rather than
+        by the application's arithmetic: two treasurers confirming at the same
+        instant both read the same highest sequence, and only the index can stop
+        them.
+      responses:
+        '200': { description: The confirmed donation, with its receipt number }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+        '409': { description: DONATION_LOCKED — already confirmed, or reversed }
+
+  /api/admin/donations/{id}/reverse:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    post:
+      tags: [Donations]
+      summary: Reverse a donation — the only undo there is
+      description: |
+        Requires `donations.manage`.
+
+        **There is no `DELETE` on any donation endpoint**, at any status. Its
+        absence is the rule. Reversal keeps the row and its receipt number,
+        stops it counting towards every total, and records who reversed it,
+        when, and why.
+
+        The reason is required: "why was five thousand rupees removed from the
+        books" is the first question an auditor asks, and the answer must not
+        depend on somebody's memory.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reversal_reason]
+              properties:
+                reversal_reason: { type: string, minLength: 3, maxLength: 500 }
+      responses:
+        '200': { description: The reversed donation }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+        '409': { description: DONATION_LOCKED — already reversed }
+        '422': { description: VALIDATION_FAILED — no reason given }
+
+  /api/admin/donations/{id}/receipt:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [Donations]
+      summary: The printable receipt
+      description: |
+        Requires `donations.view`. Returns **HTML**, not JSON and not a PDF: a
+        print-ready document the committee opens in a tab and prints, to paper
+        or to PDF.
+
+        The reason is Devanagari. A donor is `श्री रामप्रसाद यादव`, and rendering
+        that means reordering matras and forming conjuncts. `dompdf` and the
+        FPDF family do not shape complex scripts and would print the letters in
+        the wrong order, on a receipt for money. Every browser ships a shaping
+        engine and a PDF writer.
+
+        A reversed donation prints as **CANCELLED**, in the largest type on the
+        page, with its reason.
+
+        Served `Cache-Control: no-store, private`: a receipt names a donor and
+        must not sit in a proxy, or in the cache of a shared computer after it
+        is handed back.
+      responses:
+        '200':
+          description: A print-ready HTML document
+          content:
+            text/html:
+              schema: { type: string }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+
+  /api/admin/donation-settings:
+    get:
+      tags: [Donations]
+      summary: The published bank/UPI block, as the editor sees it
+      description: Requires `donations.view`.
+      responses:
+        '200':
+          description: The details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/AdminDonationSettings' }
+        '403': { description: FORBIDDEN }
+    put:
+      tags: [Donations]
+      summary: Change where devotees send money
+      description: |
+        Requires **`donations.manage`**, not `content.manage`.
+
+        Changing the published UPI id is the single most valuable attack on this
+        site, so the control sits behind the money permission: a compromised
+        Content Manager account can rewrite the About page and cannot redirect
+        the temple's donations.
+
+        `qr_url` comes from the Phase 5 media library, and the Phase 5 deletion
+        guard knows about it — a QR code the donation page is showing cannot be
+        deleted out from under it.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DonationSettingsInput' }
+      responses:
+        '200': { description: The updated details }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED }
+
 components:
   securitySchemes:
     sessionCookie:
@@ -1531,6 +1825,7 @@ components:
                 - TOO_MANY_REQUESTS
                 - CSRF_TOKEN_MISMATCH
                 - MEDIA_IN_USE
+                - DONATION_LOCKED
                 - SERVER_ERROR
             message:
               type: string
@@ -2065,6 +2360,150 @@ components:
         cover_media_id: { type: [integer, 'null'] }
         sort_order: { type: [integer, 'null'] }
         status: { type: string, enum: [draft, published] }
+
+    Donation:
+      type: object
+      description: |
+        One donation, as the register shows it. There is no public counterpart:
+        every field here is behind `donations.view`.
+
+        The amount is sent three ways on purpose. `amount_paise` is the
+        authority — an integer, because a rupee total held as a float is exact
+        until it is summed, which is the one operation a treasurer cares about.
+        `amount_formatted` is what a person reads, grouped the Indian way
+        (₹1,25,500.00, not ₹125,500.00). `amount_decimal` is what an export or a
+        receipt prints. No client ever divides by a hundred.
+      properties:
+        id: { type: integer }
+        receipt_number:
+          type: [string, 'null']
+          description: Null until the donation is verified; never changes afterwards.
+        donor_name: { type: string }
+        donor_phone: { type: [string, 'null'] }
+        donor_address: { type: [string, 'null'] }
+        is_anonymous:
+          type: boolean
+          description: >-
+            The donor asked not to be named in any future listing. Their own
+            receipt still names them — it is their receipt.
+        amount_paise: { type: integer, minimum: 1 }
+        amount_decimal: { type: string, example: '1255.00' }
+        amount_formatted: { type: string, example: '₹1,25,500.50' }
+        donation_date: { type: string, format: date }
+        payment_mode: { type: string, enum: [cash, upi, bank_transfer, cheque, card, other] }
+        reference_number: { type: [string, 'null'] }
+        purpose:
+          type: string
+          enum: [general, puja, maintenance, festival, annadan, construction, other]
+        notes: { type: [string, 'null'] }
+        status: { type: string, enum: [pending, confirmed, reversed] }
+        is_locked:
+          type: boolean
+          description: >-
+            A receipt has been issued, so only `notes` may change. The client
+            uses it to decide which controls to offer; the server refuses
+            regardless.
+        recorded_by: { type: [string, 'null'] }
+        confirmed_at: { type: [string, 'null'], format: date-time }
+        confirmed_by: { type: [string, 'null'] }
+        reversed_at: { type: [string, 'null'], format: date-time }
+        reversed_by: { type: [string, 'null'] }
+        reversal_reason: { type: [string, 'null'] }
+        updated_at: { type: [string, 'null'], format: date-time }
+
+    DonationInput:
+      type: object
+      required: [donor_name, amount, donation_date, payment_mode]
+      properties:
+        donor_name: { type: string, maxLength: 200 }
+        donor_phone: { type: [string, 'null'], maxLength: 20 }
+        donor_address: { type: [string, 'null'], maxLength: 500 }
+        is_anonymous: { type: boolean, default: false }
+        amount:
+          type: string
+          description: >-
+            "501", "501.50", "1,25,500" or "₹501". A string and not a number:
+            parsing happens in one place on the server, and a JSON number would
+            be a float.
+        donation_date:
+          type: string
+          format: date
+          description: Not in the future, and not more than a year in the past.
+        payment_mode: { type: string, enum: [cash, upi, bank_transfer, cheque, card, other] }
+        reference_number:
+          type: [string, 'null']
+          description: Required for every mode except cash.
+        purpose:
+          type: string
+          enum: [general, puja, maintenance, festival, annadan, construction, other]
+        notes: { type: [string, 'null'], maxLength: 2000 }
+
+    DonationSummary:
+      type: object
+      description: >-
+        Computed by the database over the whole filter, never by adding up a
+        page of results.
+      properties:
+        total_paise: { type: integer, description: Confirmed donations only }
+        total_formatted: { type: string }
+        pending_paise: { type: integer }
+        pending_formatted: { type: string }
+        confirmed_count: { type: integer }
+        pending_count: { type: integer }
+        reversed_count: { type: integer }
+        donor_count: { type: integer, description: Distinct payers among confirmed donations }
+
+    PublicDonationSettings:
+      type: object
+      properties:
+        requested_language: { type: string, enum: [hi, en] }
+        upi_id: { type: [string, 'null'] }
+        bank_name: { type: [string, 'null'] }
+        account_name: { type: [string, 'null'] }
+        account_number:
+          type: [string, 'null']
+          description: Exactly as the committee typed it; masking is their decision.
+        ifsc: { type: [string, 'null'] }
+        qr_url: { type: [string, 'null'] }
+        intro: { $ref: '#/components/schemas/LocalizedText' }
+        note: { $ref: '#/components/schemas/LocalizedText' }
+
+    AdminDonationSettings:
+      type: object
+      properties:
+        upi_id: { type: [string, 'null'] }
+        bank_name: { type: [string, 'null'] }
+        account_name: { type: [string, 'null'] }
+        account_number: { type: [string, 'null'] }
+        ifsc: { type: [string, 'null'] }
+        qr_url: { type: [string, 'null'] }
+        intro_hi: { type: [string, 'null'] }
+        intro_en: { type: [string, 'null'] }
+        note_hi: { type: [string, 'null'] }
+        note_en: { type: [string, 'null'] }
+        is_published: { type: boolean }
+        is_publicly_visible:
+          type: boolean
+          description: >-
+            Not the same as `is_published`: a block published with every field
+            blank shows nothing, and the editor is told so before it looks like
+            a bug.
+        updated_at: { type: [string, 'null'], format: date-time }
+
+    DonationSettingsInput:
+      type: object
+      properties:
+        upi_id: { type: [string, 'null'], maxLength: 120 }
+        bank_name: { type: [string, 'null'], maxLength: 150 }
+        account_name: { type: [string, 'null'], maxLength: 150 }
+        account_number: { type: [string, 'null'], maxLength: 60 }
+        ifsc: { type: [string, 'null'], maxLength: 20 }
+        qr_url: { type: [string, 'null'], format: uri }
+        intro_hi: { type: [string, 'null'] }
+        intro_en: { type: [string, 'null'] }
+        note_hi: { type: [string, 'null'] }
+        note_en: { type: [string, 'null'] }
+        is_published: { type: boolean }
 
 security:
   - sessionCookie: []

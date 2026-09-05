@@ -98,6 +98,20 @@ void main() {
       expect(trail[2].route, RoutePaths.adminAlbums);
     });
 
+    test('the donation settings go back through the register', () {
+      // They are reached from the register, so that is where back should land
+      // — the bank details are part of running the money, not of the dashboard.
+      final trail = adminTrail(RoutePaths.adminDonationSettings, hi);
+
+      expect(trail.map((c) => c.label), [
+        hi.adminDashboardTitle,
+        hi.navDonations,
+        hi.navDonationSettings,
+      ]);
+      expect(trail[1].route, RoutePaths.adminDonations);
+      expect(trail.last.isLink, isFalse);
+    });
+
     test('every admin route produces a trail', () {
       final routes = <String>[
         RoutePaths.admin,
@@ -122,6 +136,10 @@ void main() {
         RoutePaths.adminAlbums,
         RoutePaths.adminAlbumNew,
         RoutePaths.adminAlbumEditor(1),
+        RoutePaths.adminDonations,
+        RoutePaths.adminDonationNew,
+        RoutePaths.adminDonationDetail(1),
+        RoutePaths.adminDonationSettings,
       ];
 
       for (final route in routes) {

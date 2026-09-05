@@ -8,11 +8,13 @@ import 'package:go_router/go_router.dart';
 import 'package:rkt_web/app/localization/locale_controller.dart';
 import 'package:rkt_web/app/routing/route_paths.dart';
 import 'package:rkt_web/app/theme/app_theme.dart';
+import 'package:rkt_web/features/donations/data/donation_providers.dart';
 import 'package:rkt_web/features/events/data/event_providers.dart';
 import 'package:rkt_web/features/media/data/media_providers.dart';
 import 'package:rkt_web/features/temple/data/temple_providers.dart';
 import 'package:rkt_web/l10n/app_localizations.dart';
 
+import 'fake_donation_repository.dart';
 import 'fake_event_repository.dart';
 import 'fake_media_repository.dart';
 import 'fake_temple_repository.dart';
@@ -36,15 +38,22 @@ const mediaListPlaceholderKey = Key('test-media-placeholder');
 /// Key on the stand-in screen the albums route renders.
 const albumListPlaceholderKey = Key('test-albums-placeholder');
 
+/// Key on the stand-in screen the public donate route renders.
+const donatePlaceholderKey = Key('test-donate-placeholder');
+
+/// Key on the stand-in screen the donation register renders.
+const donationsPlaceholderKey = Key('test-donations-placeholder');
+
 /// Pumps a single screen inside the real theme and localization setup.
 ///
 /// A minimal router is provided so screens that navigate (the login screen, for
 /// example) behave as they do in the application instead of throwing.
 ///
-/// The temple profile (Phase 3), the calendar (Phase 4) and the gallery
-/// (Phase 5) are read by shared chrome — the header, the hero, the home page,
-/// even the sign-in page — so stubs for all three are always supplied. Pass
-/// [temple], [events] or [media] to script them, including making them fail.
+/// The temple profile (Phase 3), the calendar (Phase 4), the gallery (Phase 5)
+/// and the donation details (Phase 6) are read by shared chrome — the header,
+/// the hero, the home page, even the sign-in page — so stubs for all four are
+/// always supplied. Pass [temple], [events], [media] or [donations] to script
+/// them, including making them fail.
 ///
 /// An [ApiClient] that refuses every request is installed as well, so a
 /// repository nobody remembered to fake fails loudly instead of quietly
@@ -58,6 +67,7 @@ Future<void> pumpScreen(
   FakeTempleRepository? temple,
   FakeEventRepository? events,
   FakeMediaRepository? media,
+  FakeDonationRepository? donations,
 }) async {
   if (surfaceSize != null) {
     // Set the logical size directly: devicePixelRatio 1.0 makes the physical
@@ -118,6 +128,22 @@ Future<void> pumpScreen(
           body: SizedBox.shrink(),
         ),
       ),
+      GoRoute(
+        path: RoutePaths.donate,
+        builder: (_, _) =>
+            const Scaffold(key: donatePlaceholderKey, body: SizedBox.shrink()),
+      ),
+      GoRoute(
+        path: RoutePaths.adminDonations,
+        builder: (_, _) => const Scaffold(
+          key: donationsPlaceholderKey,
+          body: SizedBox.shrink(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.adminDonationSettings,
+        builder: (_, _) => const Scaffold(body: SizedBox.shrink()),
+      ),
     ],
   );
   addTearDown(router.dispose);
@@ -134,6 +160,9 @@ Future<void> pumpScreen(
         ),
         mediaRepositoryProvider.overrideWithValue(
           media ?? FakeMediaRepository(),
+        ),
+        donationRepositoryProvider.overrideWithValue(
+          donations ?? FakeDonationRepository(),
         ),
         ...overrides,
       ],

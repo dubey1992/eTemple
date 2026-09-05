@@ -22,6 +22,10 @@ import '../../features/events/presentation/admin_event_editor_screen.dart';
 import '../../features/events/presentation/admin_events_screen.dart';
 import '../../features/events/presentation/event_detail_screen.dart';
 import '../../features/events/presentation/events_screen.dart';
+import '../../features/donations/presentation/admin_donation_editor_screen.dart';
+import '../../features/donations/presentation/admin_donation_settings_screen.dart';
+import '../../features/donations/presentation/admin_donations_screen.dart';
+import '../../features/donations/presentation/donate_screen.dart';
 import '../../features/media/presentation/admin_album_editor_screen.dart';
 import '../../features/media/presentation/admin_albums_screen.dart';
 import '../../features/media/presentation/admin_media_editor_screen.dart';
@@ -115,6 +119,13 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: RoutePaths.events,
             name: RouteNames.events,
             builder: (context, state) => const EventsScreen(),
+          ),
+          GoRoute(
+            // Declared here rather than left to the catch-all slug route, so
+            // /donate is never mistaken for a CMS page.
+            path: RoutePaths.donate,
+            name: RouteNames.donate,
+            builder: (context, state) => const DonateScreen(),
           ),
           GoRoute(
             // Declared here rather than left to the catch-all slug route, so
@@ -286,6 +297,31 @@ final routerProvider = Provider<GoRouter>((ref) {
               final id = int.tryParse(state.pathParameters['id'] ?? '');
               if (id == null) return const NotFoundScreen();
               return AdminAlbumEditorScreen(albumId: id);
+            },
+          ),
+          GoRoute(
+            // Declared before /admin/donations/:id so "new" is not read as an
+            // id, and before the settings route can be mistaken for one.
+            path: RoutePaths.adminDonationSettings,
+            name: RouteNames.adminDonationSettings,
+            builder: (context, state) => const AdminDonationSettingsScreen(),
+          ),
+          GoRoute(
+            path: RoutePaths.adminDonations,
+            name: RouteNames.adminDonations,
+            builder: (context, state) => const AdminDonationsScreen(),
+          ),
+          GoRoute(
+            path: RoutePaths.adminDonationNew,
+            builder: (context, state) => const AdminDonationEditorScreen(),
+          ),
+          GoRoute(
+            path: '${RoutePaths.adminDonations}/:id',
+            name: RouteNames.adminDonationDetail,
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '');
+              if (id == null) return const NotFoundScreen();
+              return AdminDonationEditorScreen(donationId: id);
             },
           ),
           GoRoute(

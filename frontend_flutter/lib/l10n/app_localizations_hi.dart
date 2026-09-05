@@ -1106,4 +1106,294 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get mediaPickerHint =>
       'गैलरी से चुनें, या नीचे कोई बाहरी यूआरएल लिखें।';
+
+  @override
+  String get navDonate => 'दान';
+
+  @override
+  String get donateTitle => 'मंदिर सहयोग / दान';
+
+  @override
+  String get donateSubtitle =>
+      'आपका सहयोग मंदिर की पूजा व्यवस्था, रखरखाव, त्योहार और सेवा कार्यों में उपयोग होगा।';
+
+  @override
+  String get donateHeading => 'पारदर्शी एवं सामुदायिक दान व्यवस्था';
+
+  @override
+  String get donateComingSoon =>
+      'दान संबंधी जानकारी शीघ्र ही यहाँ जोड़ी जाएगी।';
+
+  @override
+  String get donateAction => 'दान करें';
+
+  @override
+  String get viewDonate => 'दान विवरण देखें';
+
+  @override
+  String get fieldUpiId => 'UPI ID';
+
+  @override
+  String get fieldBankName => 'बैंक';
+
+  @override
+  String get fieldAccountName => 'खाता नाम';
+
+  @override
+  String get fieldAccountNumber => 'खाता संख्या';
+
+  @override
+  String get fieldIfsc => 'IFSC';
+
+  @override
+  String get donateQrLabel => 'UPI QR';
+
+  @override
+  String donateCopied(String label) {
+    return '$label कॉपी हो गया।';
+  }
+
+  @override
+  String get actionCopy => 'कॉपी करें';
+
+  @override
+  String get navDonations => 'दान एवं रसीदें';
+
+  @override
+  String get navDonationsDesc =>
+      'दान दर्ज करें, सत्यापित करें और रसीद जारी करें';
+
+  @override
+  String get donationsAdminTitle => 'दान एवं रसीदें';
+
+  @override
+  String get donationsAdminSubtitle =>
+      'दान यहाँ दर्ज करें। सत्यापन के बाद रसीद संख्या जारी होती है और उसके बाद विवरण नहीं बदला जा सकता।';
+
+  @override
+  String get donationsEmpty => 'अभी कोई दान दर्ज नहीं किया गया है।';
+
+  @override
+  String get donationNew => 'नया दान दर्ज करें';
+
+  @override
+  String get donationEdit => 'दान विवरण';
+
+  @override
+  String get donationSearchHint => 'नाम, रसीद संख्या या संदर्भ खोजें';
+
+  @override
+  String get summaryReceived => 'कुल प्राप्त दान';
+
+  @override
+  String get summaryPending => 'सत्यापन शेष';
+
+  @override
+  String get summaryDonors => 'दानदाता';
+
+  @override
+  String get summaryReversed => 'निरस्त';
+
+  @override
+  String get statusPending => 'सत्यापन शेष';
+
+  @override
+  String get statusReversed => 'निरस्त';
+
+  @override
+  String get statusConfirmed => 'सत्यापित';
+
+  @override
+  String get fieldDonorName => 'दानदाता का नाम';
+
+  @override
+  String get fieldDonorPhone => 'दूरभाष';
+
+  @override
+  String get fieldDonorAddress => 'पता';
+
+  @override
+  String get fieldAmount => 'राशि (₹)';
+
+  @override
+  String get amountHint => 'जैसे 501 या 501.50';
+
+  @override
+  String get fieldDonationDate => 'दान की तिथि';
+
+  @override
+  String get fieldPaymentMode => 'भुगतान माध्यम';
+
+  @override
+  String get fieldReferenceNumber => 'संदर्भ संख्या';
+
+  @override
+  String get referenceHint =>
+      'नकद के अलावा हर माध्यम के लिए आवश्यक — UPI संदर्भ, चेक संख्या या ट्रांसफर आईडी।';
+
+  @override
+  String get fieldPurpose => 'उद्देश्य';
+
+  @override
+  String get fieldNotes => 'टिप्पणी';
+
+  @override
+  String get fieldAnonymous => 'दानदाता का नाम सार्वजनिक न करें';
+
+  @override
+  String get anonymousHint =>
+      'रसीद पर नाम फिर भी रहेगा — वह दानदाता की अपनी रसीद है।';
+
+  @override
+  String get modeCash => 'नकद';
+
+  @override
+  String get modeUpi => 'UPI';
+
+  @override
+  String get modeBankTransfer => 'बैंक ट्रांसफर';
+
+  @override
+  String get modeCheque => 'चेक';
+
+  @override
+  String get modeCard => 'कार्ड';
+
+  @override
+  String get modeOther => 'अन्य';
+
+  @override
+  String get purposeGeneral => 'सामान्य';
+
+  @override
+  String get purposePuja => 'पूजा व्यवस्था';
+
+  @override
+  String get purposeMaintenance => 'रखरखाव';
+
+  @override
+  String get purposeFestival => 'त्योहार';
+
+  @override
+  String get purposeAnnadan => 'भंडारा एवं प्रसाद';
+
+  @override
+  String get purposeConstruction => 'निर्माण कार्य';
+
+  @override
+  String get purposeOther => 'अन्य';
+
+  @override
+  String get fieldReceiptNumber => 'रसीद संख्या';
+
+  @override
+  String get receiptNotIssued => 'सत्यापन के बाद जारी होगी';
+
+  @override
+  String get donationConfirm => 'सत्यापित करें';
+
+  @override
+  String get donationConfirmTitle => 'इस दान को सत्यापित करें?';
+
+  @override
+  String get donationConfirmBody =>
+      'सत्यापित करते ही रसीद संख्या जारी हो जाएगी और उसके बाद राशि, तिथि या दानदाता का नाम नहीं बदला जा सकेगा।';
+
+  @override
+  String donationConfirmed(String receipt) {
+    return 'दान सत्यापित। रसीद संख्या $receipt जारी हुई।';
+  }
+
+  @override
+  String get donationReverse => 'दान निरस्त करें';
+
+  @override
+  String get donationReverseTitle => 'इस दान को निरस्त करें?';
+
+  @override
+  String get donationReverseBody =>
+      'प्रविष्टि मिटाई नहीं जाती — वह रसीद संख्या सहित बनी रहती है और किसी योग में नहीं गिनी जाती। कारण लिखना आवश्यक है।';
+
+  @override
+  String get fieldReversalReason => 'निरस्त करने का कारण';
+
+  @override
+  String get donationReversed => 'दान निरस्त कर दिया गया।';
+
+  @override
+  String get donationRecorded => 'दान दर्ज हो गया।';
+
+  @override
+  String get donationPrintReceipt => 'रसीद प्रिंट करें';
+
+  @override
+  String get donationLockedNotice =>
+      'रसीद जारी हो चुकी है, इसलिए अब केवल टिप्पणी बदली जा सकती है। सुधार के लिए इसे निरस्त करके दोबारा दर्ज करें।';
+
+  @override
+  String donationReversedNotice(String date, String reason) {
+    return 'यह दान $date को निरस्त किया गया: $reason';
+  }
+
+  @override
+  String get recordedByLabel => 'दर्ज किया';
+
+  @override
+  String get confirmedByLabel => 'सत्यापित किया';
+
+  @override
+  String get navDonationSettings => 'दान विवरण';
+
+  @override
+  String get navDonationSettingsDesc =>
+      'UPI, बैंक विवरण और QR जो वेबसाइट पर दिखते हैं';
+
+  @override
+  String get donationSettingsTitle => 'दान विवरण';
+
+  @override
+  String get donationSettingsSubtitle =>
+      'ये विवरण वेबसाइट के दान अनुभाग में दिखाई देते हैं। खाता संख्या ठीक वैसी ही दिखेगी जैसी यहाँ लिखी जाए — छिपाना है तो स्वयं छिपाकर लिखें।';
+
+  @override
+  String get donationSettingsSaved => 'दान विवरण सहेज दिए गए।';
+
+  @override
+  String get fieldQrImage => 'UPI QR चित्र';
+
+  @override
+  String get fieldDonateIntroHindi => 'परिचय (हिन्दी)';
+
+  @override
+  String get fieldDonateIntroEnglish => 'परिचय (अंग्रेज़ी)';
+
+  @override
+  String get fieldDonateNoteHindi => 'सूचना (हिन्दी)';
+
+  @override
+  String get fieldDonateNoteEnglish => 'सूचना (अंग्रेज़ी)';
+
+  @override
+  String get fieldPublishDonationDetails => 'वेबसाइट पर दिखाएँ';
+
+  @override
+  String get donationSettingsIncomplete =>
+      'प्रकाशित है, पर कोई भुगतान विवरण नहीं भरा गया — इसलिए वेबसाइट पर कुछ नहीं दिखेगा।';
+
+  @override
+  String get mediaReferenceDonationQr => 'दान QR';
+
+  @override
+  String get errorDonationLocked => 'यह प्रविष्टि अब बदली नहीं जा सकती।';
+
+  @override
+  String paginationPage(int current, int last) {
+    return 'पृष्ठ $current / $last';
+  }
+
+  @override
+  String get actionPrevious => 'पिछला';
+
+  @override
+  String get actionNext => 'अगला';
 }

@@ -70,6 +70,24 @@ List<Crumb> adminTrail(String location, AppLocalizations l10n) {
         Crumb(rest.first == 'new' ? l10n.eventNew : l10n.eventEdit),
       ];
 
+    case 'donations':
+      final donations = Crumb(l10n.navDonations, RoutePaths.adminDonations);
+      if (rest.isEmpty) return [dashboard, Crumb(l10n.navDonations)];
+      return [
+        dashboard,
+        donations,
+        Crumb(rest.first == 'new' ? l10n.donationNew : l10n.donationEdit),
+      ];
+
+    case 'donation-settings':
+      // The register, not the dashboard, is the parent: the settings are
+      // reached from it and that is where "back" should land.
+      return [
+        dashboard,
+        Crumb(l10n.navDonations, RoutePaths.adminDonations),
+        Crumb(l10n.navDonationSettings),
+      ];
+
     case 'media':
       final media = Crumb(l10n.navMedia, RoutePaths.adminMedia);
       if (rest.isEmpty) return [dashboard, Crumb(l10n.navMedia)];

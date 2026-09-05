@@ -12,13 +12,33 @@ Legend: `NOT STARTED` · `IN PROGRESS` · `PARTIAL` · `BLOCKED` · `COMPLETE`
 | 3 | Temple Profile & Committee | **COMPLETE** | Profile, committee and the consent gate on members' personal details. The address **moved** out of `site_settings` (columns dropped) and the temple name and village were **taken over** from the ARB files — `phase-reports/PHASE_3_COMPLETION.md`. |
 | 4 | Puja, Events & Calendar | **COMPLETE** | Recurring events stored as a rule and expanded on read; past/upcoming views; cancelled events kept visible and flagged. Also fixed two Phase 3 findings: admin breadcrumbs and equal-height cards — `phase-reports/PHASE_4_COMPLETION.md`. |
 | 5 | Gallery & Video Darshan | **COMPLETE** | Uploads validated by their bytes, stripped of location/camera data by re-encoding, and stored as three responsive variants; albums; a deletion guard that names what still points at a file. `logo_url`, `photo_url` and `poster_url` are now filled from the library — `phase-reports/PHASE_5_COMPLETION.md`. |
-| 6 | Donations & Receipts | NOT STARTED | Keys `donations.*` exist. The prototype's `दान` section. |
-| 7 | Devotee Contact & Enquiries | NOT STARTED | Key `enquiries.manage` exists. |
+| 6 | Donations & Receipts | **COMPLETE** | Money as integer paise; a receipt number issued on verification, unique by database index and immutable thereafter; no delete anywhere — reversal keeps the row, its number and a required reason. Donor detail reaches no public endpoint — `phase-reports/PHASE_6_COMPLETION.md`. |
+| 7 | Devotee Contact & Enquiries | NOT STARTED | Key `enquiries.manage` exists. The prototype's `संपर्क` section, and the first phase that accepts input from an anonymous visitor. |
 | 8 | Announcements & Notifications | NOT STARTED | Key `announcements.manage` exists. |
 | 9 | Accounts & Transparency | NOT STARTED | Keys `accounts.*` exist. |
 | 10 | Reports & Analytics | NOT STARTED | Keys `reports.*` exist. |
 | 11 | Security, Backup & Audit | NOT STARTED | |
 | 12 | Testing, Deployment & Handover | NOT STARTED | |
+
+## Verification log — Phase 6 (2026-09-10)
+
+| Check | Result |
+|---|---|
+| `flutter analyze` | ✅ No issues found |
+| `dart format --set-exit-if-changed` | ✅ 0 of 169 files changed |
+| `flutter test` | ✅ **441/441** passed |
+| `flutter build web --release` | ✅ built |
+| `./vendor/bin/pint --test` | ✅ passed |
+| `php artisan test` | ✅ **450** passed (1592 assertions) |
+| migrate → rollback → migrate → seed (MariaDB) | ✅ reversible |
+| Receipt number unique | ✅ enforced by the database index, not the application; a duplicate the application asks for is refused |
+| Receipt number immutable | ✅ changing an amount after receipting is 409; the number is unchanged |
+| No hard delete | ✅ `DELETE` on a donation is 405; reversal keeps the row, the number and a required reason |
+| Money exactness | ✅ integer paise throughout; ten ten-paise amounts sum to exactly one rupee |
+| Donor privacy | ✅ four plausible public donation paths 404; the published block carries no donor, amount or receipt number |
+| Live, through the running API | ✅ **44 checks** — record, correct, verify, print, reverse, and the refusals |
+| Phase 0–5 tests | ✅ pass unchanged |
+| Every admin route has a breadcrumb trail | ✅ still asserted, now including the four donation routes |
 
 ## Verification log — Phase 5 (2026-09-09)
 
@@ -102,6 +122,13 @@ MariaDB 12.3.3 · live health and 401 checks.
 - Media reordering is one item at a time and is disabled while a filter is on;
   drag-and-drop is wanted here, for the navigation menu and for the committee.
 - `checksum` is stored and indexed for duplicate detection; nothing reads it yet.
+- No online payment collection: donations are recorded after the fact, not taken
+  (Phase 6 §9.1).
+- No 80G/PAN fields on the receipt — the temple's registration status is not
+  something this project has been told (Phase 6 §9.2).
+- `donations.is_anonymous` is stored and respected by nothing yet; it exists for
+  the Phase 9 transparency figures.
+- No CSV/Excel export of the register — Phase 10.
 - No per-occurrence overrides: one day of a recurring event cannot be cancelled
   on its own (Phase 4 §10.1).
 - No calendar export (.ics); reminders are Phase 8.
@@ -110,4 +137,4 @@ MariaDB 12.3.3 · live health and 401 checks.
 - Pre-render tool not wired into CI.
 - No cross-stack end-to-end test (Phase 12).
 
-Phase 6 must not begin without explicit approval.
+Phase 7 must not begin without explicit approval.
