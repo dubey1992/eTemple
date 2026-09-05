@@ -107,7 +107,7 @@ abstract class AppLocalizations {
   /// Devotional invocation displayed above the temple name
   ///
   /// In hi, this message translates to:
-  /// **'राधे राधे · जय श्री कृष्ण'**
+  /// **'✨ राधे राधे • जय श्री कृष्ण'**
   String get invocation;
 
   /// No description provided for @languageLabel.
@@ -431,7 +431,7 @@ abstract class AppLocalizations {
   /// No description provided for @sectionAbout.
   ///
   /// In hi, this message translates to:
-  /// **'हमारे बारे में'**
+  /// **'मंदिर परिचय'**
   String get sectionAbout;
 
   /// No description provided for @sectionAddress.
@@ -989,7 +989,7 @@ abstract class AppLocalizations {
   /// No description provided for @sectionCommittee.
   ///
   /// In hi, this message translates to:
-  /// **'प्रबंध समिति'**
+  /// **'मंदिर समिति'**
   String get sectionCommittee;
 
   /// No description provided for @sectionHistory.
@@ -4255,6 +4255,114 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'यह अवधि एक फ़ाइल के लिए बहुत बड़ी है। छोटी अवधि चुनकर भागों में प्रति लें।'**
   String get errorReportTooLarge;
+
+  /// No description provided for @sectionContactLocation.
+  ///
+  /// In hi, this message translates to:
+  /// **'संपर्क एवं स्थान'**
+  String get sectionContactLocation;
+
+  /// No description provided for @sectionContactLocationSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर तक पहुँचने या समिति से संपर्क करने के लिए नीचे दी गई जानकारी का उपयोग करें।'**
+  String get sectionContactLocationSubtitle;
+
+  /// No description provided for @sectionEventsSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर के प्रमुख धार्मिक और सामुदायिक कार्यक्रमों की जानकारी।'**
+  String get sectionEventsSubtitle;
+
+  /// No description provided for @homeAccountsTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'आय-व्यय पारदर्शिता'**
+  String get homeAccountsTitle;
+
+  /// No description provided for @homeAccountsSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस वित्तीय वर्ष में मंदिर को क्या प्राप्त हुआ और कहाँ व्यय हुआ।'**
+  String get homeAccountsSubtitle;
+
+  /// No description provided for @statDonationsReceived.
+  ///
+  /// In hi, this message translates to:
+  /// **'कुल प्राप्त दान'**
+  String get statDonationsReceived;
+
+  /// No description provided for @statTotalExpense.
+  ///
+  /// In hi, this message translates to:
+  /// **'कुल व्यय'**
+  String get statTotalExpense;
+
+  /// No description provided for @statAvailableBalance.
+  ///
+  /// In hi, this message translates to:
+  /// **'उपलब्ध शेष'**
+  String get statAvailableBalance;
+
+  /// No description provided for @statDonors.
+  ///
+  /// In hi, this message translates to:
+  /// **'दानदाता'**
+  String get statDonors;
+
+  /// No description provided for @viewTransparency.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूरा लेखा-जोखा देखें'**
+  String get viewTransparency;
+
+  /// No description provided for @addressVillageLabel.
+  ///
+  /// In hi, this message translates to:
+  /// **'ग्राम'**
+  String get addressVillageLabel;
+
+  /// No description provided for @addressPoliceStationLabel.
+  ///
+  /// In hi, this message translates to:
+  /// **'थाना'**
+  String get addressPoliceStationLabel;
+
+  /// No description provided for @addressDistrictLabel.
+  ///
+  /// In hi, this message translates to:
+  /// **'जिला'**
+  String get addressDistrictLabel;
+
+  /// No description provided for @footerQuickLinks.
+  ///
+  /// In hi, this message translates to:
+  /// **'त्वरित लिंक'**
+  String get footerQuickLinks;
+
+  /// Footer copyright line. {temple} is the temple name and its locality.
+  ///
+  /// In hi, this message translates to:
+  /// **'© {year} {temple}। सर्वाधिकार सुरक्षित।'**
+  String footerCopyright(String year, String temple);
+
+  /// No description provided for @eventFeatured.
+  ///
+  /// In hi, this message translates to:
+  /// **'विशेष'**
+  String get eventFeatured;
+
+  /// No description provided for @eventTypeCommunityService.
+  ///
+  /// In hi, this message translates to:
+  /// **'सामुदायिक सेवा'**
+  String get eventTypeCommunityService;
+
+  /// No description provided for @pageCardsHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'किसी अनुच्छेद को “🛕 शीर्षक — विवरण” के रूप में लिखें तो वह वेबसाइट पर अलग कार्ड की तरह दिखेगा।'**
+  String get pageCardsHint;
 }
 
 class _AppLocalizationsDelegate

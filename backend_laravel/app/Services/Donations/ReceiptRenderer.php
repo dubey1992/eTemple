@@ -174,11 +174,14 @@ class ReceiptRenderer
         $profile = $this->temple->current();
 
         $templeName = trim((string) ($profile->name_hi ?: $profile->name_en));
+        // The receipt is printed in Hindi, so the Hindi half of each address
+        // part is the one that belongs on it — falling back to the English
+        // only where the committee has not written the Hindi.
         $address = implode(', ', array_filter([
-            $profile->address_line1,
-            $profile->village,
-            $profile->district,
-            $profile->state,
+            $profile->address_line1_hi ?: $profile->address_line1_en,
+            $profile->village_hi ?: $profile->village_en,
+            $profile->district_hi ?: $profile->district_en,
+            $profile->state_hi ?: $profile->state_en,
             $profile->postal_code,
         ], static fn ($part) => trim((string) $part) !== ''));
 

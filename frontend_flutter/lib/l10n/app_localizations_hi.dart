@@ -13,7 +13,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get appTitle => 'राधा कृष्ण ठाकुरबाड़ी';
 
   @override
-  String get invocation => 'राधे राधे · जय श्री कृष्ण';
+  String get invocation => '✨ राधे राधे • जय श्री कृष्ण';
 
   @override
   String get languageLabel => 'भाषा';
@@ -190,7 +190,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get heroDarshan => 'दर्शन करें';
 
   @override
-  String get sectionAbout => 'हमारे बारे में';
+  String get sectionAbout => 'मंदिर परिचय';
 
   @override
   String get sectionAddress => 'पता एवं संपर्क';
@@ -481,7 +481,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get navCommitteeDesc => 'सदस्य, कार्यकाल और सार्वजनिक दृश्यता';
 
   @override
-  String get sectionCommittee => 'प्रबंध समिति';
+  String get sectionCommittee => 'मंदिर समिति';
 
   @override
   String get sectionHistory => 'मंदिर का इतिहास';
@@ -2314,4 +2314,64 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get errorReportTooLarge =>
       'यह अवधि एक फ़ाइल के लिए बहुत बड़ी है। छोटी अवधि चुनकर भागों में प्रति लें।';
+
+  @override
+  String get sectionContactLocation => 'संपर्क एवं स्थान';
+
+  @override
+  String get sectionContactLocationSubtitle =>
+      'मंदिर तक पहुँचने या समिति से संपर्क करने के लिए नीचे दी गई जानकारी का उपयोग करें।';
+
+  @override
+  String get sectionEventsSubtitle =>
+      'मंदिर के प्रमुख धार्मिक और सामुदायिक कार्यक्रमों की जानकारी।';
+
+  @override
+  String get homeAccountsTitle => 'आय-व्यय पारदर्शिता';
+
+  @override
+  String get homeAccountsSubtitle =>
+      'इस वित्तीय वर्ष में मंदिर को क्या प्राप्त हुआ और कहाँ व्यय हुआ।';
+
+  @override
+  String get statDonationsReceived => 'कुल प्राप्त दान';
+
+  @override
+  String get statTotalExpense => 'कुल व्यय';
+
+  @override
+  String get statAvailableBalance => 'उपलब्ध शेष';
+
+  @override
+  String get statDonors => 'दानदाता';
+
+  @override
+  String get viewTransparency => 'पूरा लेखा-जोखा देखें';
+
+  @override
+  String get addressVillageLabel => 'ग्राम';
+
+  @override
+  String get addressPoliceStationLabel => 'थाना';
+
+  @override
+  String get addressDistrictLabel => 'जिला';
+
+  @override
+  String get footerQuickLinks => 'त्वरित लिंक';
+
+  @override
+  String footerCopyright(String year, String temple) {
+    return '© $year $temple। सर्वाधिकार सुरक्षित।';
+  }
+
+  @override
+  String get eventFeatured => 'विशेष';
+
+  @override
+  String get eventTypeCommunityService => 'सामुदायिक सेवा';
+
+  @override
+  String get pageCardsHint =>
+      'किसी अनुच्छेद को “🛕 शीर्षक — विवरण” के रूप में लिखें तो वह वेबसाइट पर अलग कार्ड की तरह दिखेगा।';
 }

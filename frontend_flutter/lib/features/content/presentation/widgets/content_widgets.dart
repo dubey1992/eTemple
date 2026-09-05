@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/localization/locale_controller.dart';
 import '../../../../app/theme/app_spacing.dart';
+import '../../../../core/widgets/breakpoints.dart';
+import '../../domain/content_highlight.dart';
 import '../../domain/localized_value.dart';
 
 /// Shown when the visitor asked for English but the committee has only written
@@ -150,6 +152,98 @@ class ContentSection extends StatelessWidget {
         const SizedBox(height: AppSpacing.md),
         child,
       ],
+    );
+  }
+}
+
+/// The card grid the approved design opens the About section with.
+///
+/// The cards are paragraphs of the CMS body — see [ContentHighlight] for the
+/// convention — so the committee adds, edits or removes one by editing the
+/// page. Cards in a row are the same height, so a long sentence does not leave
+/// the card beside it looking truncated.
+class HighlightGrid extends StatelessWidget {
+  const HighlightGrid({super.key, required this.highlights});
+
+  final List<ContentHighlight> highlights;
+
+  @override
+  Widget build(BuildContext context) {
+    if (highlights.isEmpty) return const SizedBox.shrink();
+
+    final columns = switch (Breakpoints.of(context)) {
+      FormFactor.mobile => 1,
+      FormFactor.tablet => 2,
+      FormFactor.desktop => 3,
+    };
+
+    final rows = <List<ContentHighlight>>[
+      for (var i = 0; i < highlights.length; i += columns)
+        highlights.sublist(i, (i + columns).clamp(0, highlights.length)),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final row in rows) ...[
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (var i = 0; i < columns; i++) ...[
+                  if (i > 0) const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: i < row.length
+                        ? _HighlightCard(highlight: row[i])
+                        : const SizedBox.shrink(),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          if (row != rows.last) const SizedBox(height: AppSpacing.md),
+        ],
+      ],
+    );
+  }
+}
+
+class _HighlightCard extends StatelessWidget {
+  const _HighlightCard({required this.highlight});
+
+  final ContentHighlight highlight;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (highlight.emblem != null) ...[
+              Text(highlight.emblem!, style: const TextStyle(fontSize: 30)),
+              const SizedBox(height: AppSpacing.sm),
+            ],
+            Text(
+              highlight.heading,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              highlight.body,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

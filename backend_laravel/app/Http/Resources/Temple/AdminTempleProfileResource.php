@@ -25,15 +25,9 @@ class AdminTempleProfileResource extends JsonResource
             'history_en' => $this->history_en,
             'mission_hi' => $this->mission_hi,
             'mission_en' => $this->mission_en,
-            'address_line1' => $this->address_line1,
-            'address_line2' => $this->address_line2,
-            'village' => $this->village,
-            'panchayat' => $this->panchayat,
-            'police_station' => $this->police_station,
-            'district' => $this->district,
-            'state' => $this->state,
-            'postal_code' => $this->postal_code,
-            'country' => $this->country,
+            ...collect(TempleProfile::ADDRESS_COLUMNS)
+                ->mapWithKeys(fn (string $column) => [$column => $this->{$column}])
+                ->all(),
             'logo_url' => $this->logo_url,
             'map_url' => $this->map_url,
             'established_year' => $this->established_year,

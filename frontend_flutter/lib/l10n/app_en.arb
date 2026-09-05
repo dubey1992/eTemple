@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
   "appTitle": "Radha Krishna Thakurbari",
-  "invocation": "Radhe Radhe · Jai Shri Krishna",
+  "invocation": "✨ Radhe Radhe • Jai Shri Krishna",
   "languageLabel": "Language",
   "languageHindi": "हिन्दी",
   "languageEnglish": "English",
@@ -55,7 +55,7 @@
   "navAbout": "About us",
   "navContact": "Contact",
   "heroDarshan": "Take darshan",
-  "sectionAbout": "About us",
+  "sectionAbout": "About the Temple",
   "sectionAddress": "Address and contact",
   "sectionReadMore": "Read more",
   "contactPhone": "Phone",
@@ -155,7 +155,7 @@
   "@navCommittee": {},
   "navCommitteeDesc": "Members, tenure and public visibility",
   "@navCommitteeDesc": {},
-  "sectionCommittee": "Management committee",
+  "sectionCommittee": "Temple Committee",
   "@sectionCommittee": {},
   "sectionHistory": "History of the temple",
   "@sectionHistory": {},
@@ -1080,5 +1080,51 @@
   "overviewEventCancelled": "Cancelled",
   "overviewOpenReports": "See all reports",
   "errorReportDisclosureRefused": "This report can be read, but personal details need a permission this account does not have.",
-  "errorReportTooLarge": "That period is too large for one file. Choose a shorter one and take the copy in parts."
+  "errorReportTooLarge": "That period is too large for one file. Choose a shorter one and take the copy in parts.",
+  "sectionContactLocation": "Contact & Location",
+  "@sectionContactLocation": {},
+  "sectionContactLocationSubtitle": "Use the details below to reach the temple or contact the committee.",
+  "@sectionContactLocationSubtitle": {},
+  "sectionEventsSubtitle": "Information about major religious and community events at the temple.",
+  "@sectionEventsSubtitle": {},
+  "homeAccountsTitle": "Income & Expense Transparency",
+  "@homeAccountsTitle": {},
+  "homeAccountsSubtitle": "What the temple received this financial year, and where it was spent.",
+  "@homeAccountsSubtitle": {},
+  "statDonationsReceived": "Total Donations",
+  "@statDonationsReceived": {},
+  "statTotalExpense": "Total Expenses",
+  "@statTotalExpense": {},
+  "statAvailableBalance": "Available Balance",
+  "@statAvailableBalance": {},
+  "statDonors": "Donors",
+  "@statDonors": {},
+  "viewTransparency": "See the full accounts",
+  "@viewTransparency": {},
+  "addressVillageLabel": "Village",
+  "@addressVillageLabel": {},
+  "addressPoliceStationLabel": "Police Station",
+  "@addressPoliceStationLabel": {},
+  "addressDistrictLabel": "District",
+  "@addressDistrictLabel": {},
+  "footerQuickLinks": "Quick Links",
+  "@footerQuickLinks": {},
+  "footerCopyright": "© {year} {temple}. All rights reserved.",
+  "@footerCopyright": {
+    "description": "Footer copyright line. {temple} is the temple name and its locality.",
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "temple": {
+        "type": "String"
+      }
+    }
+  },
+  "eventFeatured": "Featured",
+  "@eventFeatured": {},
+  "eventTypeCommunityService": "Community service",
+  "@eventTypeCommunityService": {},
+  "pageCardsHint": "Write a paragraph as “🛕 Heading — text” and it appears as its own card on the website.",
+  "@pageCardsHint": {}
 }

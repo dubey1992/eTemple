@@ -4,7 +4,7 @@
   "@appTitle": {
     "description": "Application shell fallback for the temple name. Since Phase 3 the real name comes from temple_profile; this is shown only while that request is in flight or has failed."
   },
-  "invocation": "राधे राधे · जय श्री कृष्ण",
+  "invocation": "✨ राधे राधे • जय श्री कृष्ण",
   "@invocation": {
     "description": "Devotional invocation displayed above the temple name"
   },
@@ -128,7 +128,7 @@
   "@navContact": {},
   "heroDarshan": "दर्शन करें",
   "@heroDarshan": {},
-  "sectionAbout": "हमारे बारे में",
+  "sectionAbout": "मंदिर परिचय",
   "@sectionAbout": {},
   "sectionAddress": "पता एवं संपर्क",
   "@sectionAddress": {},
@@ -332,7 +332,7 @@
   "@navCommittee": {},
   "navCommitteeDesc": "सदस्य, कार्यकाल और सार्वजनिक दृश्यता",
   "@navCommitteeDesc": {},
-  "sectionCommittee": "प्रबंध समिति",
+  "sectionCommittee": "मंदिर समिति",
   "@sectionCommittee": {},
   "sectionHistory": "मंदिर का इतिहास",
   "@sectionHistory": {},
@@ -1257,5 +1257,51 @@
   "overviewEventCancelled": "रद्द",
   "overviewOpenReports": "सभी रिपोर्ट देखें",
   "errorReportDisclosureRefused": "यह रिपोर्ट देखी जा सकती है, पर व्यक्तिगत विवरण के लिए अनुमति चाहिए जो इस खाते के पास नहीं है।",
-  "errorReportTooLarge": "यह अवधि एक फ़ाइल के लिए बहुत बड़ी है। छोटी अवधि चुनकर भागों में प्रति लें।"
+  "errorReportTooLarge": "यह अवधि एक फ़ाइल के लिए बहुत बड़ी है। छोटी अवधि चुनकर भागों में प्रति लें।",
+  "sectionContactLocation": "संपर्क एवं स्थान",
+  "@sectionContactLocation": {},
+  "sectionContactLocationSubtitle": "मंदिर तक पहुँचने या समिति से संपर्क करने के लिए नीचे दी गई जानकारी का उपयोग करें।",
+  "@sectionContactLocationSubtitle": {},
+  "sectionEventsSubtitle": "मंदिर के प्रमुख धार्मिक और सामुदायिक कार्यक्रमों की जानकारी।",
+  "@sectionEventsSubtitle": {},
+  "homeAccountsTitle": "आय-व्यय पारदर्शिता",
+  "@homeAccountsTitle": {},
+  "homeAccountsSubtitle": "इस वित्तीय वर्ष में मंदिर को क्या प्राप्त हुआ और कहाँ व्यय हुआ।",
+  "@homeAccountsSubtitle": {},
+  "statDonationsReceived": "कुल प्राप्त दान",
+  "@statDonationsReceived": {},
+  "statTotalExpense": "कुल व्यय",
+  "@statTotalExpense": {},
+  "statAvailableBalance": "उपलब्ध शेष",
+  "@statAvailableBalance": {},
+  "statDonors": "दानदाता",
+  "@statDonors": {},
+  "viewTransparency": "पूरा लेखा-जोखा देखें",
+  "@viewTransparency": {},
+  "addressVillageLabel": "ग्राम",
+  "@addressVillageLabel": {},
+  "addressPoliceStationLabel": "थाना",
+  "@addressPoliceStationLabel": {},
+  "addressDistrictLabel": "जिला",
+  "@addressDistrictLabel": {},
+  "footerQuickLinks": "त्वरित लिंक",
+  "@footerQuickLinks": {},
+  "footerCopyright": "© {year} {temple}। सर्वाधिकार सुरक्षित।",
+  "@footerCopyright": {
+    "description": "Footer copyright line. {temple} is the temple name and its locality.",
+    "placeholders": {
+      "year": {
+        "type": "String"
+      },
+      "temple": {
+        "type": "String"
+      }
+    }
+  },
+  "eventFeatured": "विशेष",
+  "@eventFeatured": {},
+  "eventTypeCommunityService": "सामुदायिक सेवा",
+  "@eventTypeCommunityService": {},
+  "pageCardsHint": "किसी अनुच्छेद को “🛕 शीर्षक — विवरण” के रूप में लिखें तो वह वेबसाइट पर अलग कार्ड की तरह दिखेगा।",
+  "@pageCardsHint": {}
 }

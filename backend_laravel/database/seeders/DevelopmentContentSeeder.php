@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Announcement;
 use App\Models\CommitteeMember;
+use App\Models\DonationSetting;
 use App\Models\Event;
 use App\Models\NavigationItem;
 use App\Models\Page;
@@ -16,9 +18,14 @@ use Illuminate\Database\Seeder;
 /**
  * Loads the committee's approved copy into the CMS.
  *
- * Every string here is taken verbatim from the approved prototype
+ * Every string here is taken from the approved prototype
  * (`radha-krishna-thakurbari-prototype.html`), so a reviewer opening the site
  * sees the wording they signed off on rather than placeholder text.
+ *
+ * Verbatim, with three exceptions, all recorded in
+ * `docs/PROTOTYPE_CONTENT_MATCH.md`: the prototype's demo bank and UPI details
+ * are not seeded at all, and the two sentences that describe the mock rather
+ * than the temple are rewritten to describe the temple.
  *
  * It is still seed data and still refuses to run in production: on a real
  * deployment the committee owns this content and a seeder must never overwrite
@@ -38,6 +45,8 @@ class DevelopmentContentSeeder extends Seeder
         $this->seedProfile();
         $this->seedSettings();
         $this->seedPages();
+        $this->seedNotice();
+        $this->seedDonationIntro();
         $this->seedEvents();
         $this->seedCommittee();
         $this->seedNavigation();
@@ -61,18 +70,27 @@ class DevelopmentContentSeeder extends Seeder
                 .'service, community participation and cultural unity.',
 
             // The "मंदिर परिचय" lead paragraph.
-            'history_hi' => 'राधा कृष्ण ठाकुरबाड़ी एक सामुदायिक एवं ग़ैर-लाभकारी धार्मिक स्थल है, '
+            'history_hi' => 'राधा कृष्ण ठाकुरबाड़ी एक सामुदायिक एवं गैर-लाभकारी धार्मिक स्थल है, '
                 .'जिसका संचालन ग्रामवासियों के सहयोग से किया जाता है।',
             'history_en' => 'Radha Krishna Thakurbari is a community-run, non-profit religious '
                 .'place managed with the support of villagers.',
 
-            'village' => 'Amarpur Pankhoriya',
-            'panchayat' => 'Kurma',
-            'police_station' => 'Rasulpur Ekchari',
-            'district' => 'Bhagalpur',
-            'state' => 'Bihar',
+            // Both scripts. The strip above the header used to show the Roman
+            // spelling on a Hindi page, which is the wrong language on the
+            // front page of a village temple's website.
+            'village_hi' => 'अमरपुर पंखोरिया',
+            'village_en' => 'Amarpur Pankhoriya',
+            'panchayat_hi' => 'कुर्मा',
+            'panchayat_en' => 'Kurma',
+            'police_station_hi' => 'रसूलपुर एकचारी',
+            'police_station_en' => 'Rasulpur Ekchari',
+            'district_hi' => 'भागलपुर',
+            'district_en' => 'Bhagalpur',
+            'state_hi' => 'बिहार',
+            'state_en' => 'Bihar',
             'postal_code' => '813204',
-            'country' => 'India',
+            'country_hi' => 'भारत',
+            'country_en' => 'India',
         ])->save();
     }
 
@@ -83,10 +101,10 @@ class DevelopmentContentSeeder extends Seeder
 
         $settings->forceFill([
             // The line the prototype puts in the strip above the header.
-            'tagline_hi' => 'ग्रामवासियों द्वारा संचालित ग़ैर-लाभकारी मंदिर',
+            'tagline_hi' => 'ग्रामवासियों द्वारा संचालित गैर-लाभकारी मंदिर',
             'tagline_en' => 'A non-profit temple managed by the villagers',
 
-            'footer_text_hi' => 'अमरपुर पंखोरिया ग्रामवासियों द्वारा संचालित एक ग़ैर-लाभकारी '
+            'footer_text_hi' => 'अमरपुर पंखोरिया ग्रामवासियों द्वारा संचालित एक गैर-लाभकारी '
                 .'धार्मिक एवं सामुदायिक मंदिर।',
             'footer_text_en' => 'A non-profit religious and community temple managed by the '
                 .'villagers of Amarpur Pankhoriya.',
@@ -105,36 +123,94 @@ class DevelopmentContentSeeder extends Seeder
             'meta_title_hi' => 'राधा कृष्ण ठाकुरबाड़ी | अमरपुर पंखोरिया',
             'meta_title_en' => 'Radha Krishna Thakurbari | Amarpur Pankhoriya',
             'meta_description_hi' => 'राधा कृष्ण ठाकुरबाड़ी, अमरपुर पंखोरिया — ग्रामवासियों '
-                .'द्वारा संचालित ग़ैर-लाभकारी मंदिर।',
+                .'द्वारा संचालित गैर-लाभकारी मंदिर।',
             'meta_description_en' => 'Radha Krishna Thakurbari, Amarpur Pankhoriya — a '
                 .'non-profit temple managed by the villagers.',
             'status' => Page::STATUS_PUBLISHED,
             'published_at' => now(),
         ]);
 
-        // The prototype's three "मंदिर परिचय" cards, as the About page body.
+        // The prototype's three "मंदिर परिचय" cards. A paragraph shaped
+        // `<emoji> <heading> — <text>` renders as a card on the public site, so
+        // these stay ordinary CMS content the committee can edit, add to or
+        // remove without a release.
         Page::query()->where('slug', Page::SLUG_ABOUT)->update([
             'title_hi' => 'मंदिर परिचय',
             'title_en' => 'About the Temple',
-            'content_hi' => 'राधा कृष्ण ठाकुरबाड़ी एक सामुदायिक एवं ग़ैर-लाभकारी धार्मिक स्थल है, '
+            'content_hi' => 'राधा कृष्ण ठाकुरबाड़ी एक सामुदायिक एवं गैर-लाभकारी धार्मिक स्थल है, '
                 ."जिसका संचालन ग्रामवासियों के सहयोग से किया जाता है।\n\n"
-                .'हमारी विरासत — मंदिर के इतिहास, स्थापना और स्थानीय परंपराओं को आने वाली '
+                .'🛕 हमारी विरासत — मंदिर के इतिहास, स्थापना और स्थानीय परंपराओं को आने वाली '
                 ."पीढ़ियों के लिए संरक्षित करना।\n\n"
-                .'ग्राम सहभागिता — पूजा, त्योहार, सेवा और विकास कार्य ग्रामवासियों के सामूहिक '
+                .'🤝 ग्राम सहभागिता — पूजा, त्योहार, सेवा और विकास कार्य ग्रामवासियों के सामूहिक '
                 ."सहयोग से संचालित होते हैं।\n\n"
-                .'सेवा और भक्ति — नियमित पूजा, आरती, भजन-कीर्तन और धार्मिक आयोजनों के माध्यम से '
+                .'🪔 सेवा और भक्ति — नियमित पूजा, आरती, भजन-कीर्तन और धार्मिक आयोजनों के माध्यम से '
                 .'आध्यात्मिक वातावरण।',
             'content_en' => 'Radha Krishna Thakurbari is a community-run, non-profit religious '
                 ."place managed with the support of villagers.\n\n"
-                ."Our Heritage — preserving the temple's history, foundation and local "
+                ."🛕 Our Heritage — preserving the temple's history, foundation and local "
                 ."traditions for future generations.\n\n"
-                .'Village Participation — worship, festivals, service and development '
+                .'🤝 Village Participation — worship, festivals, service and development '
                 ."activities are organized through community support.\n\n"
-                .'Service and Devotion — a spiritual environment through regular puja, aarti, '
+                .'🪔 Service and Devotion — a spiritual environment through regular puja, aarti, '
                 .'bhajan-kirtan and religious programs.',
             'status' => Page::STATUS_PUBLISHED,
             'published_at' => now(),
         ]);
+    }
+
+    /**
+     * The prototype's notice band, as the announcement it actually is.
+     *
+     * The prototype hardcodes this into the page. Here it is a scheduled,
+     * publishable record: the committee takes it down when Janmashtami is over
+     * without anybody touching the site.
+     */
+    private function seedNotice(): void
+    {
+        Announcement::query()->delete();
+
+        $notice = Announcement::query()->create([
+            'title_hi' => 'आज की सूचना',
+            'title_en' => "Today's Notice",
+            'message_hi' => 'संध्या आरती प्रतिदिन शाम 6:30 बजे। जन्माष्टमी महोत्सव की तैयारी '
+                .'हेतु सभी ग्रामवासियों से सहयोग का अनुरोध है।',
+            'message_en' => 'Evening Aarti is held daily at 6:30 PM. Villagers are requested '
+                .'to support preparations for the Janmashtami celebration.',
+            'priority' => 'important',
+            'start_at' => now()->subDay(),
+        ]);
+
+        // Publishing is a decision rather than a fillable column, so it is set
+        // here rather than passed in.
+        $notice->forceFill(['status' => Announcement::STATUS_PUBLISHED])->save();
+    }
+
+    /**
+     * The wording of the donation block — and nothing payable.
+     *
+     * The prototype's `temple@upi` and `Demo Bank` are invented payment details
+     * and are deliberately absent: a donor who acts on them loses money. So the
+     * block stays invisible until the committee enters a real UPI ID or bank
+     * account, which is the Phase 6 rule and the right one.
+     *
+     * The prototype's own sentence describes the mock ("details *can be
+     * displayed* here"); this says what the temple does.
+     */
+    private function seedDonationIntro(): void
+    {
+        $settings = DonationSetting::query()->oldest('id')->first()
+            ?? DonationSetting::query()->create([]);
+
+        $settings->forceFill([
+            'intro_hi' => 'मंदिर UPI, बैंक ट्रांसफर और नकद — तीनों माध्यमों से सहयोग स्वीकार '
+                .'करता है। सत्यापन के बाद डिजिटल रसीद उपलब्ध कराई जाती है।',
+            'intro_en' => 'The temple accepts support by UPI, bank transfer and cash. A digital '
+                .'receipt is issued once the donation has been verified.',
+            'note_hi' => 'दान से प्राप्त राशि का उपयोग पूजा व्यवस्था, रखरखाव, त्योहार और सेवा '
+                .'कार्यों में किया जाता है, और उसका लेखा-जोखा वेबसाइट पर प्रकाशित होता है।',
+            'note_en' => 'Donations are used for worship arrangements, maintenance, festivals '
+                .'and community service, and the accounts are published on this website.',
+        ])->save();
     }
 
     /**
@@ -194,7 +270,7 @@ class DevelopmentContentSeeder extends Seeder
         ]);
 
         Event::query()->create([
-            'event_type' => EventType::OTHER,
+            'event_type' => EventType::COMMUNITY_SERVICE,
             'title_hi' => 'भंडारा एवं प्रसाद',
             'title_en' => 'Bhandara & Prasad',
             'description_hi' => 'विशेष अवसरों पर श्रद्धालुओं के लिए प्रसाद एवं सामूहिक भोजन '

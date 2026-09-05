@@ -189,6 +189,17 @@ acceptance and handover are Phase 12.
 - [ ] A PDF export prints with its heading row repeating on the second page
 - [ ] An account holding `reports.view` but not `reports.export` is offered no
       download, and is told why
+- [ ] **Fill in the temple address in both scripts.** The public site shows it
+      in the visitor's language, so a profile with only the Roman spelling puts
+      `Amarpur Pankhoriya` in the first line of a Hindi page. Every part has a
+      `_hi` and an `_en` field except the pin code
+- [ ] **The three About cards are paragraphs**, shaped `<emoji> <heading> —
+      <text>`. If the committee reflows that page into prose the grid becomes a
+      wall of text — which is what it was before, and nothing breaks to say so
+- [ ] Open the home page on a **first visit, on a slow connection**: the
+      approved design's emoji arrive with a Noto fallback CanvasKit downloads,
+      so they show as boxes for a moment. If that is unacceptable, the answer is
+      to drop the emoji from the seeded copy, not to bundle a font
 - [ ] Layout checked at 360 px, 768 px and 1440 px widths
 - [ ] Checked in Chrome/Edge on desktop and in a common Android mobile browser
 

@@ -169,18 +169,14 @@ class _InfoStrip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final l10n = context.l10n;
 
     final tagline = ref.watch(siteSettingsProvider).value?.tagline.value;
 
-    final address = ref
-        .watch(templeProfileProvider)
-        .value
-        ?.address
-        .lines(panchayatLabel: l10n.panchayatLabel);
-    final where = (address == null || address.isEmpty)
-        ? null
-        : address.join(', ');
+    // The short form, in the visitor's language. This used to be every address
+    // line joined with commas, which on a Hindi page read
+    // `Amarpur Pankhoriya, Kurma, Rasulpur Ekchari, Bhagalpur, Bihar, 813204` —
+    // the wrong language, in the first line of the site.
+    final where = ref.watch(templeProfileProvider).value?.address.shortLine;
 
     if (tagline == null && where == null) return const SizedBox.shrink();
 
@@ -197,8 +193,11 @@ class _InfoStrip extends ConsumerWidget {
           children: [
             if (tagline != null)
               Expanded(
+                // The two emblems are the approved design's, and they are
+                // decoration rather than content: they say "temple" and "this
+                // is where it is" without asking the committee to type them.
                 child: Text(
-                  tagline,
+                  '🙏 $tagline',
                   key: const Key('info-strip-tagline'),
                   style: style,
                   maxLines: 1,
@@ -209,7 +208,7 @@ class _InfoStrip extends ConsumerWidget {
               const SizedBox(width: AppSpacing.md),
               Flexible(
                 child: Text(
-                  where,
+                  '📍 $where',
                   key: const Key('info-strip-address'),
                   style: style,
                   textAlign: TextAlign.right,
@@ -283,6 +282,14 @@ class _NavigationDrawer extends StatelessWidget {
 }
 
 /// The dark footer that closes the page.
+///
+/// Three things, in the approved design's order: what this place is, the quick
+/// links, and the copyright line.
+///
+/// It stays a pinned bar rather than the tall block the prototype draws, and it
+/// is kept to two lines for that reason: every public page owns its own scroll
+/// view, so a footer inside the shell cannot scroll away, and a tall one would
+/// take a fifth of a laptop screen on every page of the site.
 class _PublicFooter extends ConsumerWidget {
   const _PublicFooter();
 
@@ -290,14 +297,20 @@ class _PublicFooter extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
+    final isDesktop = Breakpoints.of(context).isDesktop;
     final settings = ref.watch(siteSettingsProvider).value;
     final templeName = ref.watch(templeNameProvider);
     final locality = ref.watch(templeLocalityProvider);
+    final navigation = ref.watch(navigationProvider);
 
     // Falls back to the temple's own identity from the profile, and only then
     // to the application shell name.
     final identity = [templeName ?? l10n.appTitle, ?locality].join(' · ');
     final footer = settings?.footerText.value ?? identity;
+
+    final bodyStyle = theme.textTheme.bodySmall?.copyWith(
+      color: AppColors.onFooter,
+    );
 
     return Material(
       color: AppColors.maroonFooter,
@@ -306,16 +319,100 @@ class _PublicFooter extends ConsumerWidget {
         child: PageContainer(
           maxWidth: 1120,
           verticalPadding: AppSpacing.md,
-          child: Text(
-            footer,
-            key: const Key('public-footer'),
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: AppColors.onFooter,
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (isDesktop && navigation.isNotEmpty)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        footer,
+                        key: const Key('public-footer'),
+                        style: bodyStyle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xl),
+                    // The same admin-managed menu as the header, so the
+                    // committee never has to remember to change two lists.
+                    _QuickLinks(items: navigation),
+                  ],
+                )
+              else
+                Text(
+                  footer,
+                  key: const Key('public-footer'),
+                  textAlign: TextAlign.center,
+                  style: bodyStyle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                // The year is read from the clock rather than written into the
+                // app, so the site does not silently claim to be a year old.
+                l10n.footerCopyright('${DateTime.now().year}', identity),
+                key: const Key('public-footer-copyright'),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: AppColors.onFooter.withValues(alpha: 0.72),
+                ),
+              ),
+            ],
           ),
         ),
       ),
+    );
+  }
+}
+
+/// The footer's link row, from the admin-managed navigation.
+class _QuickLinks extends StatelessWidget {
+  const _QuickLinks({required this.items});
+
+  final List<NavigationEntry> items;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          context.l10n.footerQuickLinks,
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: AppColors.onFooter,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xs),
+        Wrap(
+          alignment: WrapAlignment.end,
+          spacing: AppSpacing.md,
+          children: [
+            for (final item in items)
+              // External entries are not pushed onto the in-app router, exactly
+              // as in the header.
+              InkWell(
+                key: Key('footer-nav-${item.id}'),
+                onTap: item.isExternal ? null : () => context.go(item.route),
+                child: Text(
+                  item.label.orElse(item.route),
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: AppColors.onFooter.withValues(alpha: 0.86),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ],
     );
   }
 }

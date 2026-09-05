@@ -16,36 +16,82 @@ void main() {
         'address_line1': '   ',
       });
 
-      expect(address.lines(panchayatLabel: 'पंचायत'), [
-        'Amarpur Pankhoriya, पंचायत: Kurma',
-        'Rasulpur Ekchari, Bhagalpur, Bihar, 813204',
+      // The approved design labels each line and keeps the pin code beside
+      // the district, which is how a village address is written and read.
+      expect(address.lines(labels: _hindiLabels), [
+        'ग्राम - Amarpur Pankhoriya',
+        'पंचायत - Kurma',
+        'थाना - Rasulpur Ekchari',
+        'जिला - Bhagalpur, Bihar - 813204',
         'India',
       ]);
       expect(address.isEmpty, isFalse);
     });
 
-    test(
-      'the panchayat label follows the caller, not a hardcoded language',
-      () {
+    test('the labels follow the caller, not a hardcoded language', () {
+      final address = TempleAddress.fromJson({
+        'village': 'Amarpur Pankhoriya',
+        'panchayat': 'Kurma',
+      });
+
+      expect(address.lines(labels: _englishLabels), [
+        'Village - Amarpur Pankhoriya',
+        'Panchayat - Kurma',
+      ]);
+    });
+
+    test('the strip above the header gets the short form', () {
+      final address = TempleAddress.fromJson({
+        'village': 'अमरपुर पंखोरिया',
+        'panchayat': 'कुर्मा',
+        'police_station': 'रसूलपुर एकचारी',
+        'district': 'भागलपुर',
+        'state': 'बिहार',
+        'postal_code': '813204',
+      });
+
+      // The panchayat and the police station are deliberately left out: this
+      // line shares one row with the tagline.
+      expect(address.shortLine, 'अमरपुर पंखोरिया, भागलपुर, बिहार - 813204');
+      expect(TempleAddress.fromJson(null).shortLine, isNull);
+    });
+
+    group('the map link', () {
+      test('is the one the committee set, when they have set one', () {
         final address = TempleAddress.fromJson({
-          'village': 'Amarpur Pankhoriya',
-          'panchayat': 'Kurma',
+          'village': 'अमरपुर पंखोरिया',
+          'map_url': 'https://maps.example/temple',
         });
 
+        expect(address.mapDestination('मंदिर'), 'https://maps.example/temple');
+      });
+
+      test('otherwise searches for the address the card just printed', () {
+        final address = TempleAddress.fromJson({
+          'village': 'Amarpur Pankhoriya',
+          'district': 'Bhagalpur',
+          'state': 'Bihar',
+          'postal_code': '813204',
+        });
+
+        final destination = address.mapDestination('Radha Krishna Thakurbari')!;
+
+        expect(destination, startsWith('https://www.google.com/maps/search/'));
         expect(
-          address.lines(panchayatLabel: 'Panchayat').first,
-          'Amarpur Pankhoriya, Panchayat: Kurma',
+          Uri.parse(destination).queryParameters['query'],
+          'Radha Krishna Thakurbari, Amarpur Pankhoriya, Bhagalpur, Bihar, 813204',
         );
-      },
-    );
+      });
+
+      test('is absent when there is no address to search for', () {
+        expect(TempleAddress.fromJson(null).mapDestination(null), isNull);
+      });
+    });
 
     test('an unfilled address is empty', () {
       expect(TempleAddress.fromJson(null).isEmpty, isTrue);
       expect(TempleAddress.fromJson({'village': '  '}).isEmpty, isTrue);
-      expect(
-        TempleAddress.fromJson(null).lines(panchayatLabel: 'पंचायत'),
-        isEmpty,
-      );
+      expect(TempleAddress.fromJson(null).lines(labels: _hindiLabels), isEmpty);
     });
 
     test('the locality is the village and panchayat only', () {
@@ -298,3 +344,17 @@ void main() {
     });
   });
 }
+
+const _hindiLabels = AddressLabels(
+  village: 'ग्राम',
+  panchayat: 'पंचायत',
+  policeStation: 'थाना',
+  district: 'जिला',
+);
+
+const _englishLabels = AddressLabels(
+  village: 'Village',
+  panchayat: 'Panchayat',
+  policeStation: 'Police Station',
+  district: 'District',
+);

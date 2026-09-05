@@ -13,7 +13,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Radha Krishna Thakurbari';
 
   @override
-  String get invocation => 'Radhe Radhe · Jai Shri Krishna';
+  String get invocation => '✨ Radhe Radhe • Jai Shri Krishna';
 
   @override
   String get languageLabel => 'Language';
@@ -190,7 +190,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get heroDarshan => 'Take darshan';
 
   @override
-  String get sectionAbout => 'About us';
+  String get sectionAbout => 'About the Temple';
 
   @override
   String get sectionAddress => 'Address and contact';
@@ -483,7 +483,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navCommitteeDesc => 'Members, tenure and public visibility';
 
   @override
-  String get sectionCommittee => 'Management committee';
+  String get sectionCommittee => 'Temple Committee';
 
   @override
   String get sectionHistory => 'History of the temple';
@@ -2322,4 +2322,64 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorReportTooLarge =>
       'That period is too large for one file. Choose a shorter one and take the copy in parts.';
+
+  @override
+  String get sectionContactLocation => 'Contact & Location';
+
+  @override
+  String get sectionContactLocationSubtitle =>
+      'Use the details below to reach the temple or contact the committee.';
+
+  @override
+  String get sectionEventsSubtitle =>
+      'Information about major religious and community events at the temple.';
+
+  @override
+  String get homeAccountsTitle => 'Income & Expense Transparency';
+
+  @override
+  String get homeAccountsSubtitle =>
+      'What the temple received this financial year, and where it was spent.';
+
+  @override
+  String get statDonationsReceived => 'Total Donations';
+
+  @override
+  String get statTotalExpense => 'Total Expenses';
+
+  @override
+  String get statAvailableBalance => 'Available Balance';
+
+  @override
+  String get statDonors => 'Donors';
+
+  @override
+  String get viewTransparency => 'See the full accounts';
+
+  @override
+  String get addressVillageLabel => 'Village';
+
+  @override
+  String get addressPoliceStationLabel => 'Police Station';
+
+  @override
+  String get addressDistrictLabel => 'District';
+
+  @override
+  String get footerQuickLinks => 'Quick Links';
+
+  @override
+  String footerCopyright(String year, String temple) {
+    return '© $year $temple. All rights reserved.';
+  }
+
+  @override
+  String get eventFeatured => 'Featured';
+
+  @override
+  String get eventTypeCommunityService => 'Community service';
+
+  @override
+  String get pageCardsHint =>
+      'Write a paragraph as “🛕 Heading — text” and it appears as its own card on the website.';
 }

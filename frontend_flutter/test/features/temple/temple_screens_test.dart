@@ -149,13 +149,13 @@ void main() {
       final temple = FakeTempleRepository()
         ..editableProfile = EditableTempleProfile.fromJson({
           'name_hi': 'राधा कृष्ण ठाकुरबाड़ी',
-          'village': 'Amarpur Pankhoriya',
+          'village_hi': 'अमरपुर पंखोरिया',
         });
 
       await pumpTemple(tester, const AdminTempleProfileScreen(), temple);
 
       expect(find.text('राधा कृष्ण ठाकुरबाड़ी'), findsOneWidget);
-      expect(find.text('Amarpur Pankhoriya'), findsOneWidget);
+      expect(find.text('अमरपुर पंखोरिया'), findsOneWidget);
     });
 
     testWidgets('sends blank fields as absent, not empty strings', (
@@ -170,16 +170,20 @@ void main() {
 
       await tester.enterText(find.byKey(const Key('temple-name_hi')), '  ');
       await tester.enterText(
-        find.byKey(const Key('temple-village')),
-        'Amarpur Pankhoriya',
+        find.byKey(const Key('temple-village_hi')),
+        'अमरपुर पंखोरिया',
       );
+      // The address is bilingual, so the form is long enough that the save
+      // control starts below the fold.
+      await tester.ensureVisible(find.byKey(const Key('temple-save')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('temple-save')));
       await tester.pumpAndSettle();
 
       expect(temple.saveProfileCalls, 1);
       final json = temple.lastProfileDraft!.toJson();
       expect(json['name_hi'], isNull);
-      expect(json['village'], 'Amarpur Pankhoriya');
+      expect(json['village_hi'], 'अमरपुर पंखोरिया');
     });
 
     testWidgets('a server validation error is shown against the field', (
@@ -195,6 +199,10 @@ void main() {
 
       await pumpTemple(tester, const AdminTempleProfileScreen(), temple);
 
+      // The address is bilingual, so the form is long enough that the save
+      // control starts below the fold.
+      await tester.ensureVisible(find.byKey(const Key('temple-save')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('temple-save')));
       await tester.pumpAndSettle();
 

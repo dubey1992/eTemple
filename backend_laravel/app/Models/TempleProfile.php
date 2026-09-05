@@ -18,7 +18,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property string|null $name_hi
  * @property string|null $name_en
- * @property string|null $village
+ * @property string|null $village_hi
+ * @property string|null $village_en
  */
 class TempleProfile extends Model
 {
@@ -26,16 +27,34 @@ class TempleProfile extends Model
     use HasFactory;
 
     /**
-     * The postal address columns, in the order they are rendered.
+     * The address parts that exist in two scripts, in the order they render.
      *
-     * Named once here because the move-from-site-settings migration, the form
-     * request and the resources all need the same list.
+     * Named once here because the migration, the form request and both
+     * resources all need the same list. `postal_code` is not in it: `813204` is
+     * `813204` in either language.
+     *
+     * @var list<string>
+     */
+    public const BILINGUAL_ADDRESS_PARTS = [
+        'address_line1', 'address_line2', 'village', 'panchayat',
+        'police_station', 'district', 'state', 'country',
+    ];
+
+    /**
+     * The postal address columns, in the order they are rendered.
      *
      * @var list<string>
      */
     public const ADDRESS_COLUMNS = [
-        'address_line1', 'address_line2', 'village', 'panchayat',
-        'police_station', 'district', 'state', 'postal_code', 'country',
+        'address_line1_hi', 'address_line1_en',
+        'address_line2_hi', 'address_line2_en',
+        'village_hi', 'village_en',
+        'panchayat_hi', 'panchayat_en',
+        'police_station_hi', 'police_station_en',
+        'district_hi', 'district_en',
+        'state_hi', 'state_en',
+        'postal_code',
+        'country_hi', 'country_en',
     ];
 
     /** @var list<string> */
@@ -43,8 +62,7 @@ class TempleProfile extends Model
         'name_hi', 'name_en',
         'history_hi', 'history_en',
         'mission_hi', 'mission_en',
-        'address_line1', 'address_line2', 'village', 'panchayat',
-        'police_station', 'district', 'state', 'postal_code', 'country',
+        ...self::ADDRESS_COLUMNS,
         'logo_url', 'map_url', 'established_year',
     ];
 

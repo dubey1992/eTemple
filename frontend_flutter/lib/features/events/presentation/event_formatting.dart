@@ -15,6 +15,7 @@ class EventFormatting {
     EventTypes.bhajanKirtan => l10n.eventTypeBhajanKirtan,
     EventTypes.festival => l10n.eventTypeFestival,
     EventTypes.puja => l10n.eventTypePuja,
+    EventTypes.communityService => l10n.eventTypeCommunityService,
     _ => l10n.eventTypeOther,
   };
 

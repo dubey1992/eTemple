@@ -2,7 +2,7 @@ openapi: 3.1.0
 
 info:
   title: Radha Krishna Thakurbari API
-  version: 0.11.0
+  version: 0.11.1
   description: |
     REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
     admin console.
@@ -506,16 +506,12 @@ paths:
                 tagline_en: { type: [string, 'null'], maxLength: 200 }
                 footer_text_hi: { type: [string, 'null'], maxLength: 400 }
                 footer_text_en: { type: [string, 'null'], maxLength: 400 }
-                village: { type: [string, 'null'] }
-                panchayat: { type: [string, 'null'] }
-                police_station: { type: [string, 'null'] }
-                district: { type: [string, 'null'] }
-                state: { type: [string, 'null'] }
-                postal_code: { type: [string, 'null'] }
-                country: { type: [string, 'null'] }
+                # The postal address is **not** here. Phase 3 moved it to the
+                # temple profile, and the form request rejects it as unknown
+                # input rather than storing a second copy of where the temple
+                # is. Use PUT /api/admin/temple-profile.
                 contact_phone: { type: [string, 'null'] }
                 contact_email: { type: [string, 'null'], format: email }
-                map_url: { type: [string, 'null'], format: uri }
                 social_links:
                   type: object
                   additionalProperties: { type: string, format: uri }
@@ -979,7 +975,7 @@ paths:
             been missed. `past` returns finished occurrences, most recent first.
         - { name: days, in: query, schema: { type: integer, minimum: 1, maximum: 366, default: 90 } }
         - { name: featured, in: query, schema: { type: boolean }, description: A cancelled event is never featured. }
-        - { name: type, in: query, schema: { type: string, enum: [aarti, bhajan_kirtan, festival, puja, other] }, description: An unrecognised value is ignored rather than refused. }
+        - { name: type, in: query, schema: { type: string, enum: [aarti, bhajan_kirtan, festival, puja, community_service, other] }, description: An unrecognised value is ignored rather than refused. }
       responses:
         '200':
           description: The occurrences
@@ -2984,7 +2980,18 @@ components:
 
     TempleAddress:
       type: object
-      description: The temple's postal address. Authoritative since Phase 3.
+      description: |
+        The temple's postal address, **already resolved for the requested
+        language**. Authoritative since Phase 3.
+
+        Each part is stored in both scripts and resolved here rather than sent
+        as `*_hi`/`*_en` pairs: the address is read as one block of lines, and a
+        client assembling it would be re-implementing the fallback rule. An
+        unwritten English part falls back to the Hindi one, part by part, so a
+        half-translated address still reads as an address rather than as gaps.
+
+        `postal_code` is not bilingual - `813204` is `813204` in either
+        language.
       properties:
         address_line1: { type: [string, 'null'] }
         address_line2: { type: [string, 'null'] }
@@ -3019,15 +3026,23 @@ components:
         history_en: { type: [string, 'null'] }
         mission_hi: { type: [string, 'null'] }
         mission_en: { type: [string, 'null'] }
-        address_line1: { type: [string, 'null'], maxLength: 200 }
-        address_line2: { type: [string, 'null'], maxLength: 200 }
-        village: { type: [string, 'null'], maxLength: 120 }
-        panchayat: { type: [string, 'null'], maxLength: 120 }
-        police_station: { type: [string, 'null'], maxLength: 120 }
-        district: { type: [string, 'null'], maxLength: 120 }
-        state: { type: [string, 'null'], maxLength: 120 }
+        address_line1_hi: { type: [string, 'null'], maxLength: 200 }
+        address_line1_en: { type: [string, 'null'], maxLength: 200 }
+        address_line2_hi: { type: [string, 'null'], maxLength: 200 }
+        address_line2_en: { type: [string, 'null'], maxLength: 200 }
+        village_hi: { type: [string, 'null'], maxLength: 120 }
+        village_en: { type: [string, 'null'], maxLength: 120 }
+        panchayat_hi: { type: [string, 'null'], maxLength: 120 }
+        panchayat_en: { type: [string, 'null'], maxLength: 120 }
+        police_station_hi: { type: [string, 'null'], maxLength: 120 }
+        police_station_en: { type: [string, 'null'], maxLength: 120 }
+        district_hi: { type: [string, 'null'], maxLength: 120 }
+        district_en: { type: [string, 'null'], maxLength: 120 }
+        state_hi: { type: [string, 'null'], maxLength: 120 }
+        state_en: { type: [string, 'null'], maxLength: 120 }
         postal_code: { type: [string, 'null'], maxLength: 20 }
-        country: { type: [string, 'null'], maxLength: 120 }
+        country_hi: { type: [string, 'null'], maxLength: 120 }
+        country_en: { type: [string, 'null'], maxLength: 120 }
         logo_url: { type: [string, 'null'], format: uri, maxLength: 500 }
         map_url: { type: [string, 'null'], format: uri, maxLength: 500 }
         established_year: { type: [integer, 'null'], minimum: 1000 }
@@ -3113,7 +3128,7 @@ components:
       properties:
         id: { type: integer }
         occurrence_key: { type: string, example: "7@2026-10-12" }
-        event_type: { type: string, enum: [aarti, bhajan_kirtan, festival, puja, other] }
+        event_type: { type: string, enum: [aarti, bhajan_kirtan, festival, puja, community_service, other] }
         requested_language: { type: string, enum: [hi, en] }
         title: { $ref: '#/components/schemas/LocalizedText' }
         description: { $ref: '#/components/schemas/LocalizedText' }
@@ -3161,7 +3176,7 @@ components:
       type: object
       required: [event_type, title_hi, start_at, status]
       properties:
-        event_type: { type: string, enum: [aarti, bhajan_kirtan, festival, puja, other] }
+        event_type: { type: string, enum: [aarti, bhajan_kirtan, festival, puja, community_service, other] }
         title_hi: { type: string, maxLength: 200 }
         title_en: { type: [string, 'null'], maxLength: 200 }
         description_hi: { type: [string, 'null'] }

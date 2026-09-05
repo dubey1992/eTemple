@@ -113,8 +113,17 @@ class MigrationTest extends TestCase
         $expected = [
             'id', 'name_hi', 'name_en',
             'history_hi', 'history_en', 'mission_hi', 'mission_en',
-            'address_line1', 'address_line2', 'village', 'panchayat',
-            'police_station', 'district', 'state', 'postal_code', 'country',
+            // Bilingual since the prototype match: `अमरपुर पंखोरिया` and
+            // `Amarpur Pankhoriya` are one village in two scripts.
+            'address_line1_hi', 'address_line1_en',
+            'address_line2_hi', 'address_line2_en',
+            'village_hi', 'village_en',
+            'panchayat_hi', 'panchayat_en',
+            'police_station_hi', 'police_station_en',
+            'district_hi', 'district_en',
+            'state_hi', 'state_en',
+            'postal_code',
+            'country_hi', 'country_en',
             'logo_url', 'map_url', 'established_year',
             'updated_by', 'created_at', 'updated_at',
         ];

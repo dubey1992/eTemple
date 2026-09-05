@@ -85,16 +85,25 @@ class TempleProfileTest extends TestCase
 
     public function test_the_address_is_served_from_the_profile_not_from_site_settings(): void
     {
-        TempleProfile::factory()->create(['village' => 'Amarpur Pankhoriya']);
+        TempleProfile::factory()->create([
+            'village_hi' => 'अमरपुर पंखोरिया',
+            'village_en' => 'Amarpur Pankhoriya',
+        ]);
         SiteSetting::factory()->create();
 
+        // The public address arrives resolved for the requested language, so a
+        // Hindi page never shows the Roman spelling of the village.
         $this->getJson('/api/public/temple-profile')
+            ->assertOk()
+            ->assertJsonPath('data.address.village', 'अमरपुर पंखोरिया');
+
+        $this->getJson('/api/public/temple-profile?lang=en')
             ->assertOk()
             ->assertJsonPath('data.address.village', 'Amarpur Pankhoriya');
 
         // The address moved; site settings must not carry a second copy of it.
         $settings = $this->getJson('/api/public/site-settings')->assertOk();
-        $this->assertArrayNotHasKey('village', $settings->json('data.contact'));
+        $this->assertArrayNotHasKey('village_hi', $settings->json('data.contact'));
         $this->assertArrayNotHasKey('address_line1', $settings->json('data.contact'));
         $this->assertArrayNotHasKey('map_url', $settings->json('data.contact'));
     }
@@ -116,13 +125,15 @@ class TempleProfileTest extends TestCase
             ->putJson('/api/admin/temple-profile', [
                 'name_hi' => 'राधा कृष्ण ठाकुरबाड़ी',
                 'name_en' => 'Radha Krishna Thakurbari',
-                'village' => 'Amarpur Pankhoriya',
-                'district' => 'Bhagalpur',
+                'village_hi' => 'अमरपुर पंखोरिया',
+                'village_en' => 'Amarpur Pankhoriya',
+                'district_hi' => 'भागलपुर',
                 'established_year' => 1965,
             ])
             ->assertOk()
             ->assertJsonPath('data.name_hi', 'राधा कृष्ण ठाकुरबाड़ी')
-            ->assertJsonPath('data.village', 'Amarpur Pankhoriya')
+            ->assertJsonPath('data.village_hi', 'अमरपुर पंखोरिया')
+            ->assertJsonPath('data.village_en', 'Amarpur Pankhoriya')
             ->assertJsonPath('data.established_year', 1965);
 
         $profile = TempleProfile::query()->sole();
@@ -134,10 +145,10 @@ class TempleProfileTest extends TestCase
         // The committee usually has the address before they have agreed the
         // wording of the history, so no field may be mandatory.
         $this->actingAs($this->editor, 'web')
-            ->putJson('/api/admin/temple-profile', ['village' => 'Amarpur Pankhoriya'])
+            ->putJson('/api/admin/temple-profile', ['village_hi' => 'अमरपुर पंखोरिया'])
             ->assertOk()
             ->assertJsonPath('data.name_hi', null)
-            ->assertJsonPath('data.village', 'Amarpur Pankhoriya');
+            ->assertJsonPath('data.village_hi', 'अमरपुर पंखोरिया');
     }
 
     public function test_invalid_profile_input_is_rejected_by_field(): void

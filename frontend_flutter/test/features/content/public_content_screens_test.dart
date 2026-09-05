@@ -63,8 +63,10 @@ void main() {
       expect(find.text('पहला अनुच्छेद।'), findsOneWidget);
       expect(find.text('दूसरा अनुच्छेद।'), findsNothing);
       expect(find.byKey(const Key('address-card')), findsOneWidget);
-      // The address now comes from the temple profile, not from site settings.
-      expect(find.text('Amarpur Pankhoriya, पंचायत: Kurma'), findsOneWidget);
+      // The address now comes from the temple profile, not from site settings,
+      // and each line is labelled the way a village address is written.
+      expect(find.text('ग्राम - Amarpur Pankhoriya'), findsOneWidget);
+      expect(find.text('पंचायत - Kurma'), findsOneWidget);
       expect(
         find.text('राधा कृष्ण ठाकुरबाड़ी'),
         findsWidgets,

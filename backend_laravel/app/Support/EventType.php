@@ -22,6 +22,13 @@ final class EventType
 
     public const PUJA = 'puja';
 
+    /**
+     * Bhandara, prasad and the other things the temple does for the village
+     * that are not worship. The approved design names this kind on its own
+     * card, and filing a community kitchen under "other" loses that.
+     */
+    public const COMMUNITY_SERVICE = 'community_service';
+
     public const OTHER = 'other';
 
     /** @return list<string> */
@@ -32,6 +39,7 @@ final class EventType
             self::BHAJAN_KIRTAN,
             self::FESTIVAL,
             self::PUJA,
+            self::COMMUNITY_SERVICE,
             self::OTHER,
         ];
     }
@@ -54,6 +62,7 @@ final class EventType
             self::BHAJAN_KIRTAN => 'भजन-कीर्तन / Bhajan-kirtan',
             self::FESTIVAL => 'त्योहार / Festival',
             self::PUJA => 'पूजा / Puja',
+            self::COMMUNITY_SERVICE => 'सामुदायिक सेवा / Community service',
             default => 'अन्य / Other',
         };
     }

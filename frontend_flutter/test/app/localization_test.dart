@@ -67,7 +67,9 @@ void main() {
       // CMS-driven content, served in Hindi because that is the default.
       expect(find.text('राधा कृष्ण ठाकुरबाड़ी'), findsWidgets);
       expect(find.byKey(const Key('hero-tagline')), findsOneWidget);
-      expect(find.text('भक्ति और सेवा का केंद्र'), findsOneWidget);
+      // The strip carries the approved design's emblem in front of the
+      // committee's tagline.
+      expect(find.text('🙏 भक्ति और सेवा का केंद्र'), findsOneWidget);
       expect(find.text('पहला अनुच्छेद।'), findsOneWidget);
     });
 

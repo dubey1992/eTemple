@@ -230,6 +230,19 @@ class _EditorFormState extends ConsumerState<_EditorForm> {
                 maxLines: 8,
                 serverError: _error?.firstErrorFor('content_en'),
               ),
+              // The card convention, stated where somebody writing a page can
+              // see it. Without this the three About cards look like magic
+              // that only the developer knows how to reproduce.
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                child: Text(
+                  l10n.pageCardsHint,
+                  key: const Key('editor-cards-hint'),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
               _Field(
                 fieldKey: const Key('editor-meta-title'),
                 controller: _metaTitleHi,

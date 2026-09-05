@@ -66,7 +66,7 @@ class TempleAuthorizationTest extends TestCase
     {
         $this->actingAsRole($slug);
 
-        $this->putJson('/api/admin/temple-profile', ['village' => 'Somewhere'])
+        $this->putJson('/api/admin/temple-profile', ['village_en' => 'Somewhere'])
             ->assertForbidden()
             ->assertJsonPath('error.code', 'FORBIDDEN');
     }
@@ -106,7 +106,7 @@ class TempleAuthorizationTest extends TestCase
         // who runs the website's content also maintains the temple's profile.
         $this->actingAsRole(Role::CONTENT_MANAGER);
 
-        $this->putJson('/api/admin/temple-profile', ['village' => 'Amarpur Pankhoriya'])->assertOk();
+        $this->putJson('/api/admin/temple-profile', ['village_en' => 'Amarpur Pankhoriya'])->assertOk();
         $this->postJson('/api/admin/committee-members', [
             'name_hi' => 'सदस्य',
             'designation_hi' => 'सदस्य',
@@ -129,26 +129,26 @@ class TempleAuthorizationTest extends TestCase
     {
         $user = $this->actingAsRole(Role::VIEWER);
 
-        $this->putJson('/api/admin/temple-profile', ['village' => 'Nowhere'])->assertForbidden();
+        $this->putJson('/api/admin/temple-profile', ['village_en' => 'Nowhere'])->assertForbidden();
 
         $role = $user->role;
         $role->permissions = [...$role->effectivePermissions(), Permission::TEMPLE_MANAGE];
         $role->save();
 
         $this->actingAs($user->refresh(), 'web');
-        $this->putJson('/api/admin/temple-profile', ['village' => 'Amarpur Pankhoriya'])->assertOk();
+        $this->putJson('/api/admin/temple-profile', ['village_en' => 'Amarpur Pankhoriya'])->assertOk();
     }
 
     public function test_a_deactivated_account_loses_access_even_with_the_permission(): void
     {
         $user = User::factory()->withRole(Role::CONTENT_MANAGER)->create();
         $this->actingAs($user, 'web');
-        $this->putJson('/api/admin/temple-profile', ['village' => 'Amarpur'])->assertOk();
+        $this->putJson('/api/admin/temple-profile', ['village_en' => 'Amarpur'])->assertOk();
 
         $user->forceFill(['status' => User::STATUS_INACTIVE])->save();
 
         $this->actingAs($user->refresh(), 'web');
-        $this->putJson('/api/admin/temple-profile', ['village' => 'Elsewhere'])
+        $this->putJson('/api/admin/temple-profile', ['village_en' => 'Elsewhere'])
             ->assertStatus(403);
     }
 
@@ -156,7 +156,7 @@ class TempleAuthorizationTest extends TestCase
     {
         $this->actingAsRole(Role::SUPER_ADMIN);
 
-        $this->putJson('/api/admin/temple-profile', ['village' => 'Amarpur Pankhoriya'])->assertOk();
+        $this->putJson('/api/admin/temple-profile', ['village_en' => 'Amarpur Pankhoriya'])->assertOk();
         $this->postJson('/api/admin/committee-members', [
             'name_hi' => 'सदस्य',
             'designation_hi' => 'अध्यक्ष',

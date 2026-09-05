@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Temple;
 
+use App\Models\TempleProfile;
 use App\Support\Permission;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -33,15 +34,33 @@ class UpdateTempleProfileRequest extends FormRequest
             'mission_hi' => ['nullable', 'string', 'max:20000'],
             'mission_en' => ['nullable', 'string', 'max:20000'],
 
-            'address_line1' => ['nullable', 'string', 'max:200'],
-            'address_line2' => ['nullable', 'string', 'max:200'],
-            'village' => ['nullable', 'string', 'max:120'],
-            'panchayat' => ['nullable', 'string', 'max:120'],
-            'police_station' => ['nullable', 'string', 'max:120'],
-            'district' => ['nullable', 'string', 'max:120'],
-            'state' => ['nullable', 'string', 'max:120'],
+            // The address is bilingual like everything else the site publishes:
+            // `अमरपुर पंखोरिया` and `Amarpur Pankhoriya` are the same village
+            // written in two scripts, and one column cannot hold both.
+            'address_line1_hi' => ['nullable', 'string', 'max:200'],
+            'address_line1_en' => ['nullable', 'string', 'max:200'],
+            'address_line2_hi' => ['nullable', 'string', 'max:200'],
+            'address_line2_en' => ['nullable', 'string', 'max:200'],
+            'village_hi' => ['nullable', 'string', 'max:120'],
+            'village_en' => ['nullable', 'string', 'max:120'],
+            'panchayat_hi' => ['nullable', 'string', 'max:120'],
+            'panchayat_en' => ['nullable', 'string', 'max:120'],
+            'police_station_hi' => ['nullable', 'string', 'max:120'],
+            'police_station_en' => ['nullable', 'string', 'max:120'],
+            'district_hi' => ['nullable', 'string', 'max:120'],
+            'district_en' => ['nullable', 'string', 'max:120'],
+            'state_hi' => ['nullable', 'string', 'max:120'],
+            'state_en' => ['nullable', 'string', 'max:120'],
+            // Digits: the same in either language.
             'postal_code' => ['nullable', 'string', 'max:20'],
-            'country' => ['nullable', 'string', 'max:120'],
+            'country_hi' => ['nullable', 'string', 'max:120'],
+            'country_en' => ['nullable', 'string', 'max:120'],
+
+            // The retired single-language columns are **refused**, not ignored.
+            // A caller that still sends `village` would otherwise get a 200
+            // back with nothing saved, which is the silent narrowing this
+            // project refuses everywhere else.
+            ...array_fill_keys(TempleProfile::BILINGUAL_ADDRESS_PARTS, ['prohibited']),
 
             // URLs rather than uploads until Phase 5 builds media handling with
             // its own MIME and size validation (PHASE_3_PLAN assumption D10).

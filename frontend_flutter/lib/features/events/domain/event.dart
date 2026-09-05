@@ -11,9 +11,20 @@ class EventTypes {
   static const String bhajanKirtan = 'bhajan_kirtan';
   static const String festival = 'festival';
   static const String puja = 'puja';
+
+  /// Bhandara, prasad and the other things the temple does for the village
+  /// that are not worship. Mirrors `App\Support\EventType`.
+  static const String communityService = 'community_service';
   static const String other = 'other';
 
-  static const List<String> all = [aarti, bhajanKirtan, festival, puja, other];
+  static const List<String> all = [
+    aarti,
+    bhajanKirtan,
+    festival,
+    puja,
+    communityService,
+    other,
+  ];
 
   static bool exists(String value) => all.contains(value);
 }

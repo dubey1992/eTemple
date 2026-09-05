@@ -20,6 +20,42 @@ Legend: `NOT STARTED` · `IN PROGRESS` · `PARTIAL` · `BLOCKED` · `COMPLETE`
 | 11 | Security, Backup & Audit | NOT STARTED | |
 | 12 | Testing, Deployment & Handover | NOT STARTED | |
 
+## Verification log — matching the approved design (2026-09-15)
+
+Not a phase: a content audit of the public site against the committee's approved
+prototype found 23 differences, and this is the work that closed them
+(`PROTOTYPE_CONTENT_MATCH.md`).
+
+| Check | Result |
+|---|---|
+| `flutter analyze` | ✅ No issues found |
+| `dart format --set-exit-if-changed` | ✅ 0 of 221 files changed |
+| `flutter test` | ✅ **572/572** passed |
+| `flutter build web --release` | ✅ built |
+| `./vendor/bin/pint --test` | ✅ passed |
+| `php artisan test` | ✅ **675** passed (2455 assertions) |
+| Migration up → rollback → up → `migrate:fresh --seed` | ✅ on MariaDB |
+| The address is bilingual, and resolves per language | ✅ `अमरपुर पंखोरिया` on the Hindi page, `Amarpur Pankhoriya` on the English one |
+| A half-translated address still reads as an address | ✅ each part falls back on its own |
+| The retired single-language field is **refused**, not ignored | ✅ 422, rather than a 200 that saved nothing |
+| The About cards are CMS content, not markup | ✅ a paragraph shaped `<emoji> <heading> — <text>`; prose with an em dash stays prose |
+| The four home-page figures come from the accounts service | ✅ the same service as `/transparency` and the statement |
+| Unpublished books show **nothing**, not zeros | ✅ zeros would be a false statement about somebody's finances |
+| An accounts outage leaves the rest of the front page standing | ✅ the band disappears; no error box |
+| No demo bank or UPI detail is seeded | ✅ asserted by name, in a test that will fail if somebody adds one |
+| Live, through the running API | ✅ **39 checks** |
+| In a real browser, Hindi and English | ✅ hero, notice, About cards, figures, address, map, footer |
+| On a **cold browser profile** | ✅ the approved design's emoji render (see the note below) |
+| Phase 0–10 tests | ✅ pass unchanged |
+
+**A note on the emoji.** The approved design uses emoji as content — the three
+About cards carry 🛕, 🤝 and 🪔. No font is bundled (`AppTypography`), and
+CanvasKit fetches a Noto fallback for glyphs it cannot draw, so on a first visit
+there is a short window where they show as tofu boxes before the fallback
+arrives. Naming the platform emoji fonts in `fontFamilyFallback` was tried and
+**does nothing** — CanvasKit does not read the system font list — so it was
+reverted rather than left in place looking like a fix.
+
 ## Verification log — Phase 10 (2026-09-14)
 
 | Check | Result |
@@ -279,3 +315,9 @@ MariaDB 12.3.3 · live health and 401 checks.
 - No cross-stack end-to-end test (Phase 12).
 
 Phase 11 must not begin without explicit approval.
+
+The approved-design match (2026-09-15) is recorded in
+`PROTOTYPE_CONTENT_MATCH.md`. One item is deliberately not visible yet: the
+donation block's wording is seeded, and stays hidden until the committee enters
+a real UPI ID or bank account, because the prototype's `temple@upi` and
+`Demo Bank` must never be seeded.

@@ -122,6 +122,16 @@ class EventCard extends ConsumerWidget {
                     ),
                     tone: StatusTone.info,
                   ),
+                  // The approved design calls Janmashtami a "विशेष उत्सव" — a
+                  // festival the committee has singled out. That is what the
+                  // featured flag records, so it is shown rather than being
+                  // left as a home-page filter nobody can see.
+                  if (occurrence.isFeatured)
+                    StatusChip(
+                      key: Key('event-featured-${occurrence.occurrenceKey}'),
+                      label: l10n.eventFeatured,
+                      tone: StatusTone.positive,
+                    ),
                   if (occurrence.isRecurring)
                     StatusChip(
                       label: EventFormatting.recurrenceLabel(

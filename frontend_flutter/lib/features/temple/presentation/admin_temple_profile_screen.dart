@@ -211,15 +211,27 @@ class _ProfileFormState extends ConsumerState<_ProfileForm> {
               ),
 
               _sectionHeading(l10n.sectionAddress),
-              _field('address_line1', l10n.fieldAddressLine1, canEdit),
-              _field('address_line2', l10n.fieldAddressLine2, canEdit),
-              _field('village', l10n.fieldVillage, canEdit),
-              _field('panchayat', l10n.fieldPanchayat, canEdit),
-              _field('police_station', l10n.fieldPoliceStation, canEdit),
-              _field('district', l10n.fieldDistrict, canEdit),
-              _field('state', l10n.fieldState, canEdit),
+              // Both scripts, because the public site shows the address in the
+              // visitor's language: a Hindi page reading `Amarpur Pankhoriya`
+              // is the wrong language, not a styling detail.
+              for (final (field, label) in [
+                ('address_line1', l10n.fieldAddressLine1),
+                ('address_line2', l10n.fieldAddressLine2),
+                ('village', l10n.fieldVillage),
+                ('panchayat', l10n.fieldPanchayat),
+                ('police_station', l10n.fieldPoliceStation),
+                ('district', l10n.fieldDistrict),
+                ('state', l10n.fieldState),
+                ('country', l10n.fieldCountry),
+              ]) ...[
+                _field('${field}_hi', '$label (हिन्दी)', canEdit),
+                _field(
+                  '${field}_en',
+                  '$label (English) · ${l10n.fieldOptional}',
+                  canEdit,
+                ),
+              ],
               _field('postal_code', l10n.fieldPostalCode, canEdit),
-              _field('country', l10n.fieldCountry, canEdit),
               _field(
                 'map_url',
                 '${l10n.fieldMapUrl} · ${l10n.fieldOptional}',

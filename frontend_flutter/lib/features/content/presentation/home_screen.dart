@@ -9,6 +9,7 @@ import '../../../app/theme/app_colors.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../../core/widgets/section_band.dart';
 import '../../../core/widgets/state_views.dart';
+import '../../accounts/presentation/widgets/transparency_band.dart';
 import '../../announcements/presentation/widgets/announcement_banner.dart';
 import '../../events/data/event_providers.dart';
 import '../../events/presentation/widgets/event_card.dart';
@@ -22,6 +23,7 @@ import '../../temple/data/temple_providers.dart';
 import '../../temple/domain/temple_profile.dart';
 import '../../temple/presentation/widgets/committee_list.dart';
 import '../data/content_providers.dart';
+import '../domain/content_highlight.dart';
 import '../domain/page_content.dart';
 import 'seo_scope.dart';
 import 'widgets/address_card.dart';
@@ -85,11 +87,18 @@ class HomeScreen extends ConsumerWidget {
                 // The prototype's order: events, then the donation block, then
                 // the gallery, then the committee.
                 const SectionBand(child: _DonateSection()),
-                const SectionBand.alternate(child: _GallerySection()),
-                const SectionBand(child: _CommitteeSection()),
-                SectionBand.alternate(
+                // The approved design puts the four figures here, between the
+                // donation block and the gallery: having just been asked to
+                // give, a visitor is shown what the temple did with the last
+                // lot. It links to the full accounts rather than replacing
+                // them.
+                const SectionBand.alternate(child: TransparencyBand()),
+                const SectionBand(child: _GallerySection()),
+                const SectionBand.alternate(child: _CommitteeSection()),
+                SectionBand(
                   child: ContentSection(
-                    title: l10n.sectionAddress,
+                    title: l10n.sectionContactLocation,
+                    subtitle: l10n.sectionContactLocationSubtitle,
                     // The prototype's `संपर्क` block: the address here, and
                     // the form on its own page — the same shape /donate has,
                     // so the home page does not grow a second long form.
@@ -101,6 +110,7 @@ class HomeScreen extends ConsumerWidget {
                     child: AddressCard(
                       address: templeProfile.address,
                       contact: data.contact,
+                      templeName: templeProfile.name.value,
                     ),
                   ),
                 ),
@@ -163,6 +173,7 @@ class _UpcomingEventsSection extends ConsumerWidget {
 
     return ContentSection(
       title: l10n.sectionEvents,
+      subtitle: l10n.sectionEventsSubtitle,
       trailing: (events.value?.isNotEmpty ?? false)
           ? TextButton(
               key: const Key('events-see-all'),
@@ -294,6 +305,7 @@ class _CommitteeSection extends ConsumerWidget {
 
     return ContentSection(
       title: l10n.sectionCommittee,
+      subtitle: l10n.committeeSubtitle,
       trailing: (committee.value?.isNotEmpty ?? false)
           ? TextButton(
               key: const Key('committee-see-all'),
@@ -334,6 +346,11 @@ class _AboutPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final paragraphs = page.content.paragraphs;
+    // The approved design opens this section with three cards. They are
+    // paragraphs of the About page shaped `<emoji> <heading> — <text>`, so the
+    // committee owns them; a page written as ordinary prose parses to none and
+    // this falls back to the lead paragraph alone.
+    final highlights = ContentHighlight.parseAll(paragraphs.skip(1));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -346,7 +363,7 @@ class _AboutPreview extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.lg),
             child: ContentBody(
-              // Only the first paragraph on the home page; the full text lives
+              // Only the lead paragraph on the home page; the full text lives
               // on /about behind "read more".
               content: paragraphs.isEmpty
                   ? page.content
@@ -354,6 +371,13 @@ class _AboutPreview extends StatelessWidget {
             ),
           ),
         ),
+        if (highlights.isNotEmpty) ...[
+          const SizedBox(height: AppSpacing.md),
+          HighlightGrid(
+            key: const Key('about-highlights'),
+            highlights: highlights,
+          ),
+        ],
       ],
     );
   }
