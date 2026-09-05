@@ -254,6 +254,13 @@ class _DonateSection extends ConsumerWidget {
 /// "will appear here" (PHASE_5_PLAN assumption M12). Seeding invented
 /// photographs to make the demo look full is not an option the working
 /// agreement leaves open.
+///
+/// The home page shows at most five photographs. **The way through to the rest
+/// is always offered**, not only when those five are full: the gallery page is
+/// a real destination with albums and the video darshan on it, and a visitor
+/// who wants to see the temple's photographs should never have to guess that
+/// the mosaic is a preview. The one case it is hidden is while the request is
+/// still in flight, when nothing is known yet.
 class _GallerySection extends ConsumerWidget {
   const _GallerySection();
 
@@ -261,18 +268,17 @@ class _GallerySection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final gallery = ref.watch(homeGalleryProvider);
-    final items = gallery.value?.items ?? const [];
 
     return ContentSection(
       title: l10n.sectionGallery,
       subtitle: l10n.gallerySubtitle,
-      trailing: items.isNotEmpty
-          ? TextButton(
+      trailing: gallery.isLoading
+          ? null
+          : TextButton(
               key: const Key('gallery-see-all'),
               onPressed: () => context.go(RoutePaths.gallery),
               child: Text(l10n.viewGallery),
-            )
-          : null,
+            ),
       child: gallery.when(
         loading: () => const Padding(
           padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
@@ -282,9 +288,30 @@ class _GallerySection extends ConsumerWidget {
         // than to an error: the block is decorative here, and the page a
         // devotee came for must not break because of it.
         error: (_, _) => const GalleryPlaceholderMosaic(),
-        data: (page) => GalleryMosaic(
-          items: page.items,
-          onOpen: (item) => MediaLightbox.show(context, item),
+        data: (page) => Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            GalleryMosaic(
+              items: page.items,
+              onOpen: (item) => MediaLightbox.show(context, item),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            // The same destination as the heading's link, at the foot of the
+            // pictures: somebody who has just scrolled through five photographs
+            // is at the bottom of them, not back at the heading.
+            Center(
+              child: OutlinedButton.icon(
+                key: const Key('gallery-view-all'),
+                onPressed: () => context.go(RoutePaths.gallery),
+                icon: const Icon(Icons.photo_library_outlined, size: 18),
+                label: Text(
+                  page.hasMore
+                      ? l10n.viewAllPhotos(page.total)
+                      : l10n.viewGallery,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -204,6 +204,18 @@ acceptance and handover are Phase 12.
       `log` in development, so nothing is sent; and announcements and enquiry
       acknowledgements are queued, so **a queue worker must be running** or they
       are written to the jobs table and never leave
+- [ ] **Set up the nightly backup and rehearse a restore before go-live**, not
+      after — `BACKUP_AND_RESTORE.md`. The application's own database user
+      cannot create a database, so the rehearsal needs a credential from the
+      host
+- [ ] **Decide the audit retention** and run `audit:prune --older-than=` on that
+      schedule. There is no default: a retention nobody chose is not a policy,
+      and a trail that grows forever fills a shared host's disk
+- [ ] **Decide who holds `audit.view`.** Super Admin alone by default, and the
+      trail carries donor names — widen it deliberately or not at all
+- [ ] Confirm HSTS is being sent in production: it appears only over HTTPS, so
+      an origin still on plain HTTP silently has no HSTS
+- [ ] `SESSION_SECURE_COOKIE=true` and `APP_DEBUG=false` in production
 - [ ] Layout checked at 360 px, 768 px and 1440 px widths
 - [ ] Checked in Chrome/Edge on desktop and in a common Android mobile browser
 

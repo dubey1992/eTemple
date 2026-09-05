@@ -37,6 +37,7 @@ import '../../features/accounts/presentation/admin_accounts_screen.dart';
 import '../../features/accounts/presentation/admin_transaction_editor_screen.dart';
 import '../../features/accounts/presentation/transparency_screen.dart';
 import '../../features/reports/presentation/admin_report_screen.dart';
+import '../../features/audit/presentation/admin_audit_screen.dart';
 import '../../features/reports/presentation/admin_reports_screen.dart';
 import '../../features/media/presentation/admin_album_editor_screen.dart';
 import '../../features/media/presentation/admin_albums_screen.dart';
@@ -399,6 +400,14 @@ final routerProvider = Provider<GoRouter>((ref) {
             name: RouteNames.adminAccountingSettings,
             builder: (context, state) => const AdminAccountingSettingsScreen(),
           ),
+          // The audit trail (Phase 11). Read only: there is no editor route
+          // to declare beside it, and there never will be.
+          GoRoute(
+            path: RoutePaths.adminAudit,
+            name: RouteNames.adminAudit,
+            builder: (context, state) => const AdminAuditScreen(),
+          ),
+
           // Reports (Phase 10). The key is a slug, matched narrowly so it can
           // never swallow a sibling route.
           GoRoute(

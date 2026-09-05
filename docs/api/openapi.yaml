@@ -2,7 +2,7 @@ openapi: 3.1.0
 
 info:
   title: Radha Krishna Thakurbari API
-  version: 0.11.1
+  version: 0.12.0
   description: |
     REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
     admin console.
@@ -104,6 +104,10 @@ tags:
       export runs the same report with the same filters as the screen, and
       personal columns are absent unless they were both permitted and asked
       for.
+  - name: Audit
+    description: |
+      Who did what, and when. Read only at every permission: the trail is
+      append-only, and it is deliberately not downloadable.
 
 paths:
   /api/health:
@@ -2746,6 +2750,95 @@ paths:
                       data: { $ref: '#/components/schemas/Overview' }
         '403': { description: FORBIDDEN }
 
+  /api/admin/audit-logs:
+    get:
+      tags: [Audit]
+      summary: The audit trail
+      description: |
+        Requires `audit.view`, which **Super Admin alone holds by default** -
+        not even Admin. Its own key rather than `security.view`, which is the
+        login history: this trail carries donor names, enquiry references and
+        the amounts on edited entries, so it is a store of personal data and a
+        stricter thing to hand out.
+
+        Newest first, because the question is nearly always "what just
+        happened".
+
+        ## What is in it
+
+        The actions somebody may later be asked about, not every write the
+        application performs: the money lifecycle end to end, role and account
+        changes, announcements sent, settings changed, **every export of
+        personal data**, and the one read that is audited - opening an enquiry,
+        where the thing being read is a villager's telephone number and their
+        complaint.
+
+        `before_data` and `after_data` hold **only the fields that changed**,
+        with passwords, hashes and tokens stripped on the way in at any depth.
+        An empty `before_data` means the record was created rather than edited.
+
+        ## What is not
+
+        There is no POST, PUT or DELETE at any permission - the trail is
+        append-only, and an endpoint that could edit it would make every row in
+        it worthless. There is also **no export**: every report has three, and
+        a downloadable audit trail is a personal-data leak with an
+        official-sounding name.
+      parameters:
+        - { name: action, in: query, schema: { type: string }, description: 'A code from the catalogue below; an unknown value is ignored rather than refused.' }
+        - { name: entity_type, in: query, schema: { type: string } }
+        - { name: entity_id, in: query, schema: { type: integer } }
+        - { name: user_id, in: query, schema: { type: integer } }
+        - { name: from, in: query, schema: { type: string, format: date }, description: 'Read as a plain date - an audit trail is read by day.' }
+        - { name: to, in: query, schema: { type: string, format: date } }
+        - { name: page, in: query, schema: { type: integer, default: 1 } }
+        - { name: per_page, in: query, schema: { type: integer, default: 50, maximum: 200 } }
+      responses:
+        '200':
+          description: A page of the trail, newest first
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/AuditEntry' }
+                      meta: { $ref: '#/components/schemas/PaginationMeta' }
+        '401': { description: UNAUTHENTICATED }
+        '403': { description: FORBIDDEN }
+
+  /api/admin/audit-logs/actions:
+    get:
+      tags: [Audit]
+      summary: The vocabulary of the trail
+      description: |
+        Requires `audit.view`. Codes and bilingual labels, so a filter offers
+        the real list rather than a text box that matches nothing.
+      responses:
+        '200':
+          description: Every action the trail can record
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          actions:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                key: { type: string }
+                                label: { type: string }
+        '403': { description: FORBIDDEN }
+
 components:
   securitySchemes:
     sessionCookie:
@@ -3985,6 +4078,52 @@ components:
               time: { type: string }
               title: { type: string }
               is_cancelled: { type: boolean }
+
+    AuditEntry:
+      type: object
+      description: |
+        One thing that happened. Append-only: there is no endpoint that writes,
+        edits or deletes one.
+      properties:
+        id: { type: integer }
+        action: { type: string, description: 'A code from App\Support\AuditAction' }
+        action_label: { type: string, description: Bilingual, for a reader }
+        actor_name:
+          type: [string, 'null']
+          description: |
+            **Copied onto the row**, not joined. The trail outlives the account:
+            a row reading "(deleted user) approved 45,000" answers nothing.
+        actor_role: { type: [string, 'null'] }
+        user_id:
+          type: [integer, 'null']
+          description: Null once the account has been deleted; `actor_name` survives.
+        entity_type:
+          type: [string, 'null']
+          description: A short code (the table name), so renaming a class does not rewrite history.
+        entity_id: { type: [integer, 'null'] }
+        entity_label:
+          type: [string, 'null']
+          description: Something readable without joining anything - a receipt number, a donor's name.
+        before_data:
+          type: [object, 'null']
+          additionalProperties: true
+          description: |
+            **Only the fields that changed**, never a password, hash or token.
+            Empty or absent means the record was created rather than edited.
+        after_data:
+          type: [object, 'null']
+          additionalProperties: true
+        context:
+          type: [string, 'null']
+          description: Free text where the change is not a diff - a reversal reason, the filters an export ran under.
+        ip_address:
+          type: [string, 'null']
+          description: |
+            Stored raw, unlike an enquirer's, which is hashed. A committee
+            member is a named account-holder acting administratively, and
+            "which machine approved this payment" is a question the temple may
+            need to answer.
+        created_at: { type: [string, 'null'], format: date-time }
 
 security:
   - sessionCookie: []

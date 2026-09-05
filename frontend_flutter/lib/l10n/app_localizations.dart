@@ -4369,6 +4369,90 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'संपर्क'**
   String get footerContact;
+
+  /// Gallery link when more photographs exist than the home page shows.
+  ///
+  /// In hi, this message translates to:
+  /// **'सभी {count} तस्वीरें देखें'**
+  String viewAllPhotos(int count);
+
+  /// No description provided for @auditTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'लेखा-परीक्षा अभिलेख'**
+  String get auditTitle;
+
+  /// No description provided for @auditSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'किसने, कब, क्या बदला। यह अभिलेख केवल पढ़ा जा सकता है — न बदला जा सकता है, न हटाया, न डाउनलोड किया।'**
+  String get auditSubtitle;
+
+  /// No description provided for @auditEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'इन शर्तों पर कोई प्रविष्टि नहीं मिली।'**
+  String get auditEmpty;
+
+  /// No description provided for @auditFilterAction.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यवाही'**
+  String get auditFilterAction;
+
+  /// No description provided for @auditBefore.
+  ///
+  /// In hi, this message translates to:
+  /// **'पहले'**
+  String get auditBefore;
+
+  /// No description provided for @auditAfter.
+  ///
+  /// In hi, this message translates to:
+  /// **'बाद में'**
+  String get auditAfter;
+
+  /// No description provided for @auditFrom.
+  ///
+  /// In hi, this message translates to:
+  /// **'किस पते से'**
+  String get auditFrom;
+
+  /// No description provided for @auditUnknownActor.
+  ///
+  /// In hi, this message translates to:
+  /// **'(खाता हटाया जा चुका है)'**
+  String get auditUnknownActor;
+
+  /// No description provided for @auditNarrowHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'और भी प्रविष्टियाँ हैं। ऊपर दिए गए छन्नी से खोज को सीमित करें।'**
+  String get auditNarrowHint;
+
+  /// No description provided for @filterClear.
+  ///
+  /// In hi, this message translates to:
+  /// **'छन्नी हटाएँ'**
+  String get filterClear;
+
+  /// No description provided for @auditEntryCount.
+  ///
+  /// In hi, this message translates to:
+  /// **'{count, plural, =0{कोई प्रविष्टि नहीं} =1{1 प्रविष्टि} other{{count} प्रविष्टियाँ}}'**
+  String auditEntryCount(int count);
+
+  /// No description provided for @navAuditDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'किसने, कब, क्या बदला — केवल पढ़ने के लिए'**
+  String get navAuditDesc;
+
+  /// No description provided for @auditRecordedAs.
+  ///
+  /// In hi, this message translates to:
+  /// **'दर्ज हुआ'**
+  String get auditRecordedAs;
 }
 
 class _AppLocalizationsDelegate

@@ -2385,4 +2385,59 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get footerContact => 'Contact';
+
+  @override
+  String viewAllPhotos(int count) {
+    return 'See all $count photographs';
+  }
+
+  @override
+  String get auditTitle => 'Audit trail';
+
+  @override
+  String get auditSubtitle =>
+      'Who changed what, and when. This record can only be read — not edited, not deleted, and not downloaded.';
+
+  @override
+  String get auditEmpty => 'No entries match these filters.';
+
+  @override
+  String get auditFilterAction => 'Action';
+
+  @override
+  String get auditBefore => 'Before';
+
+  @override
+  String get auditAfter => 'After';
+
+  @override
+  String get auditFrom => 'From';
+
+  @override
+  String get auditUnknownActor => '(the account has been deleted)';
+
+  @override
+  String get auditNarrowHint =>
+      'There are more entries. Narrow the search with the filter above.';
+
+  @override
+  String get filterClear => 'Clear filters';
+
+  @override
+  String auditEntryCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count entries',
+      one: '1 entry',
+      zero: 'No entries',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get navAuditDesc => 'Who changed what, and when — read only';
+
+  @override
+  String get auditRecordedAs => 'Recorded as';
 }

@@ -17,8 +17,45 @@ Legend: `NOT STARTED` · `IN PROGRESS` · `PARTIAL` · `BLOCKED` · `COMPLETE`
 | 8 | Announcements & Notifications | **COMPLETE** | Publishing and sending are separate acts: saving sends nothing, publishing sends nothing, and a send needs an explicit channel choice and can happen once. The schedule is a `where` clause with no cron behind it. E-mail reaches committee accounts only. Also replaced the admin card grid with a side menu — `phase-reports/PHASE_8_COMPLETION.md`. |
 | 9 | Accounts & Transparency | **COMPLETE** | The ledger, and the figures the village reads. Only approved money counts in any total; donations are read from their own register and the `donation` category code is refused, so nothing is published twice; bills live on a private disk with no URL to them; no delete anywhere. The public page carries totals by heading and **no person's name** — the consent question `donations.is_anonymous` could not answer. Also fixed a defect found by screenshotting: the console's net excluded donations while the public page included them, unlabelled — `phase-reports/PHASE_9_COMPLETION.md`. |
 | 10 | Reports & Analytics | **COMPLETE** | Six standard reports over donations, the ledger, events and enquiries, in three formats. The export runs the *same* report with the *same* filters as the screen — a property of the code, not a promise. Personal columns are absent unless both permitted and asked for, and asking without the permission is refused rather than quietly narrowed. Reading and downloading are separate permissions. The dashboard gained the at-a-glance figures Phase 8 promised it — `phase-reports/PHASE_10_COMPLETION.md`. |
-| 11 | Security, Backup & Audit | NOT STARTED | |
+| 11 | Security, Audit, Backup & Privacy | **COMPLETE** | An append-only audit trail over the actions somebody may later be asked about — the money lifecycle, role and account changes, settings, announcements sent, **every export of personal data and who took it**, and the one read worth recording. Only what changed is kept, and never a password or a token. Reading it is Super Admin only. Two habits became properties of the code: every admin route carries a permission, and nothing is written to browser storage. Security headers with HSTS only over HTTPS. A backup procedure that has actually been restored from — `phase-reports/PHASE_11_COMPLETION.md`. |
 | 12 | Testing, Deployment & Handover | NOT STARTED | |
+
+## Verification log — Phase 11 (2026-09-16)
+
+| Check | Result |
+|---|---|
+| `flutter analyze` | ✅ No issues found |
+| `dart format --set-exit-if-changed` | ✅ 0 of 229 files changed |
+| `flutter test` | ✅ **587/587** passed |
+| `flutter build web --release` | ✅ built |
+| `./vendor/bin/pint --test` | ✅ passed |
+| `php artisan test` | ✅ **711** passed (2567 assertions) |
+| Migration up → rollback → up | ✅ on MariaDB |
+| An audit entry cannot be changed once written | ✅ the model throws, on every path |
+| An audit entry cannot be deleted | ✅ except through `audit:prune`, which records that it ran |
+| No endpoint writes to the trail | ✅ POST, PUT, PATCH and DELETE all refused |
+| The trail cannot be exported | ✅ no route, at any permission |
+| No entry carries a password, hash or token | ✅ stripped by key at any depth |
+| An edit records only the fields that changed | ✅ and a save that changed nothing writes no row |
+| An entry still names its actor after the account is deleted | ✅ the name is copied onto the row |
+| **Who took a copy of the donor register** | ✅ recorded, with whether it carried personal data — the gap Phase 10 left |
+| Opening an enquiry is recorded | ✅ the one read that is |
+| Only Super Admin may read the trail | ✅ Admin, Treasurer, Content Manager and Viewer all 403 |
+| Every `api/admin` route carries a permission | ✅ route-table sweep, with a named exemption list |
+| Every `api/admin` route requires auth and an active account | ✅ same sweep |
+| Security headers on every response | ✅ nosniff, DENY, Referrer-Policy, Permissions-Policy, CSP |
+| HSTS only over HTTPS | ✅ absent over plain HTTP, present over TLS |
+| The printable documents forbid scripts | ✅ stricter CSP on the only HTML this API emits |
+| Nothing is written to browser storage | ✅ source sweep: **nothing at all** is stored |
+| The session is an HttpOnly cookie | ✅ and the client reads only `XSRF-TOKEN` |
+| **A backup restores** | ✅ rehearsed — dump, scratch restore, row counts, migrations, Devanagari and the published total all verified (`BACKUP_AND_RESTORE.md`) |
+| The trail read in a real browser | ✅ an edit shows the two fields that moved, nothing else |
+| Phase 0–10 tests | ✅ pass unchanged |
+
+**A defect the screen found.** Verifying a donation recorded the whole record as
+if every field had changed — eleven fields against an empty column. Lifecycle
+events now record only what moved, and a creation is rendered without a "before"
+column rather than a row of em dashes.
 
 ## Verification log — matching the approved design (2026-09-15)
 
@@ -314,7 +351,7 @@ MariaDB 12.3.3 · live health and 401 checks.
 - Pre-render tool not wired into CI.
 - No cross-stack end-to-end test (Phase 12).
 
-Phase 11 must not begin without explicit approval.
+Phase 11 is **COMPLETE**. Phase 12 must not begin without explicit approval.
 
 The approved-design match (2026-09-15) is recorded in
 `PROTOTYPE_CONTENT_MATCH.md`. One item is deliberately not visible yet: the

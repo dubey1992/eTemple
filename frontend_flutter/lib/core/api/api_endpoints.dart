@@ -39,6 +39,13 @@ class ApiEndpoints {
   // Protected admin surface (Phase 0 foundation)
   static const String adminPing = '/admin/ping';
 
+  /// The audit trail (Phase 11). Read only, and there is no export route to
+  /// name here — the trail carries personal details and is deliberately not
+  /// downloadable.
+  static const String adminAuditLogs = '/admin/audit-logs';
+
+  static const String adminAuditActions = '/admin/audit-logs/actions';
+
   // Content management (Phase 1)
   static const String adminPages = '/admin/pages';
 

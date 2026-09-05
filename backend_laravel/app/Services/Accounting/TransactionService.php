@@ -231,7 +231,7 @@ class TransactionService
             $this->audit->record(
                 action: AuditAction::TRANSACTION_APPROVED,
                 entity: $transaction,
-                after: $this->snapshot($transaction),
+                after: ['status' => $transaction->status],
                 label: $this->labelFor($transaction),
             );
 
@@ -268,7 +268,10 @@ class TransactionService
             $this->audit->record(
                 action: AuditAction::TRANSACTION_REVERSED,
                 entity: $transaction,
-                after: $this->snapshot($transaction),
+                after: [
+                    'status' => $transaction->status,
+                    'reversal_reason' => $transaction->reversal_reason,
+                ],
                 context: $transaction->reversal_reason,
                 label: $this->labelFor($transaction),
             );

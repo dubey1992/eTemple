@@ -10,6 +10,7 @@ import 'package:rkt_web/app/routing/route_paths.dart';
 import 'package:rkt_web/app/theme/app_theme.dart';
 import 'package:rkt_web/features/accounts/data/accounts_providers.dart';
 import 'package:rkt_web/features/announcements/data/announcement_providers.dart';
+import 'package:rkt_web/features/audit/data/audit_providers.dart';
 import 'package:rkt_web/features/reports/data/reports_providers.dart';
 import 'package:rkt_web/features/donations/data/donation_providers.dart';
 import 'package:rkt_web/features/enquiries/data/enquiry_providers.dart';
@@ -20,6 +21,7 @@ import 'package:rkt_web/l10n/app_localizations.dart';
 
 import 'fake_accounts_repository.dart';
 import 'fake_announcement_repository.dart';
+import 'fake_audit_repository.dart';
 import 'fake_reports_repository.dart';
 import 'fake_donation_repository.dart';
 import 'fake_enquiry_repository.dart';
@@ -102,6 +104,7 @@ Future<void> pumpScreen(
   FakeAnnouncementRepository? announcements,
   FakeAccountsRepository? accounts,
   FakeReportsRepository? reports,
+  FakeAuditRepository? audit,
 }) async {
   if (surfaceSize != null) {
     // Set the logical size directly: devicePixelRatio 1.0 makes the physical
@@ -256,6 +259,9 @@ Future<void> pumpScreen(
         ),
         reportsRepositoryProvider.overrideWithValue(
           reports ?? FakeReportsRepository(),
+        ),
+        auditRepositoryProvider.overrideWithValue(
+          audit ?? FakeAuditRepository(),
         ),
         mediaRepositoryProvider.overrideWithValue(
           media ?? FakeMediaRepository(),

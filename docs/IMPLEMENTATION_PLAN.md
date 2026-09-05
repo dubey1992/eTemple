@@ -163,11 +163,11 @@ Explicitly **out** of Phase 0: CMS pages, home/about content, user CRUD screens,
 
 ## Phase 11 — Security, Audit, Backup & Privacy
 
-- [ ] `audit_logs` (`user_id`, `action`, `entity_type`, `entity_id`, `before_data`, `after_data`, `ip_address`)
-- [ ] Append-only audit behaviour; permission enforcement on every admin endpoint
-- [ ] Database + media backup schedule and rehearsed restore procedure
-- [ ] Secure headers, HTTPS-only, CSRF, session timeout, login rate limits
-- [ ] No sensitive tokens in insecure browser storage
+- [x] `audit_logs` (`user_id`, `action`, `entity_type`, `entity_id`, `before_data`, `after_data`, `ip_address`) — plus the actor's name copied on, so the trail outlives the account (PHASE_11_COMPLETION §2)
+- [x] Append-only audit behaviour; permission enforcement on every admin endpoint — the model refuses, and a route-table sweep makes the permission a property of the code rather than a habit (§4, §5)
+- [x] Database + media backup schedule and rehearsed restore procedure — **restored from, not just written** (§7)
+- [x] Secure headers, HTTPS-only, CSRF, session timeout, login rate limits — HSTS only over HTTPS, and a stricter policy on the printable documents (§6)
+- [x] No sensitive tokens in insecure browser storage — nothing at all is stored, and a source sweep keeps it that way (§5)
 
 ## Phase 12 — Testing, Deployment & Handover
 

@@ -2377,4 +2377,59 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get footerContact => 'संपर्क';
+
+  @override
+  String viewAllPhotos(int count) {
+    return 'सभी $count तस्वीरें देखें';
+  }
+
+  @override
+  String get auditTitle => 'लेखा-परीक्षा अभिलेख';
+
+  @override
+  String get auditSubtitle =>
+      'किसने, कब, क्या बदला। यह अभिलेख केवल पढ़ा जा सकता है — न बदला जा सकता है, न हटाया, न डाउनलोड किया।';
+
+  @override
+  String get auditEmpty => 'इन शर्तों पर कोई प्रविष्टि नहीं मिली।';
+
+  @override
+  String get auditFilterAction => 'कार्यवाही';
+
+  @override
+  String get auditBefore => 'पहले';
+
+  @override
+  String get auditAfter => 'बाद में';
+
+  @override
+  String get auditFrom => 'किस पते से';
+
+  @override
+  String get auditUnknownActor => '(खाता हटाया जा चुका है)';
+
+  @override
+  String get auditNarrowHint =>
+      'और भी प्रविष्टियाँ हैं। ऊपर दिए गए छन्नी से खोज को सीमित करें।';
+
+  @override
+  String get filterClear => 'छन्नी हटाएँ';
+
+  @override
+  String auditEntryCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count प्रविष्टियाँ',
+      one: '1 प्रविष्टि',
+      zero: 'कोई प्रविष्टि नहीं',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get navAuditDesc => 'किसने, कब, क्या बदला — केवल पढ़ने के लिए';
+
+  @override
+  String get auditRecordedAs => 'दर्ज हुआ';
 }

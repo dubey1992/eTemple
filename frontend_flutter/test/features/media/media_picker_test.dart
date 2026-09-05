@@ -150,8 +150,44 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('gallery-placeholder')), findsOneWidget);
-      // With nothing to see, there is nothing to link to either.
-      expect(find.byKey(const Key('gallery-see-all')), findsNothing);
+
+      // The way through is offered even here. The gallery page is a real
+      // destination — albums, the video darshan, and its own empty state in
+      // the temple's words — and a visitor should never have to guess whether
+      // the mosaic on the home page is all there is.
+      expect(find.byKey(const Key('gallery-see-all')), findsOneWidget);
+    });
+
+    /// A visitor at the foot of the pictures should not have to scroll back to
+    /// the heading to see the rest of them.
+    testWidgets('offers a way through under the mosaic as well', (
+      tester,
+    ) async {
+      await pumpScreen(
+        tester,
+        const HomeScreen(),
+        media: FakeMediaRepository(
+          photos: List.generate(
+            9,
+            (index) =>
+                testMediaItem(id: index + 1, title: 'तस्वीर ${index + 1}'),
+          ),
+        ),
+        surfaceSize: const Size(1280, 3600),
+        overrides: [
+          contentRepositoryProvider.overrideWithValue(
+            FakeContentRepository(settings: testSettings()),
+          ),
+        ],
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('gallery-see-all')), findsOneWidget);
+      expect(find.byKey(const Key('gallery-view-all')), findsOneWidget);
+
+      // Nine published, five on the home page: the button says how many more
+      // there are rather than leaving the visitor to wonder.
+      expect(find.text('सभी 9 तस्वीरें देखें'), findsOneWidget);
     });
 
     testWidgets('shows published photographs and a link to the gallery', (

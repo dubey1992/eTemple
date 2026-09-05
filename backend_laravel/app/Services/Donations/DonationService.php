@@ -186,10 +186,16 @@ class DonationService
             $donation->updated_by = $actor->id;
             $donation->save();
 
+            // What changed, not the whole record. A verification alters the
+            // status and issues a number; listing eleven unchanged fields
+            // beside an empty column reads as though all of them moved.
             $this->audit->record(
                 action: AuditAction::DONATION_CONFIRMED,
                 entity: $donation,
-                after: $this->snapshot($donation),
+                after: [
+                    'status' => $donation->status,
+                    'receipt_number' => $donation->receipt_number,
+                ],
                 context: 'रसीद संख्या / Receipt: '.$donation->receipt_number,
                 label: $this->labelFor($donation),
             );
@@ -230,7 +236,10 @@ class DonationService
             $this->audit->record(
                 action: AuditAction::DONATION_REVERSED,
                 entity: $donation,
-                after: $this->snapshot($donation),
+                after: [
+                    'status' => $donation->status,
+                    'reversal_reason' => $donation->reversal_reason,
+                ],
                 context: $donation->reversal_reason,
                 label: $this->labelFor($donation),
             );

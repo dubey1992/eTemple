@@ -1128,5 +1128,46 @@
   "pageCardsHint": "Write a paragraph as “🛕 Heading — text” and it appears as its own card on the website.",
   "@pageCardsHint": {},
   "footerContact": "Contact",
-  "@footerContact": {}
+  "@footerContact": {},
+  "viewAllPhotos": "See all {count} photographs",
+  "@viewAllPhotos": {
+    "description": "Gallery link when more photographs exist than the home page shows.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "auditTitle": "Audit trail",
+  "@auditTitle": {},
+  "auditSubtitle": "Who changed what, and when. This record can only be read — not edited, not deleted, and not downloaded.",
+  "@auditSubtitle": {},
+  "auditEmpty": "No entries match these filters.",
+  "@auditEmpty": {},
+  "auditFilterAction": "Action",
+  "@auditFilterAction": {},
+  "auditBefore": "Before",
+  "@auditBefore": {},
+  "auditAfter": "After",
+  "@auditAfter": {},
+  "auditFrom": "From",
+  "@auditFrom": {},
+  "auditUnknownActor": "(the account has been deleted)",
+  "@auditUnknownActor": {},
+  "auditNarrowHint": "There are more entries. Narrow the search with the filter above.",
+  "@auditNarrowHint": {},
+  "filterClear": "Clear filters",
+  "@filterClear": {},
+  "auditEntryCount": "{count, plural, =0{No entries} =1{1 entry} other{{count} entries}}",
+  "@auditEntryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "navAuditDesc": "Who changed what, and when — read only",
+  "@navAuditDesc": {},
+  "auditRecordedAs": "Recorded as",
+  "@auditRecordedAs": {}
 }

@@ -1305,5 +1305,46 @@
   "pageCardsHint": "किसी अनुच्छेद को “🛕 शीर्षक — विवरण” के रूप में लिखें तो वह वेबसाइट पर अलग कार्ड की तरह दिखेगा।",
   "@pageCardsHint": {},
   "footerContact": "संपर्क",
-  "@footerContact": {}
+  "@footerContact": {},
+  "viewAllPhotos": "सभी {count} तस्वीरें देखें",
+  "@viewAllPhotos": {
+    "description": "Gallery link when more photographs exist than the home page shows.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "auditTitle": "लेखा-परीक्षा अभिलेख",
+  "@auditTitle": {},
+  "auditSubtitle": "किसने, कब, क्या बदला। यह अभिलेख केवल पढ़ा जा सकता है — न बदला जा सकता है, न हटाया, न डाउनलोड किया।",
+  "@auditSubtitle": {},
+  "auditEmpty": "इन शर्तों पर कोई प्रविष्टि नहीं मिली।",
+  "@auditEmpty": {},
+  "auditFilterAction": "कार्यवाही",
+  "@auditFilterAction": {},
+  "auditBefore": "पहले",
+  "@auditBefore": {},
+  "auditAfter": "बाद में",
+  "@auditAfter": {},
+  "auditFrom": "किस पते से",
+  "@auditFrom": {},
+  "auditUnknownActor": "(खाता हटाया जा चुका है)",
+  "@auditUnknownActor": {},
+  "auditNarrowHint": "और भी प्रविष्टियाँ हैं। ऊपर दिए गए छन्नी से खोज को सीमित करें।",
+  "@auditNarrowHint": {},
+  "filterClear": "छन्नी हटाएँ",
+  "@filterClear": {},
+  "auditEntryCount": "{count, plural, =0{कोई प्रविष्टि नहीं} =1{1 प्रविष्टि} other{{count} प्रविष्टियाँ}}",
+  "@auditEntryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "navAuditDesc": "किसने, कब, क्या बदला — केवल पढ़ने के लिए",
+  "@navAuditDesc": {},
+  "auditRecordedAs": "दर्ज हुआ",
+  "@auditRecordedAs": {}
 }

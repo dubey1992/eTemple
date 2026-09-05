@@ -168,6 +168,17 @@ class AdminDestinations {
       route: RoutePaths.adminReports,
       permissions: const [Permissions.reportsView],
     ),
+    // The trail is offered only to an account that may actually read it —
+    // Super Admin alone, by default. A courtesy: the server refuses everybody
+    // else regardless.
+    AdminDestination(
+      id: 'audit',
+      icon: Icons.history,
+      title: l10n.auditTitle,
+      description: l10n.navAuditDesc,
+      route: RoutePaths.adminAudit,
+      permissions: const [Permissions.auditView],
+    ),
     AdminDestination(
       id: 'users',
       icon: Icons.group_outlined,

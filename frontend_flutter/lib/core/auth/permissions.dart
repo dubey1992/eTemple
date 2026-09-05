@@ -29,6 +29,12 @@ class Permissions {
   static const String accountsManage = 'accounts.manage';
   static const String reportsView = 'reports.view';
   static const String reportsExport = 'reports.export';
+
+  /// Reading the audit trail. Its own key rather than `security.view`, which is
+  /// the login history: the trail carries donor names and enquiry references,
+  /// so it is a stricter thing to hand out. Super Admin holds it by default and
+  /// nobody else does, including Admin.
+  static const String auditView = 'audit.view';
 }
 
 /// The signed-in user's effective permissions.
