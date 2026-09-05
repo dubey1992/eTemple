@@ -1,0 +1,74 @@
+# Apache rules for the public site — copied into build/web by `flutter build web`.
+#
+# This file belongs in the document root that serves the Flutter bundle
+# (`public_html` on cPanel). The API is a separate document root on
+# api.radhakrishnathakurwadi.com and keeps Laravel's own public/.htaccess.
+#
+# See docs/DEPLOYMENT_CPANEL.md.
+
+# --- Send every unknown path to the app -------------------------------------
+# The site is a single page: /gallery, /events/12 and /admin/donations are all
+# routes inside one bundle, not files. Without this, a visitor who reloads on
+# /gallery — or opens a link somebody sent them — gets the host's 404 page.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # An existing file or directory is served as itself. This is what makes the
+  # pre-rendered per-page metadata work: tool/generate_static_meta.dart writes a
+  # real <slug>/index.html for each published page, and a crawler that does not
+  # run JavaScript must be given *that* rather than the generic shell.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# --- HTTPS -------------------------------------------------------------------
+# cPanel's AutoSSL issues the certificate; this is what stops a plain-HTTP visit
+# from staying plain. Comment it out only while a certificate is still pending.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# --- Headers -----------------------------------------------------------------
+# The API sets its own (App\Http\Middleware\SecurityHeaders). These are for the
+# static bundle, which never reaches PHP.
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+  # Not DENY: the site embeds nothing and is embedded by nobody, and a temple
+  # site inside somebody else's frame is how a fake donation page is built.
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # index.html must never be cached: a stale one points at a bundle that has
+  # been replaced, and the app fails to boot after a deployment with no error a
+  # visitor could act on.
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  # Everything else in build/web carries a content hash in its name, so it can
+  # be cached hard.
+  <FilesMatch "\.(js|css|png|jpg|jpeg|webp|svg|woff2|json|wasm)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+# --- Compression -------------------------------------------------------------
+# The Flutter bundle is the largest thing a village connection has to download.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain application/javascript application/json image/svg+xml application/wasm
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType application/wasm .wasm
+</IfModule>
+
+# Directory listings, never.
+Options -Indexes

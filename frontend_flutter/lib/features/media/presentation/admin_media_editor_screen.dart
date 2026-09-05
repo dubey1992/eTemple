@@ -549,6 +549,7 @@ class _MediaFormState extends ConsumerState<_MediaForm> {
               ),
 
               DropdownButtonFormField<int?>(
+                isExpanded: true,
                 key: const Key('media-album'),
                 initialValue: albums.any((a) => a.id == _albumId)
                     ? _albumId
@@ -574,6 +575,7 @@ class _MediaFormState extends ConsumerState<_MediaForm> {
               const SizedBox(height: AppSpacing.md),
 
               DropdownButtonFormField<String>(
+                isExpanded: true,
                 key: const Key('media-status'),
                 initialValue: _status,
                 decoration: InputDecoration(labelText: l10n.fieldStatus),

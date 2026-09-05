@@ -10,6 +10,7 @@ import '../../../app/localization/message_translations.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../../core/errors/error_code.dart';
 import '../../../core/widgets/page_container.dart';
+import '../../../core/widgets/page_heading.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../admin/data/admin_providers.dart';
 import '../../admin/presentation/widgets/status_chip.dart';
@@ -71,7 +72,6 @@ class _AdminMediaScreenState extends ConsumerState<AdminMediaScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     final media = ref.watch(adminMediaProvider(_query));
     final canEdit = ref.watch(permissionsProvider).can(Permissions.mediaManage);
 
@@ -81,26 +81,10 @@ class _AdminMediaScreenState extends ConsumerState<AdminMediaScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.mediaAdminTitle,
-                        style: theme.textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        l10n.mediaAdminSubtitle,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            PageHeading(
+              title: l10n.mediaAdminTitle,
+              subtitle: l10n.mediaAdminSubtitle,
+              actions: [
                 if (canEdit) ...[
                   OutlinedButton.icon(
                     key: const Key('albums-open'),
@@ -111,7 +95,6 @@ class _AdminMediaScreenState extends ConsumerState<AdminMediaScreen> {
                     ),
                     label: Text(l10n.navAlbums),
                   ),
-                  const SizedBox(width: AppSpacing.sm),
                   FilledButton.icon(
                     key: const Key('media-new'),
                     onPressed: () => context.go(RoutePaths.adminMediaNew),
@@ -232,8 +215,8 @@ class _MediaRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     final dimensions = MediaFormatting.dimensions(item.width, item.height);
 
     return Card(

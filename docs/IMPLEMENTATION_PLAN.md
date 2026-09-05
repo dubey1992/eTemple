@@ -171,12 +171,21 @@ Explicitly **out** of Phase 0: CMS pages, home/about content, user CRUD screens,
 
 ## Phase 12 — Testing, Deployment & Handover
 
-- [ ] Full backend unit/feature/API/authorization suites
-- [ ] Flutter unit/widget/integration suites, localization and responsive regression
-- [ ] Donation receipt, accounting and media upload workflow tests; security smoke tests
-- [ ] Staging acceptance by committee, production deployment with backup + rollback plan
-- [ ] Admin user guide, training, backup/restore handover checklist
-- [ ] `flutter analyze`, `flutter test`, `flutter build web --release`, `php artisan test` green
+- [x] Full backend unit/feature/API/authorization suites — 749 tests, including
+      four cross-module journeys
+- [x] Flutter unit/widget/integration suites, localization and responsive
+      regression — 595 tests, including every screen at every width in both
+      languages, and ARB parity between the two
+- [x] Donation receipt, accounting and media upload workflow tests; security
+      smoke tests — `tests/Feature/EndToEnd/`, and `php artisan deploy:check`
+- [x] Production deployment procedure with backup + rollback plan —
+      `docs/DEPLOYMENT_CPANEL.md`, written for cPanel and the real domain.
+      **Staging acceptance by the committee is theirs to give and has not
+      happened**
+- [x] Admin user guide, training, backup/restore handover checklist —
+      `docs/ADMIN_GUIDE.md`, `docs/HANDOVER.md`, `docs/BACKUP_AND_RESTORE.md`
+- [x] `flutter analyze`, `flutter test`, `flutter build web --release`,
+      `php artisan test` green
 
 ---
 

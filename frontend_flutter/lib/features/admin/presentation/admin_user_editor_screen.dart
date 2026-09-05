@@ -42,6 +42,19 @@ class AdminUserEditorScreen extends ConsumerWidget {
         () => ref.invalidate(adminRolesProvider),
       ),
       data: (roleList) {
+        // Every account must have a role, so a form with nothing to choose
+        // from cannot be filled in. It used to read the last role off an empty
+        // list and throw `Bad state: No element` — a red screen with no
+        // explanation, where the honest answer is short and actionable
+        // (PHASE_12_PLAN §C).
+        if (roleList.isEmpty) {
+          return EmptyView(
+            key: const Key('user-editor-no-roles'),
+            icon: Icons.badge_outlined,
+            message: context.l10n.userEditorNoRoles,
+          );
+        }
+
         if (userId == null) {
           return _UserForm(roles: roleList);
         }

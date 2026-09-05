@@ -1169,5 +1169,7 @@
   "navAuditDesc": "Who changed what, and when — read only",
   "@navAuditDesc": {},
   "auditRecordedAs": "Recorded as",
-  "@auditRecordedAs": {}
+  "@auditRecordedAs": {},
+  "userEditorNoRoles": "At least one role must exist before an account can be created.",
+  "@userEditorNoRoles": {}
 }

@@ -9,6 +9,7 @@ import '../../../core/auth/permissions.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../../core/errors/error_code.dart';
 import '../../../core/widgets/page_container.dart';
+import '../../../core/widgets/page_heading.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../admin/data/admin_providers.dart';
 import '../../admin/presentation/widgets/status_chip.dart';
@@ -51,7 +52,6 @@ class _AdminAnnouncementsScreenState
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     final view = ref.watch(announcementListProvider);
     final list = ref.watch(announcementsProvider(view.query));
     final canManage = ref
@@ -64,26 +64,10 @@ class _AdminAnnouncementsScreenState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.announcementsTitle,
-                        style: theme.textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        l10n.announcementsSubtitle,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            PageHeading(
+              title: l10n.announcementsTitle,
+              subtitle: l10n.announcementsSubtitle,
+              actions: [
                 if (canManage)
                   FilledButton.icon(
                     key: const Key('announcement-new'),
@@ -198,8 +182,8 @@ class _AnnouncementRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return Card(
       key: Key('announcement-row-${announcement.id}'),

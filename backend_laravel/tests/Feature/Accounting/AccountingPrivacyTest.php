@@ -61,12 +61,12 @@ class AccountingPrivacyTest extends TestCase
             'donation_date' => now()->subDays(10)->toDateString(),
         ]);
 
-        $body = $this->getJson('/api/public/transparency')->assertOk()->getContent();
+        $response = $this->getJson('/api/public/transparency')->assertOk();
 
-        $this->assertStringNotContainsString('रामप्रसाद', $body);
-        $this->assertStringNotContainsString('Sita Devi', $body);
-        $this->assertStringNotContainsString('9876543210', $body);
-        $this->assertStringNotContainsString('receipt', $body);
+        $this->assertResponseDoesNotLeak(
+            $response,
+            'रामप्रसाद', 'Sita Devi', '9876543210', 'receipt',
+        );
     }
 
     public function test_no_payee_reference_or_description_appears_in_the_public_response(): void
@@ -81,11 +81,12 @@ class AccountingPrivacyTest extends TestCase
             'description' => 'तीन पंखे और वायरिंग',
         ]);
 
-        $body = $this->getJson('/api/public/transparency')->assertOk()->getContent();
+        $response = $this->getJson('/api/public/transparency')->assertOk();
 
-        $this->assertStringNotContainsString('शर्मा', $body);
-        $this->assertStringNotContainsString('CHQ-884412', $body);
-        $this->assertStringNotContainsString('पंखे', $body);
+        // 'पंखे' is the description, and it is Devanagari-only: before Phase 12
+        // gave this assertion an encoding-aware helper, it was the one field
+        // here that nothing could have caught leaking.
+        $this->assertResponseDoesNotLeak($response, 'शर्मा', 'CHQ-884412', 'पंखे');
     }
 
     public function test_there_is_no_public_route_to_an_individual_entry(): void

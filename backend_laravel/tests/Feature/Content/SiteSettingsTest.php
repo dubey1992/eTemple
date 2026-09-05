@@ -81,7 +81,7 @@ class SiteSettingsTest extends TestCase
 
         $this->assertSame(['पहला', 'दूसरा'], array_column($response->json('data.navigation'), 'label.value')
             ?: array_map(static fn ($i) => $i['label']['value'], $response->json('data.navigation')));
-        $this->assertStringNotContainsString('छिपा', $response->getContent() ?: '');
+        $this->assertResponseDoesNotLeak($response, 'छिपा');
     }
 
     public function test_the_admin_view_includes_hidden_items_and_both_languages(): void

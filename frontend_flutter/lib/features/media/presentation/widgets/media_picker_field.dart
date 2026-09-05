@@ -56,7 +56,13 @@ class MediaPickerField extends ConsumerWidget {
             decoration: InputDecoration(labelText: label, errorText: errorText),
           ),
           const SizedBox(height: AppSpacing.xs),
-          Row(
+          // A Wrap, not a Row: "पुस्तकालय से चुनें" beside "हटाएँ" is wider
+          // than a phone, and a row cannot make a button narrower than its
+          // label.
+          Wrap(
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.xs,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               OutlinedButton.icon(
                 key: Key('$_name-choose'),
@@ -67,7 +73,6 @@ class MediaPickerField extends ConsumerWidget {
                 label: Text(l10n.mediaPickerChoose),
               ),
               if (controller.text.trim().isNotEmpty) ...[
-                const SizedBox(width: AppSpacing.sm),
                 TextButton(
                   key: Key('$_name-clear'),
                   onPressed: enabled
@@ -79,18 +84,19 @@ class MediaPickerField extends ConsumerWidget {
                   child: Text(l10n.mediaPickerClear),
                 ),
               ],
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(
-                  l10n.mediaPickerHint,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
             ],
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          // Under the buttons rather than beside them. It is an explanation,
+          // not a control, and it is the first thing that should give up the
+          // width it was taking.
+          Text(
+            l10n.mediaPickerHint,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

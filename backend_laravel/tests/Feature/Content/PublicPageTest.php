@@ -111,7 +111,7 @@ class PublicPageTest extends TestCase
 
         $response = $this->getJson('/api/public/pages/secret-draft');
 
-        $this->assertStringNotContainsString('गोपनीय', $response->getContent() ?: '');
+        $this->assertResponseDoesNotLeak($response, 'गोपनीय');
     }
 
     public function test_the_public_endpoint_needs_no_authentication(): void

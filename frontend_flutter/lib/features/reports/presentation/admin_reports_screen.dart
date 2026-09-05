@@ -7,6 +7,7 @@ import '../../../app/routing/route_paths.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../../core/errors/error_code.dart';
+import '../../../core/widgets/breakpoints.dart';
 import '../../../core/widgets/page_container.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../admin/presentation/widgets/status_chip.dart';
@@ -109,6 +110,7 @@ class _ReportRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
+    final isCompact = Breakpoints.of(context).isCompact;
 
     return Card(
       key: Key('report-row-${report.key}'),
@@ -133,12 +135,24 @@ class _ReportRow extends StatelessWidget {
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
+                    if (report.hasPersonalColumns && isCompact) ...[
+                      const SizedBox(height: AppSpacing.xs),
+                      Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: StatusChip(
+                          label: l10n.reportHasPersonal,
+                          tone: StatusTone.warning,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
               // Flagged on the row so a committee member knows before opening
-              // it that this is a report holding somebody's details.
-              if (report.hasPersonalColumns) ...[
+              // it that this is a report holding somebody's details. On a phone
+              // the chip goes under the title rather than squeezing it: the
+              // warning is worth reading, and so is the report's name.
+              if (report.hasPersonalColumns && !isCompact) ...[
                 const SizedBox(width: AppSpacing.sm),
                 StatusChip(
                   label: l10n.reportHasPersonal,

@@ -334,6 +334,7 @@ class _AlbumFormState extends ConsumerState<_AlbumForm> {
               ),
 
               DropdownButtonFormField<int?>(
+                isExpanded: true,
                 key: const Key('album-cover'),
                 initialValue: photos.any((p) => p.id == _coverId)
                     ? _coverId
@@ -359,6 +360,7 @@ class _AlbumFormState extends ConsumerState<_AlbumForm> {
               const SizedBox(height: AppSpacing.md),
 
               DropdownButtonFormField<String>(
+                isExpanded: true,
                 key: const Key('album-status'),
                 initialValue: _status,
                 decoration: InputDecoration(labelText: l10n.fieldStatus),

@@ -147,6 +147,7 @@ class _EnquiryFormCardState extends ConsumerState<EnquiryFormCard> {
               const SizedBox(height: AppSpacing.md),
 
               DropdownButtonFormField<String>(
+                isExpanded: true,
                 key: const Key('enquiry-category'),
                 initialValue: _category,
                 decoration: InputDecoration(

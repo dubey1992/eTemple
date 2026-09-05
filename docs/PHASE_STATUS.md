@@ -18,7 +18,43 @@ Legend: `NOT STARTED` · `IN PROGRESS` · `PARTIAL` · `BLOCKED` · `COMPLETE`
 | 9 | Accounts & Transparency | **COMPLETE** | The ledger, and the figures the village reads. Only approved money counts in any total; donations are read from their own register and the `donation` category code is refused, so nothing is published twice; bills live on a private disk with no URL to them; no delete anywhere. The public page carries totals by heading and **no person's name** — the consent question `donations.is_anonymous` could not answer. Also fixed a defect found by screenshotting: the console's net excluded donations while the public page included them, unlabelled — `phase-reports/PHASE_9_COMPLETION.md`. |
 | 10 | Reports & Analytics | **COMPLETE** | Six standard reports over donations, the ledger, events and enquiries, in three formats. The export runs the *same* report with the *same* filters as the screen — a property of the code, not a promise. Personal columns are absent unless both permitted and asked for, and asking without the permission is refused rather than quietly narrowed. Reading and downloading are separate permissions. The dashboard gained the at-a-glance figures Phase 8 promised it — `phase-reports/PHASE_10_COMPLETION.md`. |
 | 11 | Security, Audit, Backup & Privacy | **COMPLETE** | An append-only audit trail over the actions somebody may later be asked about — the money lifecycle, role and account changes, settings, announcements sent, **every export of personal data and who took it**, and the one read worth recording. Only what changed is kept, and never a password or a token. Reading it is Super Admin only. Two habits became properties of the code: every admin route carries a permission, and nothing is written to browser storage. Security headers with HSTS only over HTTPS. A backup procedure that has actually been restored from — `phase-reports/PHASE_11_COMPLETION.md`. |
-| 12 | Testing, Deployment & Handover | NOT STARTED | |
+| 12 | Testing, Deployment & Handover | **COMPLETE** | Four cross-module journey tests — the gap no per-module suite can close; a sweep of every screen at every width in both languages, which found sixteen overflowing consoles from five causes; `deploy:check`, which answers the questions only the host can and is proved able to fail; and the cPanel procedure, the committee's guide and the handover for radhakrishnathakurwadi.com. Also found a class of privacy assertion that could never fail, and closed Phase 11's two audit gaps — `phase-reports/PHASE_12_COMPLETION.md`.
+
+## Verification log — Phase 12 (2026-09-16)
+
+| Check | Result |
+|---|---|
+| `flutter analyze` | ✅ No issues found |
+| `dart format --set-exit-if-changed` | ✅ 0 of 233 files changed |
+| `flutter test` | ✅ **595/595** passed |
+| `flutter build web --release` | ✅ built, for the real domain |
+| `./vendor/bin/pint --test` | ✅ passed |
+| `php artisan test` | ✅ **749** passed (2815 assertions) |
+| Migration up → rollback → up | ✅ on MariaDB |
+| One rupee means the same thing everywhere | ✅ register, receipt, public page, dashboard, report, export and trail, in one test |
+| A reversal leaves every total at once | ✅ and the row, its receipt number and the reason all survive |
+| The whole public site answers on an empty database | ✅ ten endpoints, before the committee has written anything |
+| An account: created, used, and taken away | ✅ invitation, reset, sign-in, permission boundaries, deactivation — and a live session ends too |
+| A photograph: stripped, stored, published, guarded | ✅ EXIF absent from all three variants; deletion refused while a poster points at it, and the refusal names the festival |
+| **Every screen at 360, 768 and 1440** | ✅ 44 screens, Hindi at all three widths and English at 360 |
+| Sixteen overflowing screens found and fixed | ✅ from five shared causes; the console had never been rendered at phone width |
+| The user editor no longer crashes on an empty role list | ✅ it says a role must exist first, in both languages |
+| The two ARB files agree | ✅ same keys, same placeholders, nothing left in English |
+| **A privacy assertion that could not fail** | ✅ found, fixed, and the fix proved able to fail |
+| `deploy:check` rejects a development environment | ✅ 11 real failures here; CI asserts the non-zero exit |
+| `deploy:check` catches each danger on its own | ✅ debug, wildcard CORS, public bills, no Super Admin, demo accounts, a queue with no worker, a channel with no provider |
+| Committee create/update and content deletions audited | ✅ Phase 11 §10 closed |
+| A consent withdrawal does not copy the number into the trail | ✅ asserted by name |
+| `zip` exercised in CI | ✅ it was missing, and the .xlsx export depends on it |
+| The app on a phone, in Hindi | ✅ sign-in, dashboard, donations register, reports |
+| Phase 0–11 tests | ✅ pass unchanged |
+
+**Three defects this phase found.** The console overflowed on every phone —
+sixteen screens, five causes, because every per-feature test pumped at 1024px.
+Creating a user with no roles on file threw `Bad state: No element` and painted a
+red screen. And ten privacy assertions **could never have failed**: `json_encode`
+escapes Devanagari, so a leaked name never appeared in the body as itself. All
+ten still pass — but now that is a fact rather than an artefact of the encoding.
 
 ## Verification log — Phase 11 (2026-09-16)
 
@@ -315,13 +351,11 @@ MariaDB 12.3.3 · live health and 401 checks.
   the field that would allow one: it defaults to false, and a default is not
   consent. A board needs a publication-consent question asked when the donation
   is recorded, plus an effective-from date (Phase 9 §5).
-- No CSV/Excel export of the register — Phase 10.
 - No per-occurrence overrides: one day of a recurring event cannot be cancelled
   on its own (Phase 4 §10.1).
 - No calendar export (.ics); reminders are Phase 8.
 - Committee ordering and the navigation menu both need reorderable editors.
-- Consent changes are not audit-logged; the record exists for Phase 11.
-- No retention or purge of enquiry personal data — Phase 11.
+- No retention or purge of enquiry personal data.
 - An enquiry cannot be answered from inside the console; replies go by
   telephone or e-mail (Phase 7 §10).
 - Handing an enquiry to another member needs `users.view`, which
@@ -330,14 +364,12 @@ MariaDB 12.3.3 · live health and 401 checks.
 - No devotee mailing list: announcement e-mail reaches committee accounts only
   (Phase 8 §5). Opt-in, confirmation and unsubscribe are unbuilt.
 - SMS and WhatsApp are refused cleanly, not implemented (Phase 8 §6).
-- An announcement sent with no queue worker running records itself as sent and
-  delivers nothing; it cannot be detected from inside the request (Phase 8 §10).
+- An announcement sent with no queue worker running still records itself as sent
+  and delivers nothing — it cannot be detected from inside the request
+  (Phase 8 §10). Phase 12 added the next best thing: `deploy:check` fails when
+  jobs have been waiting more than ten minutes, and the cPanel cron entry is
+  what stops it happening.
 - The home banner's dismissal lasts the session only.
-- Accounting approvals and reversals are not in an append-only audit log; the
-  columns on the row record who and when (Phase 11).
-- **Exports of personal data are not logged.** Phase 10 made this more urgent:
-  "who took a copy of the donor list, and when" is exactly what an audit log
-  exists to answer (Phase 11).
 - No scheduled or e-mailed reports, and no report builder (Phase 10 §10).
 - The export cap of 10,000 rows is not configurable.
 - The events report is expanded in PHP rather than the database, because
@@ -348,10 +380,20 @@ MariaDB 12.3.3 · live health and 401 checks.
   (Phase 9 §12).
 - Attachment storage is unbounded: nothing prunes bills or warns when the disk
   fills.
-- Pre-render tool not wired into CI.
-- No cross-stack end-to-end test (Phase 12).
+- The pre-render tool is compile-checked in CI but not run there: it needs a
+  live API, so running it for real is a deploy step.
+- A ledger entry's bill has still not been through a restore rehearsal, because
+  no development entry has one attached (Phase 11 §7).
+- `deploy:check` reads the CLI's `php.ini`; on cPanel the web server often reads
+  a different one. The command says so, and the two browser checks at the end of
+  `DEPLOYMENT_CPANEL.md` §11 are what cover the gap.
+- The production deployment itself has not been performed, and committee
+  acceptance has not happened — both are the committee's to do.
 
-Phase 11 is **COMPLETE**. Phase 12 must not begin without explicit approval.
+**All twelve phases are COMPLETE.** What remains is the committee's:
+`docs/DEPLOYMENT_CPANEL.md` to put it on radhakrishnathakurwadi.com,
+`docs/ADMIN_GUIDE.md` for the people who will use it, and `docs/HANDOVER.md` for
+whoever holds the hosting account.
 
 The approved-design match (2026-09-15) is recorded in
 `PROTOTYPE_CONTENT_MATCH.md`. One item is deliberately not visible yet: the

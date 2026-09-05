@@ -4453,6 +4453,12 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'दर्ज हुआ'**
   String get auditRecordedAs;
+
+  /// No description provided for @userEditorNoRoles.
+  ///
+  /// In hi, this message translates to:
+  /// **'खाता बनाने से पहले कम-से-कम एक भूमिका होनी चाहिए।'**
+  String get userEditorNoRoles;
 }
 
 class _AppLocalizationsDelegate

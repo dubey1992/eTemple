@@ -7,6 +7,8 @@ namespace App\Services\Events;
 use App\Exceptions\EventGuardException;
 use App\Models\Event;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 use App\Support\EventOccurrence;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
@@ -27,6 +29,8 @@ class EventService
 
     /** The widest window a caller may ask for, in days. */
     public const MAX_WINDOW_DAYS = 366;
+
+    public function __construct(private readonly AuditLogger $audit) {}
 
     public const DEFAULT_WINDOW_DAYS = 90;
 
@@ -304,6 +308,22 @@ class EventService
 
     public function delete(Event $event): void
     {
+        // An event is one of the few things on this site that really is
+        // destroyed rather than retired, and a deleted festival is exactly the
+        // kind of absence somebody asks about later — "the Janmashtami entry is
+        // gone, who removed it".
+        $this->audit->record(
+            action: AuditAction::CONTENT_DELETED,
+            entity: $event,
+            before: [
+                'title_hi' => $event->title_hi,
+                'starts_at' => $event->start_at?->toDateTimeString(),
+                'recurrence' => $event->recurrence,
+                'status' => $event->status,
+            ],
+            label: $event->title_hi,
+        );
+
         $event->delete();
     }
 

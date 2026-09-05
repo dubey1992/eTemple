@@ -74,6 +74,13 @@ class CommitteeService
             $member->updated_by = $actor->id;
             $member->save();
 
+            $this->audit->record(
+                action: AuditAction::COMMITTEE_MEMBER_CREATED,
+                entity: $member,
+                after: $this->snapshot($member),
+                label: $member->name_hi,
+            );
+
             return $member->refresh();
         });
     }
@@ -84,9 +91,22 @@ class CommitteeService
     public function update(CommitteeMember $member, array $attributes, User $actor): CommitteeMember
     {
         return DB::transaction(function () use ($member, $attributes, $actor) {
+            $before = $this->snapshot($member);
+
             $this->apply($member, $attributes, $actor);
             $member->updated_by = $actor->id;
             $member->save();
+
+            // Consent given and consent withdrawn are the changes worth
+            // finding later: they are the difference between a phone number
+            // the village may see and one it may not.
+            $this->audit->recordChange(
+                action: AuditAction::COMMITTEE_MEMBER_UPDATED,
+                entity: $member,
+                before: $before,
+                after: $this->snapshot($member),
+                label: $member->name_hi,
+            );
 
             return $member->refresh();
         });
@@ -110,6 +130,39 @@ class CommitteeService
         );
 
         $member->delete();
+    }
+
+    /**
+     * What is worth remembering about a member — and, deliberately, no more.
+     *
+     * **The telephone number, the e-mail address and the photograph are not in
+     * here.** They are the very details the consent gate governs, and copying
+     * them into an append-only table at the moment consent is withdrawn would
+     * mean the withdrawal removed nothing: the number would simply have moved
+     * somewhere only the Super Admin can read, and stayed there.
+     *
+     * What is recorded is whether each of them may be shown, which is what
+     * somebody may later be asked about — "who published Ramesh's number, and
+     * when did he agree to it".
+     *
+     * @return array<string, mixed>
+     */
+    private function snapshot(CommitteeMember $member): array
+    {
+        return [
+            'name_hi' => $member->name_hi,
+            'name_en' => $member->name_en,
+            'designation_hi' => $member->designation_hi,
+            'designation_en' => $member->designation_en,
+            'tenure_start' => $member->tenure_start?->toDateString(),
+            'tenure_end' => $member->tenure_end?->toDateString(),
+            'is_published' => $member->is_published,
+            'sort_order' => $member->sort_order,
+            'has_consent' => $member->hasConsent(),
+            'show_phone_publicly' => $member->show_phone_publicly,
+            'show_email_publicly' => $member->show_email_publicly,
+            'show_photo_publicly' => $member->show_photo_publicly,
+        ];
     }
 
     /**

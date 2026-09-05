@@ -37,6 +37,11 @@ Development is phase-gated. The current status of every phase is tracked in
 | [docs/api/openapi.yaml](docs/api/openapi.yaml) | API contract |
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Local setup and check commands |
 | [docs/DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md) | Release checklist |
+| [docs/DEPLOYMENT_CPANEL.md](docs/DEPLOYMENT_CPANEL.md) | Deploying to cPanel, step by step |
+| [docs/ADMIN_GUIDE.md](docs/ADMIN_GUIDE.md) | प्रबंधन पुस्तिका — for the committee |
+| [docs/HANDOVER.md](docs/HANDOVER.md) | What the committee owns and must keep doing |
+| [docs/BACKUP_AND_RESTORE.md](docs/BACKUP_AND_RESTORE.md) | Backup, and a rehearsed restore |
+| [docs/EMAIL_TEMPLATES.md](docs/EMAIL_TEMPLATES.md) | Every message this system sends |
 
 ## Checks
 
@@ -46,6 +51,9 @@ flutter pub get && flutter analyze && flutter test && flutter build web --releas
 
 # backend_laravel
 composer install && ./vendor/bin/pint --test && php artisan test
+
+# on a deployed host, after every release
+php artisan deploy:check
 ```
 
 ## Security

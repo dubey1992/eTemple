@@ -474,6 +474,7 @@ class _DonationFormState extends ConsumerState<_DonationForm> {
               const SizedBox(height: AppSpacing.md),
 
               DropdownButtonFormField<String>(
+                isExpanded: true,
                 key: const Key('donation-mode'),
                 initialValue: _mode,
                 decoration: InputDecoration(
@@ -519,6 +520,7 @@ class _DonationFormState extends ConsumerState<_DonationForm> {
               ],
 
               DropdownButtonFormField<String>(
+                isExpanded: true,
                 key: const Key('donation-purpose'),
                 initialValue: _purpose,
                 decoration: InputDecoration(labelText: l10n.fieldPurpose),

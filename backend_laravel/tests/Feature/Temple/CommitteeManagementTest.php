@@ -49,7 +49,7 @@ class CommitteeManagementTest extends TestCase
         $response = $this->getJson('/api/public/committee')->assertOk();
 
         $this->assertSame([], $response->json('data'));
-        $this->assertStringNotContainsString('गुप्त', $response->getContent() ?: '');
+        $this->assertResponseDoesNotLeak($response, 'गुप्त');
     }
 
     public function test_a_member_whose_tenure_ended_drops_off_the_public_list(): void

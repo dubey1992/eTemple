@@ -47,9 +47,7 @@ class ReportDisclosureTest extends TestCase
         $this->assertNotContains('donor_name', $columns);
         $this->assertNotContains('donor_phone', $columns);
 
-        $body = $response->getContent();
-        $this->assertStringNotContainsString('रामप्रसाद', $body);
-        $this->assertStringNotContainsString('9876543210', $body);
+        $this->assertResponseDoesNotLeak($response, 'रामप्रसाद', '9876543210');
 
         $response->assertJsonPath('data.includes_personal', false);
         // But the report says it *has* such columns, so the screen can offer

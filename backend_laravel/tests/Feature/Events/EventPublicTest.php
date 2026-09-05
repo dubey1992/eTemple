@@ -56,7 +56,7 @@ class EventPublicTest extends TestCase
         $response = $this->getJson('/api/public/events')->assertOk();
 
         $this->assertSame([], $response->json('data'));
-        $this->assertStringNotContainsString('गुप्त', $response->getContent() ?: '');
+        $this->assertResponseDoesNotLeak($response, 'गुप्त');
     }
 
     public function test_a_draft_is_indistinguishable_from_a_missing_event(): void

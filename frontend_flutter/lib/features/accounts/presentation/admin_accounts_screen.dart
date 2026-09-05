@@ -9,6 +9,7 @@ import '../../../core/auth/permissions.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../../core/errors/error_code.dart';
 import '../../../core/widgets/page_container.dart';
+import '../../../core/widgets/page_heading.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../admin/data/admin_providers.dart';
 import '../../admin/presentation/widgets/status_chip.dart';
@@ -55,7 +56,6 @@ class _AdminAccountsScreenState extends ConsumerState<AdminAccountsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     final view = ref.watch(ledgerProvider);
     final list = ref.watch(transactionsProvider(view.query));
     final permissions = ref.watch(permissionsProvider);
@@ -67,26 +67,10 @@ class _AdminAccountsScreenState extends ConsumerState<AdminAccountsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.accountsTitle,
-                        style: theme.textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        l10n.accountsSubtitle,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            PageHeading(
+              title: l10n.accountsTitle,
+              subtitle: l10n.accountsSubtitle,
+              actions: [
                 IconButton(
                   key: const Key('accounts-categories'),
                   onPressed: () =>
@@ -101,15 +85,13 @@ class _AdminAccountsScreenState extends ConsumerState<AdminAccountsScreen> {
                   icon: const Icon(Icons.settings_outlined),
                   tooltip: l10n.navAccountingSettings,
                 ),
-                if (canManage) ...[
-                  const SizedBox(width: AppSpacing.sm),
+                if (canManage)
                   FilledButton.icon(
                     key: const Key('accounts-new'),
                     onPressed: () => context.go(RoutePaths.adminAccountNew),
                     icon: const Icon(Icons.add, size: 18),
                     label: Text(l10n.accountsNewEntry),
                   ),
-                ],
               ],
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -186,8 +168,8 @@ class _SummaryPanel extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     final summary = ref.watch(accountsSummaryProvider(query));
 
     return summary.maybeWhen(
@@ -373,8 +355,8 @@ class _TransactionRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     final language = Localizations.localeOf(context).languageCode;
 
     final tone = switch (transaction.status) {

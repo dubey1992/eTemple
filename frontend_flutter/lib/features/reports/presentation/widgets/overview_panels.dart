@@ -288,6 +288,9 @@ class _TrendCard extends StatelessWidget {
                               const SizedBox(height: AppSpacing.xs),
                               Text(
                                 point.label,
+                                maxLines: 1,
+                                overflow: TextOverflow.clip,
+                                softWrap: false,
                                 style: theme.textTheme.labelSmall?.copyWith(
                                   color: theme.colorScheme.onSurfaceVariant,
                                 ),

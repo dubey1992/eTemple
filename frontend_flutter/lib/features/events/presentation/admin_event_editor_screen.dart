@@ -370,6 +370,7 @@ class _EventFormState extends ConsumerState<_EventForm> {
               ],
 
               DropdownButtonFormField<String>(
+                isExpanded: true,
                 key: const Key('event-type'),
                 initialValue: _type,
                 decoration: InputDecoration(labelText: l10n.fieldEventType),
@@ -446,6 +447,7 @@ class _EventFormState extends ConsumerState<_EventForm> {
 
               const SizedBox(height: AppSpacing.md),
               DropdownButtonFormField<String>(
+                isExpanded: true,
                 key: const Key('event-recurrence'),
                 initialValue: _recurrence,
                 decoration: InputDecoration(labelText: l10n.fieldRecurrence),
@@ -527,6 +529,7 @@ class _EventFormState extends ConsumerState<_EventForm> {
               ),
 
               DropdownButtonFormField<String>(
+                isExpanded: true,
                 key: const Key('event-status'),
                 initialValue: _status,
                 decoration: InputDecoration(labelText: l10n.fieldStatus),

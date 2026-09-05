@@ -7,6 +7,8 @@ namespace App\Services\Accounting;
 use App\Exceptions\AccountingGuardException;
 use App\Models\AccountingCategory;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 use App\Support\TransactionType;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
@@ -25,6 +27,8 @@ use Illuminate\Support\Str;
  */
 class AccountingCategoryService
 {
+    public function __construct(private readonly AuditLogger $audit) {}
+
     /**
      * @param  array{type?: string, active_only?: bool}  $filters
      * @return Collection<int, AccountingCategory>
@@ -95,6 +99,21 @@ class AccountingCategoryService
         if ($count > 0) {
             throw AccountingGuardException::categoryInUse($count);
         }
+
+        // Only ever an unused heading — the guard above is what makes that
+        // true — but it is still a heading disappearing from the books, and
+        // the ledger's whole promise is that nothing about it vanishes
+        // unrecorded.
+        $this->audit->record(
+            action: AuditAction::CONTENT_DELETED,
+            entity: $category,
+            before: [
+                'code' => $category->code,
+                'type' => $category->type,
+                'name_hi' => $category->name_hi,
+            ],
+            label: $category->name_hi,
+        );
 
         $category->delete();
     }

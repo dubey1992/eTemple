@@ -2432,4 +2432,8 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get auditRecordedAs => 'दर्ज हुआ';
+
+  @override
+  String get userEditorNoRoles =>
+      'खाता बनाने से पहले कम-से-कम एक भूमिका होनी चाहिए।';
 }

@@ -1346,5 +1346,7 @@
   "navAuditDesc": "किसने, कब, क्या बदला — केवल पढ़ने के लिए",
   "@navAuditDesc": {},
   "auditRecordedAs": "दर्ज हुआ",
-  "@auditRecordedAs": {}
+  "@auditRecordedAs": {},
+  "userEditorNoRoles": "खाता बनाने से पहले कम-से-कम एक भूमिका होनी चाहिए।",
+  "@userEditorNoRoles": {}
 }

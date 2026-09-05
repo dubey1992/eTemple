@@ -59,8 +59,12 @@ class EnquiryPrivacyTest extends TestCase
         $response = $this->getJson($path);
 
         $this->assertContains($response->status(), [404, 405], $path.' answered a public read');
-        $this->assertStringNotContainsString('गुप्त नाम', $response->getContent());
-        $this->assertStringNotContainsString('9998887776', $response->getContent());
+        $this->assertResponseDoesNotLeak(
+            $response,
+            'गुप्त नाम',
+            '9998887776',
+            'यह संदेश कभी सार्वजनिक नहीं होना चाहिए।',
+        );
     }
 
     public function test_an_anonymous_visitor_cannot_open_the_inbox(): void

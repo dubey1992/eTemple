@@ -146,9 +146,13 @@ class ContentSection extends StatelessWidget {
                 ],
               ),
             ),
-            ?trailing,
+            // The heading's own action — "see all photographs" — has to give
+            // way on a phone, where the title needs the whole width.
+            if (!Breakpoints.of(context).isCompact) ?trailing,
           ],
         ),
+        if (Breakpoints.of(context).isCompact && trailing != null)
+          Align(alignment: AlignmentDirectional.centerStart, child: trailing!),
         const SizedBox(height: AppSpacing.md),
         child,
       ],

@@ -10,6 +10,7 @@ import '../../../core/errors/app_exception.dart';
 import '../../../core/errors/error_code.dart';
 import '../../../core/widgets/breakpoints.dart';
 import '../../../core/widgets/page_container.dart';
+import '../../../core/widgets/page_heading.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../admin/data/admin_providers.dart';
 import '../../admin/presentation/widgets/status_chip.dart';
@@ -52,7 +53,6 @@ class _AdminDonationsScreenState extends ConsumerState<AdminDonationsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final theme = Theme.of(context);
     final view = ref.watch(donationRegisterProvider);
     final register = ref.watch(donationsProvider(view.query));
     final canManage = ref
@@ -65,26 +65,10 @@ class _AdminDonationsScreenState extends ConsumerState<AdminDonationsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.donationsAdminTitle,
-                        style: theme.textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        l10n.donationsAdminSubtitle,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            PageHeading(
+              title: l10n.donationsAdminTitle,
+              subtitle: l10n.donationsAdminSubtitle,
+              actions: [
                 if (canManage) ...[
                   OutlinedButton.icon(
                     key: const Key('donation-settings-open'),
@@ -93,7 +77,6 @@ class _AdminDonationsScreenState extends ConsumerState<AdminDonationsScreen> {
                     icon: const Icon(Icons.account_balance_outlined, size: 18),
                     label: Text(l10n.navDonationSettings),
                   ),
-                  const SizedBox(width: AppSpacing.sm),
                   FilledButton.icon(
                     key: const Key('donation-new'),
                     onPressed: () => context.go(RoutePaths.adminDonationNew),
@@ -314,8 +297,8 @@ class _DonationRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = context.l10n;
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     final language = ref.watch(contentLanguageProvider);
 
     return Card(

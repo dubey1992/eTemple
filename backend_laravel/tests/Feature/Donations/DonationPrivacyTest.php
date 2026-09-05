@@ -94,11 +94,10 @@ class DonationPrivacyTest extends TestCase
             'is_published' => true,
         ]);
 
-        $body = $this->getJson('/api/public/donation-settings')->assertOk()->getContent();
+        $response = $this->getJson('/api/public/donation-settings')->assertOk();
 
-        $this->assertStringNotContainsString('सीता देवी', (string) $body);
-        $this->assertStringNotContainsString('9999999999', (string) $body);
-        $this->assertStringContainsString('thakurbari@upi', (string) $body);
+        $this->assertResponseDoesNotLeak($response, 'सीता देवी', '9999999999');
+        $this->assertResponseCarries($response, 'thakurbari@upi');
     }
 
     public function test_the_public_details_stay_hidden_until_they_are_published(): void

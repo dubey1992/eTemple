@@ -13,6 +13,8 @@ use App\Models\Media;
 use App\Models\Page;
 use App\Models\TempleProfile;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 use App\Support\MediaType;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -33,7 +35,10 @@ class MediaService
 
     public const DEFAULT_PER_PAGE = 24;
 
-    public function __construct(private readonly ImageProcessor $images) {}
+    public function __construct(
+        private readonly ImageProcessor $images,
+        private readonly AuditLogger $audit,
+    ) {}
 
     /**
      * The published gallery, paginated.
@@ -239,6 +244,21 @@ class MediaService
 
         $paths = $media->storedPaths();
 
+        // Recorded before the row goes, because afterwards there is nothing
+        // left to name. A photograph is destroyed here — the file leaves the
+        // disk below — so this row is the only remaining evidence it existed.
+        $this->audit->record(
+            action: AuditAction::CONTENT_DELETED,
+            entity: $media,
+            before: [
+                'media_type' => $media->media_type,
+                'title_hi' => $media->title_hi,
+                'original_name' => $media->original_name,
+                'album_id' => $media->album_id,
+            ],
+            label: $media->title_hi ?? $media->original_name,
+        );
+
         DB::transaction(function () use ($media) {
             $media->delete();
         });
@@ -395,6 +415,19 @@ class MediaService
      */
     public function deleteAlbum(Album $album): void
     {
+        $unfiled = Media::query()->where('album_id', $album->id)->count();
+
+        // The count is the point. Deleting an album destroys no photograph, but
+        // it does unfile however many were in it, and "where did the forty
+        // photographs from the 2026 Janmashtami album go" is the question this
+        // row has to answer.
+        $this->audit->record(
+            action: AuditAction::CONTENT_DELETED,
+            entity: $album,
+            before: ['title_hi' => $album->title_hi, 'photographs_unfiled' => $unfiled],
+            label: $album->title_hi,
+        );
+
         DB::transaction(function () use ($album) {
             Media::query()->where('album_id', $album->id)->update(['album_id' => null]);
             $album->delete();

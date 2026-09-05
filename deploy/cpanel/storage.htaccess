@@ -1,0 +1,42 @@
+# Rules for the uploads directory on the API host.
+#
+# Install as: <api document root>/storage/.htaccess
+#             (i.e. backend_laravel/public/storage/.htaccess, inside the
+#             symlink created by `php artisan storage:link`)
+#
+# Uploaded photographs are **static files**. The web server answers them without
+# running PHP, which means config/cors.php and the SecurityHeaders middleware
+# never see the request — everything they would have done has to be done here.
+
+<IfModule mod_headers.c>
+  # The site is on a different origin from the API, and Flutter Web fetches
+  # image *bytes* (rather than pointing an <img> at the URL) so it can decode
+  # them at a bounded size. A cross-origin fetch without this header is blocked,
+  # and the gallery silently falls back to a plain <img> — it works, but the
+  # bounded decode is lost, which matters most on the cheap phones this site is
+  # for.
+  Header always set Access-Control-Allow-Origin "https://radhakrishnathakurwadi.com"
+  Header always set Vary "Origin"
+
+  # An uploaded file must never be interpreted as something executable, whatever
+  # its extension says.
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Uploads are content-addressed by the media service, so they can be cached
+  # for a long time.
+  Header set Cache-Control "public, max-age=604800"
+</IfModule>
+
+# Nothing here is a program. Even though every upload is re-encoded through GD
+# before it is stored — which is what strips the location data and would destroy
+# any script hidden in a JPEG — this is the second wall, and it costs nothing.
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+
+<FilesMatch "\.(php|phtml|phar|php[0-9]|cgi|pl|py|sh)$">
+  Require all denied
+</FilesMatch>
+
+Options -Indexes -ExecCGI
+AddHandler default-handler .php .phtml .phar .cgi .pl .py .sh

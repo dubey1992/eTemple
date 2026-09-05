@@ -2440,4 +2440,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get auditRecordedAs => 'Recorded as';
+
+  @override
+  String get userEditorNoRoles =>
+      'At least one role must exist before an account can be created.';
 }

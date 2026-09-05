@@ -103,7 +103,11 @@ jobs:
           # service refuses the upload rather than storing an unstripped
           # original. exif is optional (auto-rotation only) and installed so CI
           # exercises the same path as production.
-          extensions: mbstring, pdo, pdo_mysql, pdo_sqlite, bcmath, intl, gd, exif
+          #
+          # zip was missing here until Phase 12 and is not optional either: the
+          # .xlsx export is written by hand with ZipArchive, so without it the
+          # Excel half of every report is untested.
+          extensions: mbstring, pdo, pdo_mysql, pdo_sqlite, bcmath, intl, gd, exif, zip
           coverage: none
 
       - name: Install dependencies
@@ -119,6 +123,16 @@ jobs:
 
       - name: Tests (in-memory SQLite)
         run: php artisan test
+
+      # The command that decides whether a deployment is safe to open. It must
+      # *fail* a development environment — a check that passes everywhere proves
+      # nothing — so CI runs it and asserts the non-zero exit.
+      - name: The deployment check rejects a development environment
+        run: |
+          if php artisan deploy:check; then
+            echo "::error::deploy:check passed a development environment; it is not checking anything"
+            exit 1
+          fi
 
       - name: Migration verification against MySQL
         env:
