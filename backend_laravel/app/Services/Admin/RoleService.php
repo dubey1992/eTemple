@@ -6,6 +6,8 @@ namespace App\Services\Admin;
 
 use App\Exceptions\AdminGuardException;
 use App\Models\Role;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 use App\Support\Permission;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -14,6 +16,8 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class RoleService
 {
+    public function __construct(private readonly AuditLogger $audit) {}
+
     /** @return Collection<int, Role> */
     public function all(): Collection
     {
@@ -34,6 +38,8 @@ class RoleService
      */
     public function replacePermissions(Role $role, array $permissions): Role
     {
+        $before = $role->permissions;
+
         if ($role->isSuperAdmin()) {
             throw AdminGuardException::superAdminPermissionsAreFixed();
         }
@@ -50,6 +56,17 @@ class RoleService
             array_unique($permissions),
         ));
         $role->save();
+
+        // What a role may do is the shape of everybody's access. A change here
+        // is one of the few edits that can quietly hand somebody the donation
+        // register, so it is recorded with both sets.
+        $this->audit->recordChange(
+            action: AuditAction::ROLE_UPDATED,
+            entity: $role,
+            before: ['permissions' => $before],
+            after: ['permissions' => $role->permissions],
+            label: $role->name,
+        );
 
         return $role->refresh();
     }

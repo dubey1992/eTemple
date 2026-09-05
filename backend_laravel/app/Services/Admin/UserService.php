@@ -8,6 +8,8 @@ use App\Exceptions\AdminGuardException;
 use App\Mail\AccountInvitation;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
@@ -21,6 +23,8 @@ use Illuminate\Support\Str;
  */
 class UserService
 {
+    public function __construct(private readonly AuditLogger $audit) {}
+
     /**
      * @param  array{search?: string|null, role?: string|null, status?: string|null}  $filters
      * @return LengthAwarePaginator<int, User>
@@ -77,6 +81,13 @@ class UserService
         $user->forceFill(['last_login_at' => null, 'remember_token' => null]);
         $user->save();
 
+        $this->audit->record(
+            action: AuditAction::USER_CREATED,
+            entity: $user,
+            after: $this->snapshot($user),
+            label: $user->email,
+        );
+
         $this->sendInvitation($user->refresh()->load('role'));
 
         return $user->refresh()->load('role');
@@ -89,6 +100,7 @@ class UserService
      */
     public function update(User $user, array $attributes, User $editor): User
     {
+        $before = $this->snapshot($user);
         $isSelf = $user->is($editor);
 
         if (array_key_exists('role_id', $attributes)
@@ -129,12 +141,52 @@ class UserService
 
         $user->save();
 
+        // A role or a status change is somebody's access changing. The trail
+        // holds both sides, because "who made them a Treasurer" is the
+        // question, not "somebody edited an account".
+        $this->audit->recordChange(
+            action: AuditAction::USER_UPDATED,
+            entity: $user,
+            before: $before,
+            after: $this->snapshot($user),
+            label: $user->email,
+        );
+
         return $user->refresh()->load('role');
     }
 
     public function sendPasswordResetLink(User $user): void
     {
         Password::broker()->sendResetLink(['email' => $user->email]);
+
+        // Worth a row: a reset link sent to an account somebody else controls
+        // is how an account is taken over, and this is the record that shows
+        // who asked for one.
+        $this->audit->record(
+            action: AuditAction::USER_PASSWORD_RESET_SENT,
+            entity: $user,
+            label: $user->email,
+        );
+    }
+
+    /**
+     * The fields worth remembering about an account.
+     *
+     * Never the password, in any form — {@see AuditLogger} would strip it
+     * anyway, and it answers no question worth asking.
+     *
+     * @return array<string, mixed>
+     */
+    private function snapshot(User $user): array
+    {
+        return [
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
+            'mobile' => $user->mobile,
+            'role_id' => $user->role_id,
+            'status' => $user->status,
+        ];
     }
 
     /**

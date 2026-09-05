@@ -2,6 +2,7 @@
 
 use App\Exceptions\ApiExceptionRenderer;
 use App\Http\Middleware\EnsureUserIsActive;
+use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -20,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
         // requests that originate from a configured stateful domain.
         // CORS is already part of the framework's global stack.
         $middleware->statefulApi();
+
+        // On every response, including the printable receipts and exports.
+        $middleware->append(SecurityHeaders::class);
 
         $middleware->alias([
             'active' => EnsureUserIsActive::class,

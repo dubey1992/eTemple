@@ -6,6 +6,8 @@ namespace App\Services\Temple;
 
 use App\Models\TempleProfile;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 
 /**
  * Business rules for the temple-profile singleton.
@@ -16,6 +18,8 @@ use App\Models\User;
  */
 class TempleProfileService
 {
+    public function __construct(private readonly AuditLogger $audit) {}
+
     /**
      * The one profile row, created empty on first access.
      *
@@ -36,9 +40,21 @@ class TempleProfileService
     public function update(array $attributes, User $editor): TempleProfile
     {
         $profile = $this->current();
+        // The values as they stand, for exactly the keys about to be
+        // written. Only the ones that really change reach the trail.
+        $before = $profile->only(array_keys($attributes));
         $profile->fill($attributes);
         $profile->updated_by = $editor->id;
         $profile->save();
+
+        // Settings are the site's own configuration; a change here is
+        // visible to every visitor, so it leaves a trace.
+        $this->audit->recordChange(
+            action: AuditAction::TEMPLE_PROFILE_UPDATED,
+            entity: $profile,
+            before: $before,
+            after: $profile->only(array_keys($before)),
+        );
 
         return $profile->refresh();
     }

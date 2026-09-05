@@ -14,8 +14,10 @@ use App\Reports\ReportRegistry;
 use App\Reports\ReportRequest;
 use App\Reports\ReportResult;
 use App\Reports\ReportRunner;
+use App\Services\Audit\AuditLogger;
 use App\Support\ApiErrorCode;
 use App\Support\ApiResponse;
+use App\Support\AuditAction;
 use App\Support\Language;
 use App\Support\Money;
 use App\Support\Permission;
@@ -42,6 +44,7 @@ class ReportController extends Controller
         private readonly ReportRunner $runner,
         private readonly ExporterRegistry $exporters,
         private readonly ExportHeader $header,
+        private readonly AuditLogger $audit,
     ) {}
 
     /**
@@ -115,6 +118,26 @@ class ReportController extends Controller
 
         $body = $exporter->render($result, $request->user());
         $filename = $this->header->filename($result, $exporter->extension());
+
+        /*
+         * A copy of the temple's records has just left the building.
+         *
+         * Phase 10 shipped without an answer to "who took the donor register,
+         * and when", which is exactly the question an audit trail exists for
+         * (PHASE_11_PLAN assumption S2). It is recorded even though this is a
+         * GET: what makes an action worth auditing is its consequence, not its
+         * verb — and whether the copy carried personal data is recorded with
+         * it, because that is the part that matters.
+         */
+        $this->audit->record(
+            action: AuditAction::REPORT_EXPORTED,
+            context: implode(' · ', array_filter([
+                $filename,
+                $result->includesPersonal ? 'व्यक्तिगत विवरण सहित / includes personal details' : null,
+                implode(', ', $result->filters),
+            ])),
+            label: $result->title(),
+        );
 
         return response($body, 200, [
             'Content-Type' => $exporter->contentType(),

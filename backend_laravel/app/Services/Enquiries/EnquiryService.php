@@ -8,6 +8,8 @@ use App\Exceptions\EnquiryGuardException;
 use App\Mail\EnquiryAcknowledgement;
 use App\Models\Enquiry;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 use App\Support\Permission;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
@@ -33,7 +35,25 @@ class EnquiryService
     public function __construct(
         private readonly EnquiryReferenceGenerator $references,
         private readonly EnquirySpamGuard $spam,
+        private readonly AuditLogger $audit,
     ) {}
+
+    /**
+     * Record that somebody opened a villager's message.
+     *
+     * The only *read* this system audits. Everywhere else, reading a list is
+     * ordinary work; here the thing being read is a person's telephone number
+     * and their complaint, and "who has seen this" is a question the committee
+     * may legitimately be asked (PHASE_11_PLAN assumption S1).
+     */
+    public function recordView(Enquiry $enquiry): void
+    {
+        $this->audit->record(
+            action: AuditAction::ENQUIRY_VIEWED,
+            entity: $enquiry,
+            label: $enquiry->reference,
+        );
+    }
 
     /**
      * Stores a message from the public form.
@@ -139,6 +159,8 @@ class EnquiryService
      */
     public function updateStatus(Enquiry $enquiry, array $attributes, User $actor): Enquiry
     {
+        $before = ['status' => $enquiry->status, 'assigned_to' => $enquiry->assigned_to];
+
         if (array_key_exists('assigned_to', $attributes)) {
             $assignee = $attributes['assigned_to'];
 
@@ -166,6 +188,14 @@ class EnquiryService
         }
 
         $enquiry->save();
+
+        $this->audit->recordChange(
+            action: AuditAction::ENQUIRY_UPDATED,
+            entity: $enquiry,
+            before: $before,
+            after: ['status' => $enquiry->status, 'assigned_to' => $enquiry->assigned_to],
+            label: $enquiry->reference,
+        );
 
         return $enquiry->fresh(['assignee', 'resolver']) ?? $enquiry;
     }

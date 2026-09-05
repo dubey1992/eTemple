@@ -7,6 +7,8 @@ namespace App\Services\Temple;
 use App\Exceptions\CommitteeGuardException;
 use App\Models\CommitteeMember;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +31,8 @@ use Illuminate\Support\Facades\DB;
  */
 class CommitteeService
 {
+    public function __construct(private readonly AuditLogger $audit) {}
+
     /**
      * The members a visitor may see: published, still serving, in display order.
      *
@@ -98,6 +102,13 @@ class CommitteeService
      */
     public function delete(CommitteeMember $member): void
     {
+        $this->audit->record(
+            action: AuditAction::COMMITTEE_MEMBER_DELETED,
+            entity: $member,
+            before: ['name_hi' => $member->name_hi, 'designation_hi' => $member->designation_hi],
+            label: $member->name_hi,
+        );
+
         $member->delete();
     }
 

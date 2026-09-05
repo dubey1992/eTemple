@@ -62,6 +62,18 @@ final class Permission
     public const REPORTS_EXPORT = 'reports.export';         // Phase 10
 
     /**
+     * Read the audit trail.
+     *
+     * Its own key rather than `security.view`, which is the login history: the
+     * audit log carries donor names, enquirers' details and the amounts on
+     * edited entries, so it is a store of personal data and a stricter thing to
+     * hand out (PHASE_11_PLAN assumption S5). Super Admin holds it by default
+     * and nobody else does, including Admin — a committee that wants to widen
+     * it can, in one screen.
+     */
+    public const AUDIT_VIEW = 'audit.view';                 // Phase 11
+
+    /**
      * The catalogue, grouped by module, in the order the matrix renders it.
      *
      * `phase` tells the UI which keys are not yet enforced, so the committee is
@@ -102,6 +114,7 @@ final class Permission
                 'permissions' => [
                     self::SECURITY_VIEW => 'View login history',
                     self::SECURITY_MANAGE => 'Change security settings',
+                    self::AUDIT_VIEW => 'Read the audit trail',
                 ],
             ],
             'temple' => [
@@ -191,6 +204,9 @@ final class Permission
                 // reshaping roles or security stays with the Super Admin.
                 self::ROLES_MANAGE,
                 self::SECURITY_MANAGE,
+                // The trail of who did what, including the personal details
+                // that changed, stays with the Super Admin by default.
+                self::AUDIT_VIEW,
             ])),
 
             Role::TREASURER => [

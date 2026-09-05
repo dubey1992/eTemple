@@ -8,6 +8,8 @@ use App\Exceptions\AccountingGuardException;
 use App\Models\AccountingCategory;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 use App\Support\Money;
 use App\Support\PaymentMode;
 use App\Support\TransactionType;
@@ -34,7 +36,10 @@ use Illuminate\Support\Facades\DB;
  */
 class TransactionService
 {
-    public function __construct(private readonly AttachmentStore $attachments) {}
+    public function __construct(
+        private readonly AttachmentStore $attachments,
+        private readonly AuditLogger $audit,
+    ) {}
 
     /**
      * The register, paginated and filtered.
@@ -124,6 +129,13 @@ class TransactionService
             $transaction->updated_by = $actor->id;
             $transaction->save();
 
+            $this->audit->record(
+                action: AuditAction::TRANSACTION_RECORDED,
+                entity: $transaction,
+                after: $this->snapshot($transaction),
+                label: $this->labelFor($transaction),
+            );
+
             return $transaction->fresh() ?? $transaction;
         });
     }
@@ -153,6 +165,8 @@ class TransactionService
         }
 
         return DB::transaction(function () use ($transaction, $attributes, $actor, $attachment) {
+            $before = $this->snapshot($transaction);
+
             if ($transaction->isLocked()) {
                 $transaction->description = $this->text($attributes, 'description');
             } else {
@@ -167,6 +181,14 @@ class TransactionService
 
             $transaction->updated_by = $actor->id;
             $transaction->save();
+
+            $this->audit->recordChange(
+                action: AuditAction::TRANSACTION_UPDATED,
+                entity: $transaction,
+                before: $before,
+                after: $this->snapshot($transaction),
+                label: $this->labelFor($transaction),
+            );
 
             return $transaction->fresh() ?? $transaction;
         });
@@ -204,6 +226,15 @@ class TransactionService
             $transaction->updated_by = $actor->id;
             $transaction->save();
 
+            // From here the figure is in the total the village reads, so who
+            // put it there is worth keeping.
+            $this->audit->record(
+                action: AuditAction::TRANSACTION_APPROVED,
+                entity: $transaction,
+                after: $this->snapshot($transaction),
+                label: $this->labelFor($transaction),
+            );
+
             return $transaction->fresh() ?? $transaction;
         });
     }
@@ -234,8 +265,44 @@ class TransactionService
             $transaction->updated_by = $actor->id;
             $transaction->save();
 
+            $this->audit->record(
+                action: AuditAction::TRANSACTION_REVERSED,
+                entity: $transaction,
+                after: $this->snapshot($transaction),
+                context: $transaction->reversal_reason,
+                label: $this->labelFor($transaction),
+            );
+
             return $transaction->fresh() ?? $transaction;
         });
+    }
+
+    /**
+     * The fields worth remembering about a ledger entry.
+     *
+     * @return array<string, mixed>
+     */
+    private function snapshot(Transaction $transaction): array
+    {
+        return [
+            'type' => $transaction->type,
+            'amount_paise' => $transaction->amount_paise,
+            'transaction_date' => $transaction->transaction_date?->toDateString(),
+            'category_id' => $transaction->category_id,
+            'payment_mode' => $transaction->payment_mode,
+            'payee_name' => $transaction->payee_name,
+            'reference_number' => $transaction->reference_number,
+            'description' => $transaction->description,
+            'status' => $transaction->status,
+            'attachment_path' => $transaction->attachment_path,
+        ];
+    }
+
+    /** Something readable in a list, without joining anything. */
+    private function labelFor(Transaction $transaction): string
+    {
+        return trim(Money::format($transaction->amount_paise)
+            .' · '.($transaction->payee_name ?? '—'));
     }
 
     // --- internals ----------------------------------------------------------

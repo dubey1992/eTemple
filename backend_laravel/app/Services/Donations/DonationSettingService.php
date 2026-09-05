@@ -6,6 +6,8 @@ namespace App\Services\Donations;
 
 use App\Models\DonationSetting;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 
 /**
  * The singleton row of public donation details.
@@ -17,6 +19,8 @@ use App\Models\User;
  */
 class DonationSettingService
 {
+    public function __construct(private readonly AuditLogger $audit) {}
+
     public function current(): DonationSetting
     {
         return DonationSetting::query()->oldest('id')->firstOr(
@@ -41,6 +45,7 @@ class DonationSettingService
     public function update(array $attributes, User $editor): DonationSetting
     {
         $settings = $this->current();
+        $before = $settings->only(array_keys($attributes));
 
         foreach ([
             'upi_id', 'bank_name', 'account_name', 'account_number', 'ifsc',
@@ -62,6 +67,15 @@ class DonationSettingService
 
         $settings->updated_by = $editor->id;
         $settings->save();
+
+        // Settings are the site's own configuration; a change here is
+        // visible to every visitor, so it leaves a trace.
+        $this->audit->recordChange(
+            action: AuditAction::DONATION_SETTINGS_UPDATED,
+            entity: $settings,
+            before: $before,
+            after: $settings->only(array_keys($before)),
+        );
 
         return $settings->fresh() ?? $settings;
     }

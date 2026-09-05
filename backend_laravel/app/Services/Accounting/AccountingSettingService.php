@@ -7,6 +7,8 @@ namespace App\Services\Accounting;
 use App\Exceptions\AccountingGuardException;
 use App\Models\AccountingSetting;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 use App\Support\Money;
 use Illuminate\Support\Carbon;
 
@@ -19,6 +21,8 @@ use Illuminate\Support\Carbon;
  */
 class AccountingSettingService
 {
+    public function __construct(private readonly AuditLogger $audit) {}
+
     public function current(): AccountingSetting
     {
         $settings = AccountingSetting::query()->orderBy('id')->first();
@@ -39,6 +43,7 @@ class AccountingSettingService
     public function update(array $attributes, User $actor): AccountingSetting
     {
         $settings = $this->current();
+        $before = $settings->only(array_keys($attributes));
 
         if (array_key_exists('opening_balance', $attributes)) {
             $settings->opening_balance_paise = $this->signedPaise($attributes['opening_balance']);
@@ -62,6 +67,15 @@ class AccountingSettingService
 
         $settings->updated_by = $actor->id;
         $settings->save();
+
+        // Settings are the site's own configuration; a change here is
+        // visible to every visitor, so it leaves a trace.
+        $this->audit->recordChange(
+            action: AuditAction::ACCOUNTING_SETTINGS_UPDATED,
+            entity: $settings,
+            before: $before,
+            after: $settings->only(array_keys($before)),
+        );
 
         return $settings;
     }

@@ -7,6 +7,8 @@ namespace App\Services\Content;
 use App\Models\NavigationItem;
 use App\Models\SiteSetting;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -15,6 +17,8 @@ use Illuminate\Support\Facades\DB;
  */
 class SiteSettingService
 {
+    public function __construct(private readonly AuditLogger $audit) {}
+
     /**
      * The one settings row, created empty on first access.
      *
@@ -62,6 +66,7 @@ class SiteSettingService
     {
         return DB::transaction(function () use ($attributes, $navigation, $editor) {
             $settings = $this->current();
+            $before = $settings->only(array_keys($attributes));
             $settings->fill($attributes);
             $settings->updated_by = $editor->id;
             $settings->save();
@@ -79,6 +84,21 @@ class SiteSettingService
                     ]);
                 }
             }
+
+            // Settings are the site's own configuration; a change here is
+            // visible to every visitor, so it leaves a trace.
+            $this->audit->recordChange(
+                action: AuditAction::SITE_SETTINGS_UPDATED,
+                entity: $settings,
+                before: $before,
+                after: $settings->only(array_keys($before)),
+                // The menu is replaced wholesale when it is sent at all, so
+                // "how many items" is the honest summary; the items themselves
+                // are the navigation table's own business.
+                context: $navigation === null
+                    ? null
+                    : 'मेन्यू बदला / Menu replaced: '.count($navigation).' items',
+            );
 
             return $settings->refresh();
         });

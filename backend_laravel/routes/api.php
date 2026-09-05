@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\AccountingSettingsController;
 use App\Http\Controllers\Api\Admin\AdminPingController;
 use App\Http\Controllers\Api\Admin\AlbumController;
 use App\Http\Controllers\Api\Admin\AnnouncementController as AdminAnnouncementController;
+use App\Http\Controllers\Api\Admin\AuditLogController;
 use App\Http\Controllers\Api\Admin\CommitteeMemberController;
 use App\Http\Controllers\Api\Admin\DonationController as AdminDonationController;
 use App\Http\Controllers\Api\Admin\DonationSettingsController;
@@ -200,6 +201,21 @@ Route::prefix('admin')
         // being able to create accounts.
         Route::get('/users/{user}/login-history', [UserController::class, 'loginHistory'])
             ->middleware('can:'.Permission::SECURITY_VIEW)->name('users.login-history');
+
+        /*
+         * --- The audit trail (Phase 11) --------------------------------
+         *
+         * Read only, and deliberately nothing else. There is no POST, PUT or
+         * DELETE at any permission — the trail is append-only, and an endpoint
+         * that could edit it would make every row in it worthless. There is no
+         * export either: it carries donor names and enquiry references, and a
+         * downloadable audit trail is a personal-data leak with an
+         * official-sounding name.
+         */
+        Route::get('/audit-logs', [AuditLogController::class, 'index'])
+            ->middleware('can:'.Permission::AUDIT_VIEW)->name('audit-logs.index');
+        Route::get('/audit-logs/actions', [AuditLogController::class, 'actions'])
+            ->middleware('can:'.Permission::AUDIT_VIEW)->name('audit-logs.actions');
 
         // --- Roles and the permission matrix (Phase 2) -----------------
         Route::get('/roles', [RoleController::class, 'index'])

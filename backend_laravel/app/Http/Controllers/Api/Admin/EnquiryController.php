@@ -60,6 +60,10 @@ class EnquiryController extends Controller
     {
         $enquiry->load(['assignee:id,first_name,last_name', 'resolver:id,first_name,last_name']);
 
+        // Opening one message is the single read this system audits: what is
+        // being read is somebody's telephone number and their complaint.
+        $this->enquiries->recordView($enquiry);
+
         return ApiResponse::success(new AdminEnquiryResource($enquiry));
     }
 

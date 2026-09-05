@@ -8,7 +8,9 @@ use App\Exceptions\AnnouncementGuardException;
 use App\Mail\AnnouncementNotification;
 use App\Models\Announcement;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
 use App\Support\AnnouncementChannel;
+use App\Support\AuditAction;
 use App\Support\Permission;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -27,6 +29,8 @@ use Illuminate\Support\Facades\Mail;
  */
 class AnnouncementService
 {
+    public function __construct(private readonly AuditLogger $audit) {}
+
     /**
      * What the public may see: published, inside its window, loudest first.
      *
@@ -194,6 +198,16 @@ class AnnouncementService
             $announcement->recipient_count = count($recipients);
             $announcement->save();
         });
+
+        // A send cannot be taken back, which is exactly what makes it worth
+        // a row of its own.
+        $this->audit->record(
+            action: AuditAction::ANNOUNCEMENT_SENT,
+            entity: $announcement,
+            context: 'माध्यम / Channels: '.implode(', ', $channels)
+                .' · प्राप्तकर्ता / Recipients: '.count($recipients),
+            label: $announcement->title_hi,
+        );
 
         foreach ($recipients as $address) {
             Mail::to($address)->queue(new AnnouncementNotification($announcement));

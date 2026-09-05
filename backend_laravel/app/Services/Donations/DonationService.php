@@ -7,6 +7,8 @@ namespace App\Services\Donations;
 use App\Exceptions\DonationGuardException;
 use App\Models\Donation;
 use App\Models\User;
+use App\Services\Audit\AuditLogger;
+use App\Support\AuditAction;
 use App\Support\DonationPurpose;
 use App\Support\Money;
 use App\Support\PaymentMode;
@@ -29,7 +31,10 @@ use Illuminate\Support\Facades\DB;
  */
 class DonationService
 {
-    public function __construct(private readonly ReceiptNumberGenerator $receipts) {}
+    public function __construct(
+        private readonly ReceiptNumberGenerator $receipts,
+        private readonly AuditLogger $audit,
+    ) {}
 
     /**
      * The admin list, paginated and filtered.
@@ -103,6 +108,13 @@ class DonationService
             $donation->updated_by = $actor->id;
             $donation->save();
 
+            $this->audit->record(
+                action: AuditAction::DONATION_RECORDED,
+                entity: $donation,
+                after: $this->snapshot($donation),
+                label: $this->labelFor($donation),
+            );
+
             return $donation->fresh() ?? $donation;
         });
     }
@@ -122,6 +134,8 @@ class DonationService
         }
 
         return DB::transaction(function () use ($donation, $attributes, $actor) {
+            $before = $this->snapshot($donation);
+
             if ($donation->isLocked()) {
                 // Only the notes, whatever else the payload contained.
                 $donation->notes = $this->text($attributes, 'notes');
@@ -131,6 +145,16 @@ class DonationService
 
             $donation->updated_by = $actor->id;
             $donation->save();
+
+            // An edited donation is the first thing an auditor looks at, so
+            // what changed is recorded rather than merely that something did.
+            $this->audit->recordChange(
+                action: AuditAction::DONATION_UPDATED,
+                entity: $donation,
+                before: $before,
+                after: $this->snapshot($donation),
+                label: $this->labelFor($donation),
+            );
 
             return $donation->fresh() ?? $donation;
         });
@@ -162,6 +186,14 @@ class DonationService
             $donation->updated_by = $actor->id;
             $donation->save();
 
+            $this->audit->record(
+                action: AuditAction::DONATION_CONFIRMED,
+                entity: $donation,
+                after: $this->snapshot($donation),
+                context: 'रसीद संख्या / Receipt: '.$donation->receipt_number,
+                label: $this->labelFor($donation),
+            );
+
             return $donation->fresh() ?? $donation;
         });
     }
@@ -192,8 +224,50 @@ class DonationService
             $donation->updated_by = $actor->id;
             $donation->save();
 
+            // The reason travels into the trail: "why was five thousand rupees
+            // removed from the books" is the first question an auditor asks,
+            // and the answer should not need a second lookup.
+            $this->audit->record(
+                action: AuditAction::DONATION_REVERSED,
+                entity: $donation,
+                after: $this->snapshot($donation),
+                context: $donation->reversal_reason,
+                label: $this->labelFor($donation),
+            );
+
             return $donation->fresh() ?? $donation;
         });
+    }
+
+    /**
+     * The fields worth remembering about a donation.
+     *
+     * Not the whole row: `created_at`, `updated_by` and the rest answer no
+     * question, and a diff full of them hides the one line that matters.
+     *
+     * @return array<string, mixed>
+     */
+    private function snapshot(Donation $donation): array
+    {
+        return [
+            'donor_name' => $donation->donor_name,
+            'donor_phone' => $donation->donor_phone,
+            'is_anonymous' => $donation->is_anonymous,
+            'amount_paise' => $donation->amount_paise,
+            'donation_date' => $donation->donation_date?->toDateString(),
+            'purpose' => $donation->purpose,
+            'payment_mode' => $donation->payment_mode,
+            'reference_number' => $donation->reference_number,
+            'receipt_number' => $donation->receipt_number,
+            'status' => $donation->status,
+            'notes' => $donation->notes,
+        ];
+    }
+
+    /** Something readable in a list, without joining anything. */
+    private function labelFor(Donation $donation): string
+    {
+        return trim(($donation->receipt_number ?? '—').' · '.$donation->donor_name);
     }
 
     // --- internals ----------------------------------------------------------
