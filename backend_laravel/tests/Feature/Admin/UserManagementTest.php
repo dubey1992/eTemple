@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Admin;
 
+use App\Mail\AccountInvitation;
+use App\Mail\PasswordResetMail;
 use App\Models\Role;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class UserManagementTest extends TestCase
@@ -23,7 +24,7 @@ class UserManagementTest extends TestCase
     {
         parent::setUp();
         $this->seed(RoleSeeder::class);
-        Notification::fake();
+        Mail::fake();
         $this->superAdmin = User::factory()->withRole(Role::SUPER_ADMIN)->create();
     }
 
@@ -89,7 +90,13 @@ class UserManagementTest extends TestCase
         }
         $this->assertStringNotContainsString('password', $response->getContent() ?: '');
 
-        Notification::assertSentTo($created, ResetPassword::class);
+        // An invitation, not a reset: a member who has never had a password
+        // must not be told somebody asked to reset it.
+        Mail::assertSent(
+            AccountInvitation::class,
+            static fn (AccountInvitation $mail): bool => $mail->hasTo($created->email),
+        );
+        Mail::assertNotSent(PasswordResetMail::class);
     }
 
     public function test_a_duplicate_email_is_rejected_case_insensitively(): void
@@ -168,7 +175,11 @@ class UserManagementTest extends TestCase
             ->postJson("/api/admin/users/{$target->id}/send-password-reset")
             ->assertOk();
 
-        Notification::assertSentTo($target, ResetPassword::class);
+        // Resending to an existing account is a reset, and says so.
+        Mail::assertSent(
+            PasswordResetMail::class,
+            static fn (PasswordResetMail $mail): bool => $mail->hasTo($target->email),
+        );
     }
 
     public function test_editing_a_missing_account_returns_not_found(): void

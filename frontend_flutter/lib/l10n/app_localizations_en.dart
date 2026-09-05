@@ -2382,4 +2382,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pageCardsHint =>
       'Write a paragraph as “🛕 Heading — text” and it appears as its own card on the website.';
+
+  @override
+  String get footerContact => 'Contact';
 }

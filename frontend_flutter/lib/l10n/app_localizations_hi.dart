@@ -2374,4 +2374,7 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get pageCardsHint =>
       'किसी अनुच्छेद को “🛕 शीर्षक — विवरण” के रूप में लिखें तो वह वेबसाइट पर अलग कार्ड की तरह दिखेगा।';
+
+  @override
+  String get footerContact => 'संपर्क';
 }

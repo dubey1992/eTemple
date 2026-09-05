@@ -262,9 +262,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
+      // The approved design's three columns: what this place is, the quick
+      // links, and where it is.
       expect(find.byKey(const Key('public-footer')), findsOneWidget);
       expect(find.byKey(const Key('public-footer-copyright')), findsOneWidget);
       expect(find.text('त्वरित लिंक'), findsOneWidget);
+      expect(find.text('संपर्क'), findsWidgets);
 
       // The year is read from the clock, not written into the app.
       final copyright = tester

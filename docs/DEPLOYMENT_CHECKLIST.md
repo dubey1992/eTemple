@@ -200,6 +200,10 @@ acceptance and handover are Phase 12.
       approved design's emoji arrive with a Noto fallback CanvasKit downloads,
       so they show as boxes for a moment. If that is unacceptable, the answer is
       to drop the emoji from the seeded copy, not to bundle a font
+- [ ] **Work through `EMAIL_TEMPLATES.md` before go-live.** `MAIL_MAILER` is
+      `log` in development, so nothing is sent; and announcements and enquiry
+      acknowledgements are queued, so **a queue worker must be running** or they
+      are written to the jobs table and never leave
 - [ ] Layout checked at 360 px, 768 px and 1440 px widths
 - [ ] Checked in Chrome/Edge on desktop and in a common Android mobile browser
 

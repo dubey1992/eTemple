@@ -7,6 +7,7 @@ namespace App\Providers;
 use App\Models\User;
 use App\Support\ApiErrorCode;
 use App\Support\ApiResponse;
+use App\Support\PasswordResetLink;
 use App\Support\Permission;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -133,12 +134,12 @@ class AppServiceProvider extends ServiceProvider
      */
     private function configurePasswordReset(): void
     {
-        ResetPassword::createUrlUsing(static function (object $notifiable, string $token): string {
-            $frontend = rtrim((string) config('app.frontend_url'), '/');
-            $email = urlencode((string) $notifiable->getEmailForPasswordReset());
-
-            return $frontend.'/reset-password?token='.$token.'&email='.$email;
-        });
+        ResetPassword::createUrlUsing(
+            static fn (object $notifiable, string $token): string => PasswordResetLink::for(
+                (string) $notifiable->getEmailForPasswordReset(),
+                $token,
+            ),
+        );
     }
 
     private static function credentialKey(Request $request): string

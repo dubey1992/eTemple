@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Auth;
 
+use App\Mail\PasswordResetMail;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class ForgotPasswordTest extends TestCase
@@ -21,7 +21,7 @@ class ForgotPasswordTest extends TestCase
     {
         parent::setUp();
         $this->seed(RoleSeeder::class);
-        Notification::fake();
+        Mail::fake();
     }
 
     public function test_an_active_user_is_sent_a_reset_link(): void
@@ -32,7 +32,10 @@ class ForgotPasswordTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.message', self::GENERIC_MESSAGE);
 
-        Notification::assertSentTo($user, ResetPassword::class);
+        Mail::assertSent(
+            PasswordResetMail::class,
+            static fn (PasswordResetMail $mail): bool => $mail->hasTo($user->email),
+        );
     }
 
     public function test_an_unknown_address_gets_the_same_answer_and_no_mail(): void
@@ -41,7 +44,7 @@ class ForgotPasswordTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.message', self::GENERIC_MESSAGE);
 
-        Notification::assertNothingSent();
+        Mail::assertNothingSent();
     }
 
     public function test_a_blocked_user_is_never_sent_a_reset_link(): void
@@ -52,7 +55,7 @@ class ForgotPasswordTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.message', self::GENERIC_MESSAGE);
 
-        Notification::assertNothingSent();
+        Mail::assertNothingSent();
     }
 
     public function test_the_address_must_be_valid(): void

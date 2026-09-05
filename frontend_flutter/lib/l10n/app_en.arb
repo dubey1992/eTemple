@@ -1126,5 +1126,7 @@
   "eventTypeCommunityService": "Community service",
   "@eventTypeCommunityService": {},
   "pageCardsHint": "Write a paragraph as “🛕 Heading — text” and it appears as its own card on the website.",
-  "@pageCardsHint": {}
+  "@pageCardsHint": {},
+  "footerContact": "Contact",
+  "@footerContact": {}
 }

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Mail\PasswordResetMail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * Admin / committee user.
@@ -58,6 +60,21 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    /**
+     * The reset link, in the temple's own words rather than the framework's.
+     *
+     * Laravel's default notification is in English and signs itself with
+     * `APP_NAME`. This is the hook the password broker calls, so overriding it
+     * here catches every path that asks for a reset — the forgot-password
+     * endpoint and an administrator resending a link both come through.
+     *
+     * Sent rather than queued: see {@see PasswordResetMail}.
+     */
+    public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
+    {
+        Mail::to($this)->send(new PasswordResetMail($this, (string) $token));
+    }
 
     /** @return array<string, string> */
     protected function casts(): array

@@ -127,16 +127,25 @@ void main() {
         FakeTempleRepository(
           profile: testProfile(name: 'श्री राधा कृष्ण मंदिर'),
         ),
-        // No footer line written, so the footer falls back to the temple's own
-        // identity — from the profile, not from a compiled string.
+        // No footer line written. The column still names the temple, because
+        // that heading is the profile's — not a compiled string — and the
+        // copyright line under it says the same.
         settings: testSettings(footer: null),
       );
 
-      final footer = tester.widget<Text>(
-        find.byKey(const Key('public-footer')),
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('public-footer')),
+          matching: find.text('श्री राधा कृष्ण मंदिर'),
+        ),
+        findsOneWidget,
       );
-      expect(footer.data, contains('श्री राधा कृष्ण मंदिर'));
-      expect(footer.data, contains('Amarpur Pankhoriya'));
+
+      final copyright = tester
+          .widget<Text>(find.byKey(const Key('public-footer-copyright')))
+          .data!;
+      expect(copyright, contains('श्री राधा कृष्ण मंदिर'));
+      expect(copyright, contains('Amarpur Pankhoriya'));
     });
   });
 

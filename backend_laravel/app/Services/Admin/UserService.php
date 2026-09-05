@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Services\Admin;
 
 use App\Exceptions\AdminGuardException;
+use App\Mail\AccountInvitation;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
@@ -74,7 +77,7 @@ class UserService
         $user->forceFill(['last_login_at' => null, 'remember_token' => null]);
         $user->save();
 
-        $this->sendPasswordResetLink($user);
+        $this->sendInvitation($user->refresh()->load('role'));
 
         return $user->refresh()->load('role');
     }
@@ -132,6 +135,33 @@ class UserService
     public function sendPasswordResetLink(User $user): void
     {
         Password::broker()->sendResetLink(['email' => $user->email]);
+    }
+
+    /**
+     * Welcome a new member and let them set their first password.
+     *
+     * A token is minted directly rather than going through `sendResetLink()`,
+     * for two reasons: the broker's throttle exists to stop an anonymous
+     * stranger hammering the forgot-password form, and it has no business
+     * delaying an administrator who has just created two accounts in a row;
+     * and the message that goes out has to say "your account was created", not
+     * "somebody asked to reset your password".
+     *
+     * A mail failure must not undo the account. The member exists, an
+     * administrator can resend the link from the users screen, and a
+     * half-created committee account would be worse than a missing e-mail.
+     */
+    public function sendInvitation(User $user): void
+    {
+        try {
+            $token = Password::broker()->createToken($user);
+            Mail::to($user)->send(new AccountInvitation($user, $token));
+        } catch (\Throwable $exception) {
+            Log::warning('The invitation for a new account could not be sent.', [
+                'user_id' => $user->id,
+                'exception' => $exception->getMessage(),
+            ]);
+        }
     }
 
     /**

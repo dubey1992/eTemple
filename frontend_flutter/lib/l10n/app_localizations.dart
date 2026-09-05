@@ -4363,6 +4363,12 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'किसी अनुच्छेद को “🛕 शीर्षक — विवरण” के रूप में लिखें तो वह वेबसाइट पर अलग कार्ड की तरह दिखेगा।'**
   String get pageCardsHint;
+
+  /// No description provided for @footerContact.
+  ///
+  /// In hi, this message translates to:
+  /// **'संपर्क'**
+  String get footerContact;
 }
 
 class _AppLocalizationsDelegate
