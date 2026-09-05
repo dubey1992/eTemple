@@ -1396,4 +1396,174 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get actionNext => 'अगला';
+
+  @override
+  String get contactPageTitle => 'मंदिर को लिखें';
+
+  @override
+  String get contactPageSubtitle =>
+      'पूजा, कार्यक्रम या किसी भी विषय में पूछें। समिति का कोई सदस्य आपसे संपर्क करेगा।';
+
+  @override
+  String get contactFormTitle => 'संदेश भेजें';
+
+  @override
+  String get contactOtherWays => 'संपर्क के अन्य माध्यम';
+
+  @override
+  String get contactOpenForm => 'समिति को लिखें';
+
+  @override
+  String get fieldYourName => 'आपका नाम';
+
+  @override
+  String get fieldEnquiryCategory => 'विषय क्या है?';
+
+  @override
+  String get fieldEnquiryMessage => 'आपका संदेश';
+
+  @override
+  String get fieldPreferredLanguage => 'उत्तर किस भाषा में चाहिए';
+
+  @override
+  String get contactChannelHint =>
+      'मोबाइल नंबर या ईमेल अवश्य दें, ताकि समिति उत्तर दे सके।';
+
+  @override
+  String get actionSendMessage => 'संदेश भेजें';
+
+  @override
+  String get actionSendAnother => 'एक और संदेश भेजें';
+
+  @override
+  String get enquirySentTitle => 'आपका संदेश भेज दिया गया है';
+
+  @override
+  String get enquirySentBody =>
+      'समिति का कोई सदस्य शीघ्र ही संपर्क करेगा। यह संदर्भ संख्या सुरक्षित रखें — इसी से मंदिर आपका संदेश ढूँढ़ेगा।';
+
+  @override
+  String get enquiryReferenceLabel => 'संदर्भ संख्या';
+
+  @override
+  String get enquiryChallengeLabel => 'भेजने से पहले एक छोटा सा प्रश्न';
+
+  @override
+  String get fieldChallengeAnswer => 'आपका उत्तर';
+
+  @override
+  String get enquiryCategoryGeneral => 'सामान्य जानकारी';
+
+  @override
+  String get enquiryCategoryPujaBooking => 'पूजा बुकिंग';
+
+  @override
+  String get enquiryCategoryDonation => 'दान संबंधी';
+
+  @override
+  String get enquiryCategoryEvent => 'कार्यक्रम संबंधी';
+
+  @override
+  String get enquiryCategoryVolunteer => 'सेवा एवं सहयोग';
+
+  @override
+  String get enquiryCategorySuggestion => 'सुझाव';
+
+  @override
+  String get enquiryCategoryComplaint => 'शिकायत';
+
+  @override
+  String get enquiryCategoryOther => 'अन्य';
+
+  @override
+  String get enquiryStatusNew => 'नया';
+
+  @override
+  String get enquiryStatusInProgress => 'कार्यवाही में';
+
+  @override
+  String get enquiryStatusResolved => 'उत्तर दिया गया';
+
+  @override
+  String get enquiryStatusSpam => 'स्पैम';
+
+  @override
+  String get navEnquiries => 'संपर्क एवं पूछताछ';
+
+  @override
+  String get navEnquiriesDesc =>
+      'भक्तों द्वारा भेजे गए संदेश और उन पर की गई कार्यवाही';
+
+  @override
+  String get enquiryInboxTitle => 'पूछताछ इनबॉक्स';
+
+  @override
+  String get enquiryInboxSubtitle =>
+      'संपर्क फ़ॉर्म से आए संदेश। इनमें से कुछ भी सार्वजनिक वेबसाइट पर नहीं दिखता।';
+
+  @override
+  String get enquiryInboxEmpty => 'अभी तक कोई संदेश नहीं।';
+
+  @override
+  String get enquiryDetailTitle => 'पूछताछ';
+
+  @override
+  String get enquiryAssignedTo => 'सौंपा गया';
+
+  @override
+  String get enquiryUnassigned => 'किसी को नहीं सौंपा गया';
+
+  @override
+  String get enquiryReplyIn => 'उत्तर चाहिए';
+
+  @override
+  String enquiryReceivedOn(String date) {
+    return 'प्राप्त: $date';
+  }
+
+  @override
+  String enquiryResolvedOn(String date) {
+    return 'उत्तर दिया: $date';
+  }
+
+  @override
+  String enquiryOpenCount(int count) {
+    return '$count प्रतीक्षारत';
+  }
+
+  @override
+  String get enquiryStatusUpdated => 'स्थिति बदल दी गई।';
+
+  @override
+  String get enquiryAssignmentUpdated => 'जिम्मेदारी बदल दी गई।';
+
+  @override
+  String get enquirySearchHint => 'संदर्भ, नाम, नंबर या संदेश खोजें';
+
+  @override
+  String get enquiryNoReplyChannel => 'कोई संपर्क विवरण नहीं दिया गया';
+
+  @override
+  String get enquirySpamNotice =>
+      'स्पैम चिह्नित। यह सुरक्षित है, पर इनबॉक्स से हटा दिया गया है।';
+
+  @override
+  String get enquiryPrivacyNotice => 'ये संदेश केवल समिति के लिए हैं।';
+
+  @override
+  String get errorEnquiryFormExpired =>
+      'यह फ़ॉर्म समाप्त हो गया है। कृपया संदेश दोबारा भेजें।';
+
+  @override
+  String get errorEnquiryChallengeRequired =>
+      'कृपया फ़ॉर्म के साथ दिया गया छोटा प्रश्न हल करें।';
+
+  @override
+  String get enquiryAssignToMe => 'मुझे सौंपें';
+
+  @override
+  String get enquiryUnassign => 'जिम्मेदारी हटाएं';
+
+  @override
+  String get enquiryChooseMember => 'किसी सदस्य को सौंपें';
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Admin\AlbumController;
 use App\Http\Controllers\Api\Admin\CommitteeMemberController;
 use App\Http\Controllers\Api\Admin\DonationController as AdminDonationController;
 use App\Http\Controllers\Api\Admin\DonationSettingsController;
+use App\Http\Controllers\Api\Admin\EnquiryController as AdminEnquiryController;
 use App\Http\Controllers\Api\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Api\Admin\MediaController as AdminMediaController;
 use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\PublicSite\DonationController as PublicDonationController;
+use App\Http\Controllers\Api\PublicSite\EnquiryController as PublicEnquiryController;
 use App\Http\Controllers\Api\PublicSite\EventController as PublicEventController;
 use App\Http\Controllers\Api\PublicSite\MediaController as PublicMediaController;
 use App\Http\Controllers\Api\PublicSite\PageController as PublicPageController;
@@ -114,6 +116,21 @@ Route::prefix('public')
         // is Phase 9's requirement rather than an omission here.
         Route::get('/donation-settings', [PublicDonationController::class, 'settings'])
             ->name('donation-settings');
+
+        // The contact form (Phase 7). Two endpoints and no third: fetch a
+        // form, send a message. There is deliberately **no public read** of an
+        // enquiry at any status — nothing a stranger posts here can be served
+        // back to anybody (PHASE_7_PLAN assumption N1).
+        //
+        // The submission carries `throttle:enquiry-submit` *in addition* to the
+        // group's general public limit, because this is the one endpoint in the
+        // application that an anonymous request can write with.
+        Route::get('/enquiry-form', [PublicEnquiryController::class, 'form'])
+            ->name('enquiry-form');
+
+        Route::post('/enquiries', [PublicEnquiryController::class, 'store'])
+            ->middleware('throttle:enquiry-submit')
+            ->name('enquiries.store');
 
         Route::get('/pages/{slug}', [PublicPageController::class, 'show'])
             ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')
@@ -272,4 +289,24 @@ Route::prefix('admin')
             ->middleware('can:'.Permission::DONATIONS_VIEW)->name('donation-settings.show');
         Route::put('/donation-settings', [DonationSettingsController::class, 'update'])
             ->middleware('can:'.Permission::DONATIONS_MANAGE)->name('donation-settings.update');
+
+        // --- Devotee enquiries (Phase 7) -------------------------------
+        // `enquiries.manage` on the reads as well as the writes. Unlike the
+        // calendar or the committee there is no content.view tier here: every
+        // row holds a villager's name, their telephone number and whatever
+        // they chose to tell the temple, and reading that is the sensitive act
+        // (PHASE_7_PLAN assumption N9).
+        //
+        // No DELETE, for the same reason donations have none: `spam` moves a
+        // row out of the inbox and keeps it.
+        Route::get('/enquiries', [AdminEnquiryController::class, 'index'])
+            ->middleware('can:'.Permission::ENQUIRIES_MANAGE)->name('enquiries.index');
+        Route::get('/enquiries/summary', [AdminEnquiryController::class, 'summary'])
+            ->middleware('can:'.Permission::ENQUIRIES_MANAGE)->name('enquiries.summary');
+        Route::get('/enquiries/{enquiry}', [AdminEnquiryController::class, 'show'])
+            ->whereNumber('enquiry')
+            ->middleware('can:'.Permission::ENQUIRIES_MANAGE)->name('enquiries.show');
+        Route::put('/enquiries/{enquiry}/status', [AdminEnquiryController::class, 'updateStatus'])
+            ->whereNumber('enquiry')
+            ->middleware('can:'.Permission::ENQUIRIES_MANAGE)->name('enquiries.update-status');
     });

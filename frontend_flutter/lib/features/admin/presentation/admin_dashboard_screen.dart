@@ -103,6 +103,17 @@ class AdminDashboardScreen extends ConsumerWidget {
           description: l10n.navDonationsDesc,
           route: RoutePaths.adminDonations,
         ),
+      // Reading the inbox and answering it are the same right: there is no
+      // view-only tier for a villager's telephone number and their complaint
+      // (PHASE_7_PLAN assumption N9).
+      if (permissions.can(Permissions.enquiriesManage))
+        _Entry(
+          key: const Key('dash-enquiries'),
+          icon: Icons.mark_email_unread_outlined,
+          title: l10n.navEnquiries,
+          description: l10n.navEnquiriesDesc,
+          route: RoutePaths.adminEnquiries,
+        ),
       if (permissions.can(Permissions.usersView))
         _Entry(
           key: const Key('dash-users'),

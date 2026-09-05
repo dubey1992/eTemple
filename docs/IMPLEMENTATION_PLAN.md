@@ -137,10 +137,10 @@ Explicitly **out** of Phase 0: CMS pages, home/about content, user CRUD screens,
 
 ## Phase 7 — Devotee Contact & Enquiries
 
-- [ ] `enquiries` (`name`, `mobile`, `email`, `category`, `message`, `preferred_language`, `status`, `assigned_to`, `resolved_at`)
-- [ ] `POST /api/public/enquiries`, admin inbox + status endpoints
-- [ ] Spam protection, rate limiting, CAPTCHA-after-threshold, optional acknowledgement email
-- [ ] Enquiry content never displayed publicly
+- [x] `enquiries` (`name`, `mobile`, `email`, `category`, `message`, `preferred_language`, `status`, `assigned_to`, `resolved_at`)
+- [x] `POST /api/public/enquiries`, admin inbox + status endpoints
+- [x] Spam protection, rate limiting, CAPTCHA-after-threshold, optional acknowledgement email
+- [x] Enquiry content never displayed publicly
 
 ## Phase 8 — Announcements & Notifications
 

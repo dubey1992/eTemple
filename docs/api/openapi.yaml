@@ -2,14 +2,14 @@ openapi: 3.1.0
 
 info:
   title: Radha Krishna Thakurbari API
-  version: 0.7.0
+  version: 0.8.0
   description: |
     REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
     admin console.
 
-    **Scope: Phases 0-6.** Endpoints for enquiries, announcements, accounts
-    and reports are added in their own phases and must be documented here in the
-    same change that implements them.
+    **Scope: Phases 0-7.** Endpoints for announcements, accounts and reports
+    are added in their own phases and must be documented here in the same
+    change that implements them.
 
     ## Authorization
 
@@ -80,6 +80,12 @@ tags:
   - name: Temple profile
   - name: Committee
   - name: Events
+  - name: Enquiries
+    description: |
+      The public contact form and the committee's inbox. The form is the
+      only endpoint an anonymous request can write with; the inbox is
+      readable only with `enquiries.manage`, and an enquiry reaches no
+      public endpoint at any status.
 
 paths:
   /api/health:
@@ -1781,6 +1787,197 @@ paths:
         '403': { description: FORBIDDEN }
         '422': { description: VALIDATION_FAILED }
 
+  /api/public/enquiry-form:
+    get:
+      tags: [Enquiries]
+      summary: The ticket the contact form must be submitted with
+      description: |
+        Public. Issues an HMAC-signed, single-use token stamped with its issue
+        time, plus - once this address has crossed the submission threshold -
+        a small bilingual arithmetic question that must be answered with the
+        message ("CAPTCHA-after-threshold").
+
+        The expected answer never leaves the server: the token is a signed
+        nonce and the state lives server-side, which also lets the ticket be
+        **spent once**. One harvested token is worth one message.
+
+        No third-party CAPTCHA is used. reCAPTCHA and hCaptcha would each
+        fingerprint every villager who opens the temple's contact page with a
+        third party, and both need keys this project has not been given.
+      responses:
+        '200':
+          description: A form ticket
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/EnquiryFormTicket' }
+
+  /api/public/enquiries:
+    post:
+      tags: [Enquiries]
+      summary: Send a message to the temple
+      description: |
+        Public, and the only endpoint in this API an anonymous request can
+        **write** with. Four layers of protection, none of them a third-party
+        service: an IP rate limit (3/minute) with a daily ceiling on top, a
+        honeypot field, the timed single-use form ticket, and the question
+        after the threshold.
+
+        A honeypot hit returns the **success shape with a null reference** and
+        stores nothing: telling a bot it was detected is free tuning feedback
+        for whoever wrote it.
+
+        The response carries a reference number and a sentence, and **nothing
+        else** - never the stored row. Echoing the submission back would make
+        this endpoint a reflector.
+
+        At least one of `mobile` or `email` is required: an enquiry nobody can
+        answer is not an enquiry.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EnquiryInput' }
+      responses:
+        '201':
+          description: Accepted - the reference, or null when dropped as spam
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/EnquiryReceipt' }
+        '422':
+          description: |
+            VALIDATION_FAILED, ENQUIRY_FORM_EXPIRED (missing, forged, spent or
+            stale ticket, or filled in faster than a person could type), or
+            ENQUIRY_CHALLENGE_REQUIRED.
+        '429': { description: TOO_MANY_REQUESTS - per-minute limit or the daily ceiling }
+
+  /api/admin/enquiries:
+    get:
+      tags: [Enquiries]
+      summary: The committee's inbox
+      description: |
+        Requires **`enquiries.manage`** - the read as well as the write. There
+        is deliberately no `enquiries.view` tier: a Viewer may see the calendar
+        and the donation totals, but a villager's telephone number and their
+        complaint are not general committee reading.
+
+        Unanswered messages sort first, then newest first, so paging cannot
+        reshuffle what still needs doing. `spam` is excluded unless asked for
+        by name.
+
+        `submitted_ip_hash` is never serialized. It exists to correlate abuse
+        inside the database, not to be read.
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [new, in_progress, resolved, spam] } }
+        - { name: category, in: query, schema: { type: string } }
+        - { name: assigned_to, in: query, schema: { type: string }, description: A user id, or `unassigned` }
+        - { name: search, in: query, schema: { type: string }, description: Reference, name, mobile, e-mail or message }
+        - { name: page, in: query, schema: { type: integer, default: 1 } }
+        - { name: per_page, in: query, schema: { type: integer, default: 25, maximum: 100 } }
+      responses:
+        '200':
+          description: One page of enquiries
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/Enquiry' }
+                      meta: { $ref: '#/components/schemas/PaginationMeta' }
+        '401': { description: UNAUTHENTICATED }
+        '403': { description: FORBIDDEN }
+
+  /api/admin/enquiries/summary:
+    get:
+      tags: [Enquiries]
+      summary: How many are waiting, by status
+      description: |
+        Requires `enquiries.manage`. Counted by the database over the whole
+        inbox rather than over a page, and with the `status` filter dropped - a
+        summary that honoured it would report "new: 0" to somebody looking at
+        the resolved tab.
+      responses:
+        '200':
+          description: Counts by status
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/EnquirySummary' }
+        '403': { description: FORBIDDEN }
+
+  /api/admin/enquiries/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [Enquiries]
+      summary: One enquiry
+      description: |
+        Requires `enquiries.manage`. There is **no public counterpart and no
+        DELETE**: `spam` takes a row out of the inbox and keeps it, because a
+        complaint its subject can erase is not a complaint.
+      responses:
+        '200':
+          description: The enquiry
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Enquiry' }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+
+  /api/admin/enquiries/{id}/status:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    put:
+      tags: [Enquiries]
+      summary: Move an enquiry along, or hand it to somebody
+      description: |
+        Requires `enquiries.manage`.
+
+        `resolved_at` is stamped on entering `resolved` and cleared on leaving
+        it, so the column always answers "when was this closed" rather than
+        "when was it last touched". Resolving an already resolved enquiry keeps
+        the original closing time.
+
+        `assigned_to` is validated against **active users who hold
+        `enquiries.manage`**: assigning an enquiry to a Treasurer, who cannot
+        open the inbox, is a silent black hole.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status: { type: string, enum: [new, in_progress, resolved, spam] }
+                assigned_to: { type: [integer, 'null'] }
+      responses:
+        '200': { description: The updated enquiry }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+        '422': { description: VALIDATION_FAILED - including an assignee who cannot open the inbox }
+
 components:
   securitySchemes:
     sessionCookie:
@@ -2505,5 +2702,100 @@ components:
         note_en: { type: [string, 'null'] }
         is_published: { type: boolean }
 
+    EnquiryFormTicket:
+      type: object
+      required: [token, challenge, min_fill_seconds, expires_in_seconds, categories]
+      properties:
+        token: { type: string }
+        challenge:
+          oneOf:
+            - type: 'null'
+            - type: object
+              properties:
+                question_hi: { type: string }
+                question_en: { type: string }
+          description: Null until this address has crossed the threshold.
+        min_fill_seconds: { type: integer }
+        expires_in_seconds: { type: integer }
+        max_message_length: { type: integer }
+        min_message_length: { type: integer }
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              code: { type: string }
+              label: { type: string, description: Bilingual, for a client that does not know the code }
+
+    EnquiryInput:
+      type: object
+      required: [name, category, message, form_token]
+      properties:
+        name: { type: string, minLength: 2, maxLength: 120 }
+        mobile: { type: [string, 'null'], maxLength: 20 }
+        email: { type: [string, 'null'], format: email, maxLength: 190 }
+        category:
+          type: string
+          enum: [general, puja_booking, donation, event, volunteer, suggestion, complaint, other]
+        message: { type: string, minLength: 20, maxLength: 2000 }
+        preferred_language: { type: string, enum: [hi, en] }
+        form_token: { type: string }
+        challenge_answer: { type: [string, 'null'], description: Required once the server has issued a question }
+        website:
+          type: string
+          description: |
+            The honeypot. A field no human sees; anything in it means a bot, and
+            the request is answered as though it succeeded while storing
+            nothing. Clients send it empty on every submission.
+
+    EnquiryReceipt:
+      type: object
+      required: [reference, message]
+      properties:
+        reference:
+          type: [string, 'null']
+          example: RKT/E/2026-27/0001
+          description: Null when the submission was dropped as spam.
+        message: { type: string }
+
+    Enquiry:
+      type: object
+      description: |
+        Behind `enquiries.manage`. `submitted_ip_hash` is deliberately absent:
+        it correlates abuse inside the database and identifies nobody outside
+        this installation, and nothing in the inbox is improved by showing it.
+      properties:
+        id: { type: integer }
+        reference: { type: string, example: RKT/E/2026-27/0001 }
+        name: { type: string }
+        mobile: { type: [string, 'null'] }
+        email: { type: [string, 'null'] }
+        category: { type: string }
+        category_label: { type: string }
+        message: { type: string }
+        preferred_language:
+          type: string
+          enum: [hi, en]
+          description: Which language the devotee asked to be **answered** in.
+        status: { type: string, enum: [new, in_progress, resolved, spam] }
+        is_open: { type: boolean }
+        assigned_to: { type: [integer, 'null'] }
+        assigned_to_name: { type: [string, 'null'] }
+        resolved_at: { type: [string, 'null'], format: date-time }
+        resolved_by_name: { type: [string, 'null'] }
+        acknowledged_at: { type: [string, 'null'], format: date-time }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+
+    EnquirySummary:
+      type: object
+      properties:
+        new: { type: integer }
+        in_progress: { type: integer }
+        resolved: { type: integer }
+        spam: { type: integer }
+        open: { type: integer, description: new + in_progress }
+
 security:
   - sessionCookie: []
+

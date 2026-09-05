@@ -38,6 +38,22 @@ acceptance and handover are Phase 12.
       with its credentials set); `MEDIA_MAX_UPLOAD_KB` is not larger than PHP's
       own `upload_max_filesize` **and** `post_max_size`, which are the second
       wall and silently truncate a request that exceeds them
+- [ ] **The contact form's real client IP reaches Laravel.** Every anti-spam
+      limit in Phase 7 — the rate limit, the daily ceiling and the question
+      after the threshold — is keyed on `$request->ip()`. Behind a proxy or a
+      CDN that is the *proxy's* address unless `TrustProxies` is configured, in
+      which case every visitor in the country shares one bucket: the first few
+      messages of the day would exhaust it and everybody else would be
+      throttled. Verify by submitting from two different networks and checking
+      that the second is not counted against the first
+- [ ] `ENQUIRY_ACKNOWLEDGEMENT_ENABLED` is left `false` unless the committee
+      has asked for it. When it is on, the address is supplied by whoever filled
+      an anonymous form and need not be theirs — the mail is rate limited per
+      address and carries none of the sender's words, and it should still be a
+      deliberate decision
+- [ ] `QUEUE_CONNECTION` has a worker running if the acknowledgement is enabled;
+      it is queued so a slow SMTP server cannot hold a public request open, and
+      with no worker the mail is never sent
 
 ## Backend server
 

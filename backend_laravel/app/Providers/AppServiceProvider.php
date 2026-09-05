@@ -77,6 +77,18 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('media-upload', fn (Request $request) => Limit::perMinute(30)
             ->by($request->user()?->id ?: $request->ip())
             ->response(self::throttled(...)));
+
+        // The public contact form (spec Phase 7: "rate-limit ... abuse-prone
+        // public forms"). Keyed by address only — there is no account to key
+        // on, which is exactly what makes this endpoint the abusable one.
+        //
+        // Three a minute is generous for a person writing to a temple and
+        // useless to anybody sending in bulk; the daily ceiling and the
+        // question-after-threshold in `EnquirySpamGuard` handle the patient
+        // abuser this limit alone would let through.
+        RateLimiter::for('enquiry-submit', fn (Request $request) => Limit::perMinute(3)
+            ->by($request->ip())
+            ->response(self::throttled(...)));
     }
 
     /**

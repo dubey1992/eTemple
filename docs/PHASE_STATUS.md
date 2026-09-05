@@ -13,12 +13,36 @@ Legend: `NOT STARTED` · `IN PROGRESS` · `PARTIAL` · `BLOCKED` · `COMPLETE`
 | 4 | Puja, Events & Calendar | **COMPLETE** | Recurring events stored as a rule and expanded on read; past/upcoming views; cancelled events kept visible and flagged. Also fixed two Phase 3 findings: admin breadcrumbs and equal-height cards — `phase-reports/PHASE_4_COMPLETION.md`. |
 | 5 | Gallery & Video Darshan | **COMPLETE** | Uploads validated by their bytes, stripped of location/camera data by re-encoding, and stored as three responsive variants; albums; a deletion guard that names what still points at a file. `logo_url`, `photo_url` and `poster_url` are now filled from the library — `phase-reports/PHASE_5_COMPLETION.md`. |
 | 6 | Donations & Receipts | **COMPLETE** | Money as integer paise; a receipt number issued on verification, unique by database index and immutable thereafter; no delete anywhere — reversal keeps the row, its number and a required reason. Donor detail reaches no public endpoint — `phase-reports/PHASE_6_COMPLETION.md`. |
-| 7 | Devotee Contact & Enquiries | NOT STARTED | Key `enquiries.manage` exists. The prototype's `संपर्क` section, and the first phase that accepts input from an anonymous visitor. |
+| 7 | Devotee Contact & Enquiries | **COMPLETE** | The public contact form, protected by four layers none of which is a third-party CAPTCHA: an IP rate limit with a daily ceiling, a honeypot, a timed single-use ticket, and a server-issued question after a threshold. No public read of an enquiry at any status, and no delete — `spam` keeps the row. Also fixed two defects carried in from earlier phases — `phase-reports/PHASE_7_COMPLETION.md`. |
 | 8 | Announcements & Notifications | NOT STARTED | Key `announcements.manage` exists. |
 | 9 | Accounts & Transparency | NOT STARTED | Keys `accounts.*` exist. |
 | 10 | Reports & Analytics | NOT STARTED | Keys `reports.*` exist. |
 | 11 | Security, Backup & Audit | NOT STARTED | |
 | 12 | Testing, Deployment & Handover | NOT STARTED | |
+
+## Verification log — Phase 7 (2026-09-11)
+
+| Check | Result |
+|---|---|
+| `flutter analyze` | ✅ No issues found |
+| `dart format --set-exit-if-changed` | ✅ 0 of 182 files changed |
+| `flutter test` | ✅ **464/464** passed |
+| `flutter build web --release` | ✅ built |
+| `./vendor/bin/pint --test` | ✅ passed |
+| `php artisan test` | ✅ **504** passed |
+| migrate → rollback → migrate → seed (MariaDB) | ✅ reversible |
+| No public read of an enquiry | ✅ four plausible public paths 404/405 and leak no name or number |
+| Reading the inbox is refused without `enquiries.manage` | ✅ Treasurer and Viewer both 403, called directly against the API |
+| The address is stored hashed | ✅ 64-hex HMAC, and never serialized even to the committee |
+| No hard delete | ✅ `DELETE` on an enquiry is 405; `spam` keeps the row and is one query parameter away |
+| The ticket is single-use and timed | ✅ replay, forgery, staleness and instant submission all refused |
+| The question escalates and cannot be side-stepped | ✅ a ticket taken before the threshold is bounced, not honoured |
+| The counter window does not extend itself | ✅ a visitor who wrote twice an hour ago is not made to do arithmetic all day |
+| Acknowledgement carries none of the sender's words | ✅ asserted against a rendered mail |
+| Every backend error code has a client mirror | ✅ now enforced by a test across the two languages |
+| Live, through the running API | ✅ **64 checks** over two passes — including waiting out the rate limit rather than configuring it away. The first pass reported five failures; all five were the checking script's own (`??` cannot tell a null value from a missing key, and it mis-modelled where the hour-long escalation counters already stood). Re-checked properly in the second pass |
+| Phase 0–6 tests | ✅ pass unchanged |
+| Every admin route has a breadcrumb trail | ✅ still asserted, now including the two enquiry routes |
 
 ## Verification log — Phase 6 (2026-09-10)
 
@@ -134,7 +158,13 @@ MariaDB 12.3.3 · live health and 401 checks.
 - No calendar export (.ics); reminders are Phase 8.
 - Committee ordering and the navigation menu both need reorderable editors.
 - Consent changes are not audit-logged; the record exists for Phase 11.
+- No retention or purge of enquiry personal data — Phase 11.
+- An enquiry cannot be answered from inside the console; replies go by
+  telephone or e-mail (Phase 7 §10).
+- Handing an enquiry to another member needs `users.view`, which
+  `enquiries.manage` does not imply; an "assignable members" endpoint would fix
+  it (Phase 7 §10).
 - Pre-render tool not wired into CI.
 - No cross-stack end-to-end test (Phase 12).
 
-Phase 7 must not begin without explicit approval.
+Phase 8 must not begin without explicit approval.

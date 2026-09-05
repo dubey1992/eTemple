@@ -26,6 +26,9 @@ import '../../features/donations/presentation/admin_donation_editor_screen.dart'
 import '../../features/donations/presentation/admin_donation_settings_screen.dart';
 import '../../features/donations/presentation/admin_donations_screen.dart';
 import '../../features/donations/presentation/donate_screen.dart';
+import '../../features/enquiries/presentation/admin_enquiries_screen.dart';
+import '../../features/enquiries/presentation/admin_enquiry_detail_screen.dart';
+import '../../features/enquiries/presentation/contact_screen.dart';
 import '../../features/media/presentation/admin_album_editor_screen.dart';
 import '../../features/media/presentation/admin_albums_screen.dart';
 import '../../features/media/presentation/admin_media_editor_screen.dart';
@@ -126,6 +129,13 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: RoutePaths.donate,
             name: RouteNames.donate,
             builder: (context, state) => const DonateScreen(),
+          ),
+          GoRoute(
+            // Declared here rather than left to the catch-all slug route, so
+            // /contact is never mistaken for a CMS page.
+            path: RoutePaths.contact,
+            name: RouteNames.contact,
+            builder: (context, state) => const ContactScreen(),
           ),
           GoRoute(
             // Declared here rather than left to the catch-all slug route, so
@@ -322,6 +332,20 @@ final routerProvider = Provider<GoRouter>((ref) {
               final id = int.tryParse(state.pathParameters['id'] ?? '');
               if (id == null) return const NotFoundScreen();
               return AdminDonationEditorScreen(donationId: id);
+            },
+          ),
+          GoRoute(
+            path: RoutePaths.adminEnquiries,
+            name: RouteNames.adminEnquiries,
+            builder: (context, state) => const AdminEnquiriesScreen(),
+          ),
+          GoRoute(
+            path: '${RoutePaths.adminEnquiries}/:id',
+            name: RouteNames.adminEnquiryDetail,
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '');
+              if (id == null) return const NotFoundScreen();
+              return AdminEnquiryDetailScreen(id: id);
             },
           ),
           GoRoute(

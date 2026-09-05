@@ -46,10 +46,19 @@ class FakeHttpAdapter implements HttpClientAdapter {
 
 /// Pretends to be a browser so the CSRF path can be tested on the Dart VM.
 class FakeBrowserSupport implements BrowserSupport {
-  FakeBrowserSupport({this.isWeb = true, this.cookies = const {}});
+  FakeBrowserSupport({
+    this.isWeb = true,
+    this.cookies = const {},
+    this.currentHost,
+  });
 
   @override
   final bool isWeb;
+
+  /// The host the page was served from, as `AppConfig` reads it when deciding
+  /// the development API origin.
+  @override
+  final String? currentHost;
 
   final Map<String, String> cookies;
 

@@ -85,6 +85,14 @@ class HomeScreen extends ConsumerWidget {
                 SectionBand.alternate(
                   child: ContentSection(
                     title: l10n.sectionAddress,
+                    // The prototype's `संपर्क` block: the address here, and
+                    // the form on its own page — the same shape /donate has,
+                    // so the home page does not grow a second long form.
+                    trailing: TextButton(
+                      key: const Key('contact-open'),
+                      onPressed: () => context.go(RoutePaths.contact),
+                      child: Text(l10n.contactOpenForm),
+                    ),
                     child: AddressCard(
                       address: templeProfile.address,
                       contact: data.contact,

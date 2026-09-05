@@ -250,6 +250,7 @@ class DevelopmentContentSeeder extends Seeder
             ['label_hi' => 'दान', 'label_en' => 'Donate', 'route' => '/donate', 'sort_order' => 3],
             ['label_hi' => 'गैलरी', 'label_en' => 'Gallery', 'route' => '/gallery', 'sort_order' => 4],
             ['label_hi' => 'मंदिर समिति', 'label_en' => 'Committee', 'route' => '/committee', 'sort_order' => 5],
+            ['label_hi' => 'संपर्क', 'label_en' => 'Contact', 'route' => '/contact', 'sort_order' => 6],
         ] as $item) {
             NavigationItem::query()->create($item + ['is_visible' => true]);
         }

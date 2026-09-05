@@ -25,6 +25,10 @@ class RoutePaths {
   /// The public gallery. Declared before the catch-all slug route.
   static const String gallery = '/gallery';
 
+  /// The contact page: the address, and the form. Declared before the
+  /// catch-all slug route.
+  static const String contact = '/contact';
+
   /// [album] is an album slug, so a link to one festival's photographs is
   /// shareable.
   static String galleryAlbum(String album) => '/gallery?album=$album';
@@ -84,6 +88,10 @@ class RoutePaths {
 
   static const String adminDonationSettings = '/admin/donation-settings';
 
+  static const String adminEnquiries = '/admin/enquiries';
+
+  static String adminEnquiryDetail(int id) => '/admin/enquiries/$id';
+
   static String adminRolePermissions(int id) => '/admin/roles/$id';
 
   // --- Public (completes the Phase 0 password-reset flow) -------------------
@@ -122,6 +130,9 @@ class RouteNames {
   static const String adminAlbums = 'admin-albums';
   static const String adminAlbumEditor = 'admin-album-editor';
   static const String donate = 'donate';
+  static const String contact = 'contact';
+  static const String adminEnquiries = 'admin-enquiries';
+  static const String adminEnquiryDetail = 'admin-enquiry-detail';
   static const String adminDonations = 'admin-donations';
   static const String adminDonationDetail = 'admin-donation-detail';
   static const String adminDonationSettings = 'admin-donation-settings';

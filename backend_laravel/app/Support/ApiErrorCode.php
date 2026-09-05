@@ -48,5 +48,20 @@ final class ApiErrorCode
      */
     public const DONATION_LOCKED = 'DONATION_LOCKED';
 
+    /**
+     * The contact form's token was missing, forged, spent or stale (spec
+     * Phase 7). The client's move is to fetch a fresh form and let the visitor
+     * resend, keeping the text they had already typed.
+     */
+    public const ENQUIRY_FORM_EXPIRED = 'ENQUIRY_FORM_EXPIRED';
+
+    /**
+     * This address has submitted enough that the form now asks a question, and
+     * the submission arrived without an answer (spec Phase 7:
+     * "CAPTCHA-after-threshold"). The client fetches a new form, which will
+     * carry the question.
+     */
+    public const ENQUIRY_CHALLENGE_REQUIRED = 'ENQUIRY_CHALLENGE_REQUIRED';
+
     public const SERVER_ERROR = 'SERVER_ERROR';
 }

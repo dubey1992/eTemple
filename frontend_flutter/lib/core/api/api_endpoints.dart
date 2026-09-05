@@ -106,6 +106,24 @@ class ApiEndpoints {
 
   static const String adminDonationSettings = '/admin/donation-settings';
 
+  // Devotee contact and enquiries (Phase 7)
+
+  /// The ticket the contact form is submitted with, and the question that comes
+  /// with it once an address has sent enough messages.
+  static const String publicEnquiryForm = '/public/enquiry-form';
+
+  static const String publicEnquiries = '/public/enquiries';
+
+  /// There is no public *read* of an enquiry, at any status, by design — so
+  /// there is no constant here for one either (PHASE_7_PLAN assumption N1).
+  static const String adminEnquiries = '/admin/enquiries';
+
+  static const String adminEnquirySummary = '/admin/enquiries/summary';
+
+  static String adminEnquiry(int id) => '/admin/enquiries/$id';
+
+  static String adminEnquiryStatus(int id) => '/admin/enquiries/$id/status';
+
   static const String resetPassword = '/auth/reset-password';
 
   /// Served from the application root, not from under `/api`.

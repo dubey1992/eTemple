@@ -37,5 +37,19 @@ class BrowserSupport {
     return null;
   }
 
+  /// The host the page itself was served from — `localhost`, `127.0.0.1`, or a
+  /// real domain.
+  ///
+  /// Used only to build the *development* default API origin. Cookies are keyed
+  /// by host, and `localhost` and `127.0.0.1` are two different hosts: a bundle
+  /// with `localhost:8000` compiled into it, opened at `127.0.0.1:5000`, writes
+  /// its `XSRF-TOKEN` where the page cannot read it, and every sign-in fails as
+  /// a 419 reported to the user as "session expired"
+  /// (PHASE_7_PLAN §8, defect D1).
+  String? get currentHost {
+    final host = web.window.location.hostname;
+    return host.isEmpty ? null : host;
+  }
+
   bool get isWeb => true;
 }

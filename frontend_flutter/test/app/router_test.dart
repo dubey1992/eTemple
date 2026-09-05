@@ -18,6 +18,7 @@ import 'package:rkt_web/l10n/app_localizations.dart';
 
 import 'package:rkt_web/features/content/data/content_providers.dart';
 import 'package:rkt_web/features/donations/data/donation_providers.dart';
+import 'package:rkt_web/features/enquiries/data/enquiry_providers.dart';
 import 'package:rkt_web/features/events/data/event_providers.dart';
 import 'package:rkt_web/features/media/data/media_providers.dart';
 import 'package:rkt_web/features/temple/data/temple_providers.dart';
@@ -25,6 +26,7 @@ import 'package:rkt_web/features/temple/data/temple_providers.dart';
 import '../support/fake_auth_repository.dart';
 import '../support/fake_content_repository.dart';
 import '../support/fake_donation_repository.dart';
+import '../support/fake_enquiry_repository.dart';
 import '../support/fake_event_repository.dart';
 import '../support/fake_media_repository.dart';
 import '../support/fake_temple_repository.dart';
@@ -56,6 +58,7 @@ Future<(GoRouter, ProviderContainer)> bootRouter(
       eventRepositoryProvider.overrideWithValue(FakeEventRepository()),
       mediaRepositoryProvider.overrideWithValue(FakeMediaRepository()),
       donationRepositoryProvider.overrideWithValue(FakeDonationRepository()),
+      enquiryRepositoryProvider.overrideWithValue(FakeEnquiryRepository()),
     ],
   );
 

@@ -2707,6 +2707,318 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'अगला'**
   String get actionNext;
+
+  /// No description provided for @contactPageTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर को लिखें'**
+  String get contactPageTitle;
+
+  /// No description provided for @contactPageSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूजा, कार्यक्रम या किसी भी विषय में पूछें। समिति का कोई सदस्य आपसे संपर्क करेगा।'**
+  String get contactPageSubtitle;
+
+  /// No description provided for @contactFormTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'संदेश भेजें'**
+  String get contactFormTitle;
+
+  /// No description provided for @contactOtherWays.
+  ///
+  /// In hi, this message translates to:
+  /// **'संपर्क के अन्य माध्यम'**
+  String get contactOtherWays;
+
+  /// No description provided for @contactOpenForm.
+  ///
+  /// In hi, this message translates to:
+  /// **'समिति को लिखें'**
+  String get contactOpenForm;
+
+  /// No description provided for @fieldYourName.
+  ///
+  /// In hi, this message translates to:
+  /// **'आपका नाम'**
+  String get fieldYourName;
+
+  /// No description provided for @fieldEnquiryCategory.
+  ///
+  /// In hi, this message translates to:
+  /// **'विषय क्या है?'**
+  String get fieldEnquiryCategory;
+
+  /// No description provided for @fieldEnquiryMessage.
+  ///
+  /// In hi, this message translates to:
+  /// **'आपका संदेश'**
+  String get fieldEnquiryMessage;
+
+  /// No description provided for @fieldPreferredLanguage.
+  ///
+  /// In hi, this message translates to:
+  /// **'उत्तर किस भाषा में चाहिए'**
+  String get fieldPreferredLanguage;
+
+  /// No description provided for @contactChannelHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'मोबाइल नंबर या ईमेल अवश्य दें, ताकि समिति उत्तर दे सके।'**
+  String get contactChannelHint;
+
+  /// No description provided for @actionSendMessage.
+  ///
+  /// In hi, this message translates to:
+  /// **'संदेश भेजें'**
+  String get actionSendMessage;
+
+  /// No description provided for @actionSendAnother.
+  ///
+  /// In hi, this message translates to:
+  /// **'एक और संदेश भेजें'**
+  String get actionSendAnother;
+
+  /// No description provided for @enquirySentTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'आपका संदेश भेज दिया गया है'**
+  String get enquirySentTitle;
+
+  /// No description provided for @enquirySentBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'समिति का कोई सदस्य शीघ्र ही संपर्क करेगा। यह संदर्भ संख्या सुरक्षित रखें — इसी से मंदिर आपका संदेश ढूँढ़ेगा।'**
+  String get enquirySentBody;
+
+  /// No description provided for @enquiryReferenceLabel.
+  ///
+  /// In hi, this message translates to:
+  /// **'संदर्भ संख्या'**
+  String get enquiryReferenceLabel;
+
+  /// No description provided for @enquiryChallengeLabel.
+  ///
+  /// In hi, this message translates to:
+  /// **'भेजने से पहले एक छोटा सा प्रश्न'**
+  String get enquiryChallengeLabel;
+
+  /// No description provided for @fieldChallengeAnswer.
+  ///
+  /// In hi, this message translates to:
+  /// **'आपका उत्तर'**
+  String get fieldChallengeAnswer;
+
+  /// No description provided for @enquiryCategoryGeneral.
+  ///
+  /// In hi, this message translates to:
+  /// **'सामान्य जानकारी'**
+  String get enquiryCategoryGeneral;
+
+  /// No description provided for @enquiryCategoryPujaBooking.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूजा बुकिंग'**
+  String get enquiryCategoryPujaBooking;
+
+  /// No description provided for @enquiryCategoryDonation.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान संबंधी'**
+  String get enquiryCategoryDonation;
+
+  /// No description provided for @enquiryCategoryEvent.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यक्रम संबंधी'**
+  String get enquiryCategoryEvent;
+
+  /// No description provided for @enquiryCategoryVolunteer.
+  ///
+  /// In hi, this message translates to:
+  /// **'सेवा एवं सहयोग'**
+  String get enquiryCategoryVolunteer;
+
+  /// No description provided for @enquiryCategorySuggestion.
+  ///
+  /// In hi, this message translates to:
+  /// **'सुझाव'**
+  String get enquiryCategorySuggestion;
+
+  /// No description provided for @enquiryCategoryComplaint.
+  ///
+  /// In hi, this message translates to:
+  /// **'शिकायत'**
+  String get enquiryCategoryComplaint;
+
+  /// No description provided for @enquiryCategoryOther.
+  ///
+  /// In hi, this message translates to:
+  /// **'अन्य'**
+  String get enquiryCategoryOther;
+
+  /// No description provided for @enquiryStatusNew.
+  ///
+  /// In hi, this message translates to:
+  /// **'नया'**
+  String get enquiryStatusNew;
+
+  /// No description provided for @enquiryStatusInProgress.
+  ///
+  /// In hi, this message translates to:
+  /// **'कार्यवाही में'**
+  String get enquiryStatusInProgress;
+
+  /// No description provided for @enquiryStatusResolved.
+  ///
+  /// In hi, this message translates to:
+  /// **'उत्तर दिया गया'**
+  String get enquiryStatusResolved;
+
+  /// No description provided for @enquiryStatusSpam.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्पैम'**
+  String get enquiryStatusSpam;
+
+  /// No description provided for @navEnquiries.
+  ///
+  /// In hi, this message translates to:
+  /// **'संपर्क एवं पूछताछ'**
+  String get navEnquiries;
+
+  /// No description provided for @navEnquiriesDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'भक्तों द्वारा भेजे गए संदेश और उन पर की गई कार्यवाही'**
+  String get navEnquiriesDesc;
+
+  /// No description provided for @enquiryInboxTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूछताछ इनबॉक्स'**
+  String get enquiryInboxTitle;
+
+  /// No description provided for @enquiryInboxSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'संपर्क फ़ॉर्म से आए संदेश। इनमें से कुछ भी सार्वजनिक वेबसाइट पर नहीं दिखता।'**
+  String get enquiryInboxSubtitle;
+
+  /// No description provided for @enquiryInboxEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी तक कोई संदेश नहीं।'**
+  String get enquiryInboxEmpty;
+
+  /// No description provided for @enquiryDetailTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'पूछताछ'**
+  String get enquiryDetailTitle;
+
+  /// No description provided for @enquiryAssignedTo.
+  ///
+  /// In hi, this message translates to:
+  /// **'सौंपा गया'**
+  String get enquiryAssignedTo;
+
+  /// No description provided for @enquiryUnassigned.
+  ///
+  /// In hi, this message translates to:
+  /// **'किसी को नहीं सौंपा गया'**
+  String get enquiryUnassigned;
+
+  /// No description provided for @enquiryReplyIn.
+  ///
+  /// In hi, this message translates to:
+  /// **'उत्तर चाहिए'**
+  String get enquiryReplyIn;
+
+  /// No description provided for @enquiryReceivedOn.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्राप्त: {date}'**
+  String enquiryReceivedOn(String date);
+
+  /// No description provided for @enquiryResolvedOn.
+  ///
+  /// In hi, this message translates to:
+  /// **'उत्तर दिया: {date}'**
+  String enquiryResolvedOn(String date);
+
+  /// No description provided for @enquiryOpenCount.
+  ///
+  /// In hi, this message translates to:
+  /// **'{count} प्रतीक्षारत'**
+  String enquiryOpenCount(int count);
+
+  /// No description provided for @enquiryStatusUpdated.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्थिति बदल दी गई।'**
+  String get enquiryStatusUpdated;
+
+  /// No description provided for @enquiryAssignmentUpdated.
+  ///
+  /// In hi, this message translates to:
+  /// **'जिम्मेदारी बदल दी गई।'**
+  String get enquiryAssignmentUpdated;
+
+  /// No description provided for @enquirySearchHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'संदर्भ, नाम, नंबर या संदेश खोजें'**
+  String get enquirySearchHint;
+
+  /// No description provided for @enquiryNoReplyChannel.
+  ///
+  /// In hi, this message translates to:
+  /// **'कोई संपर्क विवरण नहीं दिया गया'**
+  String get enquiryNoReplyChannel;
+
+  /// No description provided for @enquirySpamNotice.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्पैम चिह्नित। यह सुरक्षित है, पर इनबॉक्स से हटा दिया गया है।'**
+  String get enquirySpamNotice;
+
+  /// No description provided for @enquiryPrivacyNotice.
+  ///
+  /// In hi, this message translates to:
+  /// **'ये संदेश केवल समिति के लिए हैं।'**
+  String get enquiryPrivacyNotice;
+
+  /// No description provided for @errorEnquiryFormExpired.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह फ़ॉर्म समाप्त हो गया है। कृपया संदेश दोबारा भेजें।'**
+  String get errorEnquiryFormExpired;
+
+  /// No description provided for @errorEnquiryChallengeRequired.
+  ///
+  /// In hi, this message translates to:
+  /// **'कृपया फ़ॉर्म के साथ दिया गया छोटा प्रश्न हल करें।'**
+  String get errorEnquiryChallengeRequired;
+
+  /// No description provided for @enquiryAssignToMe.
+  ///
+  /// In hi, this message translates to:
+  /// **'मुझे सौंपें'**
+  String get enquiryAssignToMe;
+
+  /// No description provided for @enquiryUnassign.
+  ///
+  /// In hi, this message translates to:
+  /// **'जिम्मेदारी हटाएं'**
+  String get enquiryUnassign;
+
+  /// No description provided for @enquiryChooseMember.
+  ///
+  /// In hi, this message translates to:
+  /// **'किसी सदस्य को सौंपें'**
+  String get enquiryChooseMember;
 }
 
 class _AppLocalizationsDelegate

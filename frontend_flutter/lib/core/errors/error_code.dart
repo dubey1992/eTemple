@@ -21,6 +21,21 @@ enum ErrorCode {
   /// was well formed, the state of the site refuses it — and the UI answers it
   /// differently, by listing what is in the way.
   mediaInUse('MEDIA_IN_USE'),
+
+  /// A donation cannot be changed, confirmed or reversed because of the state
+  /// it is already in (Phase 6). Like [mediaInUse] this is a fact about the
+  /// record rather than a fault in the request, and the UI says so.
+  donationLocked('DONATION_LOCKED'),
+
+  /// The contact form's ticket was missing, forged, spent or stale (Phase 7).
+  /// The screen's move is to fetch a fresh form and let the visitor send again
+  /// without retyping anything.
+  enquiryFormExpired('ENQUIRY_FORM_EXPIRED'),
+
+  /// This address must now answer a question before the form is accepted
+  /// (Phase 7). Recoverable by fetching a fresh form, which carries one.
+  enquiryChallengeRequired('ENQUIRY_CHALLENGE_REQUIRED'),
+
   serverError('SERVER_ERROR'),
 
   // --- Client-only ----------------------------------------------------------

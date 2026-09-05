@@ -61,5 +61,20 @@ void main() {
 
       expect(config.apiOrigin, 'http://localhost:8000');
     });
+
+    test('the development default keeps its host off the web', () {
+      // On the Dart VM there is no page, so there is no host to move onto and
+      // the compiled-in default stands unchanged. In a browser the host is
+      // taken from `window.location`, which is what stops a bundle opened at
+      // `127.0.0.1:5000` from writing its XSRF cookie against `localhost` and
+      // failing every sign-in with a 419 (PHASE_7_PLAN §8, defect D1).
+      //
+      // That branch needs a browser and is covered by the live check in
+      // PHASE_7_COMPLETION rather than here.
+      expect(
+        AppConfig.fromEnvironment().apiBaseUrl,
+        'http://localhost:8000/api',
+      );
+    });
   });
 }

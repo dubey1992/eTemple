@@ -1,3 +1,4 @@
+import '../api/browser/browser_support.dart';
 import 'app_environment.dart';
 
 /// Build-time configuration.
@@ -36,6 +37,13 @@ class AppConfig {
       defaultValue: 'http://localhost:8000/api',
     );
 
+    // A deployment always passes `API_BASE_URL`, and it is used exactly as
+    // given. Only the *development default* is adjusted, and only in the
+    // browser: see [_developmentDefault].
+    final resolvedBaseUrl = const bool.hasEnvironment('API_BASE_URL')
+        ? apiBaseUrl
+        : _developmentDefault(apiBaseUrl);
+
     const connectTimeoutMs = int.fromEnvironment(
       'API_CONNECT_TIMEOUT_MS',
       defaultValue: 15000,
@@ -47,7 +55,7 @@ class AppConfig {
 
     return AppConfig(
       environment: environment,
-      apiBaseUrl: _normalizeBaseUrl(apiBaseUrl),
+      apiBaseUrl: _normalizeBaseUrl(resolvedBaseUrl),
       connectTimeout: Duration(milliseconds: connectTimeoutMs),
       receiveTimeout: Duration(milliseconds: receiveTimeoutMs),
       // Verbose request logging is never enabled in a production bundle.
@@ -72,6 +80,31 @@ class AppConfig {
       host: uri.host,
       port: uri.hasPort ? uri.port : null,
     ).toString();
+  }
+
+  /// The development API origin, moved onto whatever host the page is being
+  /// served from.
+  ///
+  /// Cookies are keyed by **host**, and `localhost` and `127.0.0.1` are two
+  /// different hosts. With `http://localhost:8000/api` compiled in, a developer
+  /// who opens the app at `http://127.0.0.1:5000` gets an `XSRF-TOKEN` written
+  /// against `localhost`, invisible to `document.cookie` on `127.0.0.1`; the
+  /// header is never sent, every sign-in is a 419, and the visitor is told
+  /// "session expired — reload the page", which is true and useless.
+  ///
+  /// This keeps the scheme, the port and the path of the default and swaps only
+  /// the host, so both addresses work. It touches nothing in production, where
+  /// `API_BASE_URL` is always supplied (PHASE_7_PLAN §8, defect D1).
+  static String _developmentDefault(String fallback) {
+    const browser = BrowserSupport();
+    final host = browser.currentHost;
+
+    if (!browser.isWeb || host == null || host.isEmpty) return fallback;
+
+    final uri = Uri.parse(fallback);
+    if (uri.host == host) return fallback;
+
+    return uri.replace(host: host).toString();
   }
 
   static String _normalizeBaseUrl(String value) {

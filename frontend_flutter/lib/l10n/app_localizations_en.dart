@@ -1399,4 +1399,175 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get actionNext => 'Next';
+
+  @override
+  String get contactPageTitle => 'Write to the temple';
+
+  @override
+  String get contactPageSubtitle =>
+      'Ask about a puja, an event, or anything else. A member of the committee will reply.';
+
+  @override
+  String get contactFormTitle => 'Send a message';
+
+  @override
+  String get contactOtherWays => 'Other ways to reach us';
+
+  @override
+  String get contactOpenForm => 'Write to the committee';
+
+  @override
+  String get fieldYourName => 'Your name';
+
+  @override
+  String get fieldEnquiryCategory => 'What is it about?';
+
+  @override
+  String get fieldEnquiryMessage => 'Your message';
+
+  @override
+  String get fieldPreferredLanguage => 'Reply to me in';
+
+  @override
+  String get contactChannelHint =>
+      'Give a mobile number or an e-mail address, so the committee can reply.';
+
+  @override
+  String get actionSendMessage => 'Send message';
+
+  @override
+  String get actionSendAnother => 'Send another message';
+
+  @override
+  String get enquirySentTitle => 'Your message has been sent';
+
+  @override
+  String get enquirySentBody =>
+      'A member of the committee will be in touch. Please keep this reference — it is how the temple will find your message.';
+
+  @override
+  String get enquiryReferenceLabel => 'Reference';
+
+  @override
+  String get enquiryChallengeLabel => 'One small question before sending';
+
+  @override
+  String get fieldChallengeAnswer => 'Your answer';
+
+  @override
+  String get enquiryCategoryGeneral => 'General enquiry';
+
+  @override
+  String get enquiryCategoryPujaBooking => 'Booking a puja';
+
+  @override
+  String get enquiryCategoryDonation => 'About donations';
+
+  @override
+  String get enquiryCategoryEvent => 'About an event';
+
+  @override
+  String get enquiryCategoryVolunteer => 'Volunteering and seva';
+
+  @override
+  String get enquiryCategorySuggestion => 'Suggestion';
+
+  @override
+  String get enquiryCategoryComplaint => 'Complaint';
+
+  @override
+  String get enquiryCategoryOther => 'Something else';
+
+  @override
+  String get enquiryStatusNew => 'New';
+
+  @override
+  String get enquiryStatusInProgress => 'Being dealt with';
+
+  @override
+  String get enquiryStatusResolved => 'Answered';
+
+  @override
+  String get enquiryStatusSpam => 'Spam';
+
+  @override
+  String get navEnquiries => 'Contact and enquiries';
+
+  @override
+  String get navEnquiriesDesc =>
+      'Messages devotees have sent, and what has been done about them';
+
+  @override
+  String get enquiryInboxTitle => 'Enquiry inbox';
+
+  @override
+  String get enquiryInboxSubtitle =>
+      'Messages sent through the contact form. Nothing here is ever shown on the public website.';
+
+  @override
+  String get enquiryInboxEmpty => 'No messages yet.';
+
+  @override
+  String get enquiryDetailTitle => 'Enquiry';
+
+  @override
+  String get enquiryAssignedTo => 'Assigned to';
+
+  @override
+  String get enquiryUnassigned => 'Not assigned';
+
+  @override
+  String get enquiryReplyIn => 'Wants a reply in';
+
+  @override
+  String enquiryReceivedOn(String date) {
+    return 'Received $date';
+  }
+
+  @override
+  String enquiryResolvedOn(String date) {
+    return 'Answered $date';
+  }
+
+  @override
+  String enquiryOpenCount(int count) {
+    return '$count waiting';
+  }
+
+  @override
+  String get enquiryStatusUpdated => 'Status updated.';
+
+  @override
+  String get enquiryAssignmentUpdated => 'Assignment updated.';
+
+  @override
+  String get enquirySearchHint => 'Search a reference, name, number or message';
+
+  @override
+  String get enquiryNoReplyChannel => 'No contact details were given';
+
+  @override
+  String get enquirySpamNotice =>
+      'Marked as spam. It is kept, but out of the inbox.';
+
+  @override
+  String get enquiryPrivacyNotice =>
+      'These messages are private to the committee.';
+
+  @override
+  String get errorEnquiryFormExpired =>
+      'This form has expired. Please send your message again.';
+
+  @override
+  String get errorEnquiryChallengeRequired =>
+      'Please answer the small question shown with the form.';
+
+  @override
+  String get enquiryAssignToMe => 'Assign to me';
+
+  @override
+  String get enquiryUnassign => 'Remove assignment';
+
+  @override
+  String get enquiryChooseMember => 'Give it to a member';
 }
