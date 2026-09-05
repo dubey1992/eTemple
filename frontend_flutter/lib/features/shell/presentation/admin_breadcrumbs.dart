@@ -93,6 +93,33 @@ List<Crumb> adminTrail(String location, AppLocalizations l10n) {
         ),
       ];
 
+    case 'accounts':
+      final accounts = Crumb(l10n.accountsTitle, RoutePaths.adminAccounts);
+      if (rest.isEmpty) return [dashboard, Crumb(l10n.accountsTitle)];
+      return [
+        dashboard,
+        accounts,
+        Crumb(
+          rest.first == 'new' ? l10n.accountsNewEntry : l10n.accountsEditEntry,
+        ),
+      ];
+
+    case 'accounting-categories':
+      // The ledger, not the dashboard, is the parent: the categories are
+      // reached from it and that is where "back" should land.
+      return [
+        dashboard,
+        Crumb(l10n.accountsTitle, RoutePaths.adminAccounts),
+        Crumb(l10n.accountsCategoriesTitle),
+      ];
+
+    case 'accounting-settings':
+      return [
+        dashboard,
+        Crumb(l10n.accountsTitle, RoutePaths.adminAccounts),
+        Crumb(l10n.accountsSettingsTitle),
+      ];
+
     case 'enquiries':
       if (rest.isEmpty) return [dashboard, Crumb(l10n.enquiryInboxTitle)];
       return [

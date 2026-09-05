@@ -832,7 +832,6 @@
   },
   "actionPrevious": "पिछला",
   "actionNext": "अगला",
-
   "contactPageTitle": "मंदिर को लिखें",
   "contactPageSubtitle": "पूजा, कार्यक्रम या किसी भी विषय में पूछें। समिति का कोई सदस्य आपसे संपर्क करेगा।",
   "contactFormTitle": "संदेश भेजें",
@@ -872,11 +871,29 @@
   "enquiryUnassigned": "किसी को नहीं सौंपा गया",
   "enquiryReplyIn": "उत्तर चाहिए",
   "enquiryReceivedOn": "प्राप्त: {date}",
-  "@enquiryReceivedOn": {"placeholders": {"date": {"type": "String"}}},
+  "@enquiryReceivedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "enquiryResolvedOn": "उत्तर दिया: {date}",
-  "@enquiryResolvedOn": {"placeholders": {"date": {"type": "String"}}},
+  "@enquiryResolvedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "enquiryOpenCount": "{count} प्रतीक्षारत",
-  "@enquiryOpenCount": {"placeholders": {"count": {"type": "int"}}},
+  "@enquiryOpenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "enquiryStatusUpdated": "स्थिति बदल दी गई।",
   "enquiryAssignmentUpdated": "जिम्मेदारी बदल दी गई।",
   "enquirySearchHint": "संदर्भ, नाम, नंबर या संदेश खोजें",
@@ -903,9 +920,21 @@
   "announcementStatusArchived": "संग्रहीत",
   "announcementShowingNow": "अभी वेबसाइट पर",
   "announcementScheduledFor": "आरंभ: {date}",
-  "@announcementScheduledFor": {"placeholders": {"date": {"type": "String"}}},
+  "@announcementScheduledFor": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "announcementExpiredOn": "समाप्त: {date}",
-  "@announcementExpiredOn": {"placeholders": {"date": {"type": "String"}}},
+  "@announcementExpiredOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "announcementPriorityNormal": "सामान्य",
   "announcementPriorityImportant": "महत्वपूर्ण",
   "announcementPriorityUrgent": "अत्यावश्यक",
@@ -925,9 +954,21 @@
   "announcementSendBody": "भेजने पर यह सूचना समिति के हर सक्रिय खाते के इनबॉक्स में पहुंचेगी। इसे वापस नहीं लिया जा सकता, और यह केवल एक बार भेजी जा सकती है।",
   "announcementSendConfirm": "भेज दें",
   "announcementSent": "{count} समिति सदस्यों को भेजी गई।",
-  "@announcementSent": {"placeholders": {"count": {"type": "int"}}},
+  "@announcementSent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "announcementSentOn": "भेजी गई: {date}",
-  "@announcementSentOn": {"placeholders": {"date": {"type": "String"}}},
+  "@announcementSentOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "announcementSentNotice": "यह सूचना भेजी जा चुकी है और दोबारा नहीं भेजी जा सकती।",
   "announcementChannels": "किस माध्यम से भेजें",
   "announcementChannelSite": "केवल वेबसाइट",
@@ -943,5 +984,193 @@
   "errorAnnouncementAlreadySent": "यह सूचना पहले ही भेजी जा चुकी है। दोबारा कहने के लिए नई सूचना लिखें।",
   "errorAnnouncementNotPublished": "भेजने से पहले इस सूचना को प्रकाशित करें।",
   "adminMenu": "मेन्यू",
-  "adminMenuOpen": "मेन्यू खोलें"
+  "adminMenuOpen": "मेन्यू खोलें",
+  "navAccounts": "आय-व्यय",
+  "navAccountsDesc": "मंदिर की आय और व्यय दर्ज करें, जाँचें और स्वीकृत करें",
+  "navAccountingCategories": "आय-व्यय श्रेणियाँ",
+  "navAccountingCategoriesDesc": "किस मद में आय या व्यय दर्ज होगा, वे शीर्षक",
+  "navAccountingSettings": "लेखा सेटिंग्स",
+  "navAccountingSettingsDesc": "आरंभिक शेष, और लेखा-जोखा वेबसाइट पर दिखाना",
+  "navTransparency": "आय-व्यय",
+  "transparencyTitle": "आय-व्यय का लेखा-जोखा",
+  "transparencySubtitle": "मंदिर को क्या प्राप्त हुआ और कहाँ व्यय हुआ",
+  "transparencyNotPublishedTitle": "लेखा-जोखा अभी प्रकाशित नहीं है",
+  "transparencyNotPublishedBody": "समिति ने अभी मंदिर का आय-व्यय विवरण वेबसाइट पर प्रकाशित नहीं किया है। अधिक जानकारी के लिए कृपया समिति से संपर्क करें।",
+  "transparencySelectYear": "वित्तीय वर्ष चुनें",
+  "transparencyYearHeading": "वित्तीय वर्ष {label}",
+  "@transparencyYearHeading": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "transparencyOpeningBalance": "वर्ष के आरंभ में शेष",
+  "transparencyDonations": "दान से प्राप्त",
+  "transparencyOtherIncome": "अन्य आय",
+  "transparencyTotalIncome": "कुल आय",
+  "transparencyTotalExpense": "कुल व्यय",
+  "transparencyClosingBalance": "वर्ष के अंत में शेष",
+  "transparencyIncomeBreakdown": "आय का विवरण",
+  "transparencyExpenseBreakdown": "व्यय का विवरण",
+  "transparencyDonationCount": "{count, plural, =0{इस वर्ष कोई दान दर्ज नहीं} =1{1 दान} other{{count} दान}}",
+  "@transparencyDonationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "transparencyNoIncome": "इस वर्ष दान के अतिरिक्त कोई आय दर्ज नहीं है।",
+  "transparencyNoExpense": "इस वर्ष कोई व्यय दर्ज नहीं है।",
+  "transparencyEmptyYear": "इस वित्तीय वर्ष का कोई लेखा अभी दर्ज नहीं हुआ है।",
+  "transparencyOnlyApprovedNote": "इन आँकड़ों में केवल वे प्रविष्टियाँ सम्मिलित हैं जिन्हें समिति ने बिल या बैंक विवरण से मिलान कर स्वीकृत किया है।",
+  "transparencyNoNamesNote": "यहाँ किसी दानदाता या विक्रेता का नाम प्रकाशित नहीं किया जाता — केवल कुल राशि और मद।",
+  "transparencyAsOf": "{date} तक",
+  "@transparencyAsOf": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "transparencyOpeningBalanceOn": "{date} से",
+  "@transparencyOpeningBalanceOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "accountsTitle": "आय-व्यय",
+  "accountsSubtitle": "मंदिर की बही",
+  "accountsNewEntry": "नई प्रविष्टि",
+  "accountsEditEntry": "प्रविष्टि संपादित करें",
+  "accountsTypeIncome": "आय",
+  "accountsTypeExpense": "व्यय",
+  "accountsStatusPending": "जाँच शेष",
+  "accountsStatusApproved": "स्वीकृत",
+  "accountsStatusReversed": "निरस्त",
+  "accountsAllTypes": "सभी",
+  "accountsAllStatuses": "सभी स्थितियाँ",
+  "accountsAllCategories": "सभी श्रेणियाँ",
+  "accountsApprovedIncome": "स्वीकृत आय",
+  "accountsApprovedExpense": "स्वीकृत व्यय",
+  "accountsNet": "बही का शुद्ध",
+  "accountsPendingNotCounted": "{count, plural, =1{1 प्रविष्टि की जाँच शेष है और वह किसी योग में नहीं गिनी गई} other{{count} प्रविष्टियों की जाँच शेष है और वे किसी योग में नहीं गिनी गईं}}",
+  "@accountsPendingNotCounted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "accountsEmpty": "अभी कोई प्रविष्टि नहीं है।",
+  "accountsEmptyFiltered": "इस छाँट के अनुसार कोई प्रविष्टि नहीं मिली।",
+  "accountsSearchHint": "किसे भुगतान, विवरण या संदर्भ खोजें",
+  "accountsFieldCategory": "श्रेणी",
+  "accountsFieldAmount": "राशि",
+  "accountsFieldDate": "तिथि",
+  "accountsFieldPaymentMode": "भुगतान का माध्यम",
+  "accountsFieldReference": "संदर्भ संख्या",
+  "accountsFieldPayee": "किसे भुगतान / किससे प्राप्त",
+  "accountsFieldDescription": "विवरण",
+  "accountsPayeeHelp": "यह नाम वेबसाइट पर कभी प्रकाशित नहीं होता।",
+  "accountsDescriptionHelp": "बही के लिए आपका अपना नोट। यह भी प्रकाशित नहीं होता।",
+  "accountsBill": "बिल / रसीद",
+  "accountsAttachBill": "बिल संलग्न करें",
+  "accountsReplaceBill": "बिल बदलें",
+  "accountsViewBill": "बिल देखें",
+  "accountsNoBill": "कोई बिल संलग्न नहीं है",
+  "accountsBillHelp": "फोटो या PDF। बिल केवल समिति के सदस्य देख सकते हैं, वेबसाइट पर कभी नहीं दिखता।",
+  "accountsBillLocked": "स्वीकृत प्रविष्टि का बिल नहीं बदला जा सकता।",
+  "accountsApprove": "स्वीकृत करें",
+  "accountsApproveTitle": "यह प्रविष्टि स्वीकृत करें?",
+  "accountsApproveBody": "स्वीकृति के बाद यह राशि हर योग में गिनी जाएगी — उस पृष्ठ पर भी जो गाँव पढ़ता है — और तब विवरण के अतिरिक्त कुछ भी नहीं बदला जा सकेगा। सुधार का एकमात्र उपाय निरस्त कर दोबारा दर्ज करना है।",
+  "accountsReverse": "निरस्त करें",
+  "accountsReverseTitle": "यह प्रविष्टि निरस्त करें?",
+  "accountsReverseBody": "पंक्ति बही में बनी रहेगी, बिल सहित, और किसी योग में नहीं गिनी जाएगी। कारण लिखना आवश्यक है — महीनों बाद यही बताएगा कि यह राशि क्यों हटाई गई।",
+  "accountsReverseReason": "निरस्त करने का कारण",
+  "accountsReversedOn": "{date} को निरस्त",
+  "@accountsReversedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "accountsApprovedOn": "{date} को स्वीकृत",
+  "@accountsApprovedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "accountsRecordedBy": "दर्ज किया: {name}",
+  "@accountsRecordedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountsApprovedBy": "स्वीकृत किया: {name}",
+  "@accountsApprovedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountsReversedBy": "निरस्त किया: {name}",
+  "@accountsReversedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountsLockedNotice": "यह प्रविष्टि स्वीकृत हो चुकी है और प्रकाशित योगों में गिनी जा चुकी है, इसलिए विवरण के अतिरिक्त कुछ नहीं बदला जा सकता। सुधार के लिए इसे निरस्त कर दोबारा दर्ज करें।",
+  "accountsPendingNotice": "यह प्रविष्टि अभी किसी योग में नहीं गिनी गई है। बिल या बैंक विवरण से मिलान करने के बाद इसे स्वीकृत करें।",
+  "accountsDonationsElsewhere": "दान यहाँ दर्ज नहीं होते। वे दान रजिस्टर में दर्ज होते हैं और वहीं से गिने जाते हैं।",
+  "accountsCategoriesTitle": "आय-व्यय श्रेणियाँ",
+  "accountsCategoriesSubtitle": "वे शीर्षक जिनके अंतर्गत बही की हर प्रविष्टि आती है",
+  "accountsCategoryNew": "नई श्रेणी",
+  "accountsCategoryEdit": "श्रेणी संपादित करें",
+  "accountsCategoryNameHi": "नाम (हिन्दी)",
+  "accountsCategoryNameEn": "नाम (अंग्रेज़ी)",
+  "accountsCategoryActive": "प्रयोग में",
+  "accountsCategoryInactive": "बंद",
+  "accountsCategoryUsage": "{count, plural, =0{किसी प्रविष्टि में प्रयुक्त नहीं} =1{1 प्रविष्टि में} other{{count} प्रविष्टियों में}}",
+  "@accountsCategoryUsage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "accountsCategoryDelete": "हटाएँ",
+  "accountsCategoryDeleteTitle": "यह श्रेणी हटाएँ?",
+  "accountsCategoryDeleteBody": "इस शीर्षक के अंतर्गत कोई प्रविष्टि नहीं है, इसलिए इसे हटाया जा सकता है।",
+  "accountsCategoryDeactivate": "बंद करें",
+  "accountsCategoryReactivate": "फिर से चालू करें",
+  "accountsCategoryInUseNotice": "इस शीर्षक के अंतर्गत प्रविष्टियाँ दर्ज हैं, इसलिए इसे न हटाया जा सकता है और न आय से व्यय में बदला जा सकता है — दोनों से पुरानी प्रविष्टियों का अर्थ बदल जाएगा। इसे बंद कर दें: नई प्रविष्टियों में यह नहीं दिखेगा और पुरानी वैसी ही पढ़ी जाएँगी।",
+  "accountsCategoryEmpty": "अभी कोई श्रेणी नहीं है।",
+  "accountsSettingsTitle": "लेखा सेटिंग्स",
+  "accountsSettingsSubtitle": "आरंभिक शेष, और लेखा-जोखा सार्वजनिक करना",
+  "accountsPublishBooks": "आय-व्यय वेबसाइट पर दिखाएँ",
+  "accountsPublishBooksHelp": "चालू करने पर मंदिर की वेबसाइट पर वर्ष का कुल आय, कुल व्यय और मदवार विवरण दिखने लगेगा। किसी दानदाता या विक्रेता का नाम कभी नहीं दिखता। जब तक यह बंद है, वेबसाइट पर कोई आँकड़ा नहीं दिखता।",
+  "accountsBooksArePublic": "लेखा-जोखा वेबसाइट पर दिख रहा है",
+  "accountsBooksAreNotPublic": "लेखा-जोखा अभी वेबसाइट पर नहीं दिख रहा",
+  "accountsOpeningBalance": "आरंभिक शेष",
+  "accountsOpeningBalanceHelp": "इस सॉफ़्टवेयर में लेखा आरंभ करते समय मंदिर के पास जो राशि थी। इसके बिना प्रकाशित शेष उतना ही कम दिखेगा। घाटे में आरंभ हो तो ऋणात्मक राशि लिखें।",
+  "accountsOpeningBalanceDate": "आरंभिक शेष की तिथि",
+  "accountsIntroHi": "परिचय (हिन्दी)",
+  "accountsIntroEn": "परिचय (अंग्रेज़ी)",
+  "accountsNoteHi": "टिप्पणी (हिन्दी)",
+  "accountsNoteEn": "टिप्पणी (अंग्रेज़ी)",
+  "accountsIntroHelp": "यह वाक्य आय-व्यय पृष्ठ के आरंभ में दिखेगा।",
+  "errorTransactionLocked": "यह प्रविष्टि स्वीकृत या निरस्त हो चुकी है, इसलिए यह कार्य अब संभव नहीं है।",
+  "errorAccountsNotPublished": "मंदिर ने अभी अपना लेखा-जोखा प्रकाशित नहीं किया है।"
 }

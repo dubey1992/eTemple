@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rkt_web/app/localization/locale_controller.dart';
 import 'package:rkt_web/app/routing/route_paths.dart';
 import 'package:rkt_web/app/theme/app_theme.dart';
+import 'package:rkt_web/features/accounts/data/accounts_providers.dart';
 import 'package:rkt_web/features/announcements/data/announcement_providers.dart';
 import 'package:rkt_web/features/donations/data/donation_providers.dart';
 import 'package:rkt_web/features/enquiries/data/enquiry_providers.dart';
@@ -16,6 +17,7 @@ import 'package:rkt_web/features/media/data/media_providers.dart';
 import 'package:rkt_web/features/temple/data/temple_providers.dart';
 import 'package:rkt_web/l10n/app_localizations.dart';
 
+import 'fake_accounts_repository.dart';
 import 'fake_announcement_repository.dart';
 import 'fake_donation_repository.dart';
 import 'fake_enquiry_repository.dart';
@@ -57,6 +59,15 @@ const enquiriesPlaceholderKey = Key('test-enquiries-placeholder');
 /// Key on the stand-in screen the announcements list renders.
 const announcementsPlaceholderKey = Key('test-announcements-placeholder');
 
+/// Key on the stand-in screen the public transparency route renders.
+const transparencyPlaceholderKey = Key('test-transparency-placeholder');
+
+/// Key on the stand-in screen the ledger renders.
+const accountsPlaceholderKey = Key('test-accounts-placeholder');
+
+/// Key on the stand-in screen the accounting categories render.
+const accountingCategoriesPlaceholderKey = Key('test-categories-placeholder');
+
 /// Pumps a single screen inside the real theme and localization setup.
 ///
 /// A minimal router is provided so screens that navigate (the login screen, for
@@ -66,7 +77,8 @@ const announcementsPlaceholderKey = Key('test-announcements-placeholder');
 /// and the donation details (Phase 6) are read by shared chrome — the header,
 /// the hero, the home page, even the sign-in page — so stubs for all four are
 /// always supplied. Pass [temple], [events], [media] or [donations] to script
-/// them, including making them fail.
+/// them, including making them fail. So are the enquiry, announcement and
+/// accounts repositories, for the same reason: any screen may reach one.
 ///
 /// An [ApiClient] that refuses every request is installed as well, so a
 /// repository nobody remembered to fake fails loudly instead of quietly
@@ -83,6 +95,7 @@ Future<void> pumpScreen(
   FakeDonationRepository? donations,
   FakeEnquiryRepository? enquiries,
   FakeAnnouncementRepository? announcements,
+  FakeAccountsRepository? accounts,
 }) async {
   if (surfaceSize != null) {
     // Set the logical size directly: devicePixelRatio 1.0 makes the physical
@@ -178,6 +191,31 @@ Future<void> pumpScreen(
           body: SizedBox.shrink(),
         ),
       ),
+      GoRoute(
+        path: RoutePaths.transparency,
+        builder: (_, _) => const Scaffold(
+          key: transparencyPlaceholderKey,
+          body: SizedBox.shrink(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.adminAccounts,
+        builder: (_, _) => const Scaffold(
+          key: accountsPlaceholderKey,
+          body: SizedBox.shrink(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.adminAccountingCategories,
+        builder: (_, _) => const Scaffold(
+          key: accountingCategoriesPlaceholderKey,
+          body: SizedBox.shrink(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.adminAccountingSettings,
+        builder: (_, _) => const Scaffold(body: SizedBox.shrink()),
+      ),
     ],
   );
   addTearDown(router.dispose);
@@ -197,6 +235,9 @@ Future<void> pumpScreen(
         ),
         announcementRepositoryProvider.overrideWithValue(
           announcements ?? FakeAnnouncementRepository(),
+        ),
+        accountsRepositoryProvider.overrideWithValue(
+          accounts ?? FakeAccountsRepository(),
         ),
         mediaRepositoryProvider.overrideWithValue(
           media ?? FakeMediaRepository(),

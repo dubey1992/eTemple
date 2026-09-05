@@ -655,7 +655,6 @@
   },
   "actionPrevious": "Previous",
   "actionNext": "Next",
-
   "contactPageTitle": "Write to the temple",
   "contactPageSubtitle": "Ask about a puja, an event, or anything else. A member of the committee will reply.",
   "contactFormTitle": "Send a message",
@@ -695,11 +694,29 @@
   "enquiryUnassigned": "Not assigned",
   "enquiryReplyIn": "Wants a reply in",
   "enquiryReceivedOn": "Received {date}",
-  "@enquiryReceivedOn": {"placeholders": {"date": {"type": "String"}}},
+  "@enquiryReceivedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "enquiryResolvedOn": "Answered {date}",
-  "@enquiryResolvedOn": {"placeholders": {"date": {"type": "String"}}},
+  "@enquiryResolvedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "enquiryOpenCount": "{count} waiting",
-  "@enquiryOpenCount": {"placeholders": {"count": {"type": "int"}}},
+  "@enquiryOpenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "enquiryStatusUpdated": "Status updated.",
   "enquiryAssignmentUpdated": "Assignment updated.",
   "enquirySearchHint": "Search a reference, name, number or message",
@@ -726,9 +743,21 @@
   "announcementStatusArchived": "Archived",
   "announcementShowingNow": "On the website now",
   "announcementScheduledFor": "Starts {date}",
-  "@announcementScheduledFor": {"placeholders": {"date": {"type": "String"}}},
+  "@announcementScheduledFor": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "announcementExpiredOn": "Ended {date}",
-  "@announcementExpiredOn": {"placeholders": {"date": {"type": "String"}}},
+  "@announcementExpiredOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "announcementPriorityNormal": "Normal",
   "announcementPriorityImportant": "Important",
   "announcementPriorityUrgent": "Urgent",
@@ -748,9 +777,21 @@
   "announcementSendBody": "Sending puts this notice in the inbox of every active committee account. It cannot be unsent, and it can only be done once.",
   "announcementSendConfirm": "Send it",
   "announcementSent": "Sent to {count} committee members.",
-  "@announcementSent": {"placeholders": {"count": {"type": "int"}}},
+  "@announcementSent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "announcementSentOn": "Sent {date}",
-  "@announcementSentOn": {"placeholders": {"date": {"type": "String"}}},
+  "@announcementSentOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "announcementSentNotice": "This announcement has been sent and cannot be sent again.",
   "announcementChannels": "Send by",
   "announcementChannelSite": "Website only",
@@ -766,5 +807,193 @@
   "errorAnnouncementAlreadySent": "This announcement has already been sent. To say it again, write a new one.",
   "errorAnnouncementNotPublished": "Publish this announcement before sending it.",
   "adminMenu": "Menu",
-  "adminMenuOpen": "Open the menu"
+  "adminMenuOpen": "Open the menu",
+  "navAccounts": "Accounts",
+  "navAccountsDesc": "Record, check and approve the temple's income and expenditure",
+  "navAccountingCategories": "Accounting categories",
+  "navAccountingCategoriesDesc": "The headings every entry in the books is filed under",
+  "navAccountingSettings": "Accounting settings",
+  "navAccountingSettingsDesc": "The opening balance, and whether the books are public",
+  "navTransparency": "Accounts",
+  "transparencyTitle": "Accounts and transparency",
+  "transparencySubtitle": "What the temple received, and where it was spent",
+  "transparencyNotPublishedTitle": "The accounts are not published yet",
+  "transparencyNotPublishedBody": "The committee has not yet published the temple's income and expenditure on this website. Please contact the committee if you would like to know more.",
+  "transparencySelectYear": "Choose a financial year",
+  "transparencyYearHeading": "Financial year {label}",
+  "@transparencyYearHeading": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "transparencyOpeningBalance": "Balance at the start of the year",
+  "transparencyDonations": "Received as donations",
+  "transparencyOtherIncome": "Other income",
+  "transparencyTotalIncome": "Total received",
+  "transparencyTotalExpense": "Total spent",
+  "transparencyClosingBalance": "Balance at the end of the year",
+  "transparencyIncomeBreakdown": "Where the income came from",
+  "transparencyExpenseBreakdown": "Where the money went",
+  "transparencyDonationCount": "{count, plural, =0{No donations recorded this year} =1{1 donation} other{{count} donations}}",
+  "@transparencyDonationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "transparencyNoIncome": "No income other than donations was recorded this year.",
+  "transparencyNoExpense": "No expenditure was recorded this year.",
+  "transparencyEmptyYear": "Nothing has been recorded for this financial year yet.",
+  "transparencyOnlyApprovedNote": "These figures include only entries the committee has checked against a bill or a bank statement and approved.",
+  "transparencyNoNamesNote": "No donor or supplier is named here — only totals and the headings they fall under.",
+  "transparencyAsOf": "As at {date}",
+  "@transparencyAsOf": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "transparencyOpeningBalanceOn": "From {date}",
+  "@transparencyOpeningBalanceOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "accountsTitle": "Accounts",
+  "accountsSubtitle": "The temple's books",
+  "accountsNewEntry": "New entry",
+  "accountsEditEntry": "Edit entry",
+  "accountsTypeIncome": "Income",
+  "accountsTypeExpense": "Expenditure",
+  "accountsStatusPending": "To check",
+  "accountsStatusApproved": "Approved",
+  "accountsStatusReversed": "Reversed",
+  "accountsAllTypes": "All",
+  "accountsAllStatuses": "All statuses",
+  "accountsAllCategories": "All categories",
+  "accountsApprovedIncome": "Approved income",
+  "accountsApprovedExpense": "Approved expenditure",
+  "accountsNet": "Ledger net",
+  "accountsPendingNotCounted": "{count, plural, =1{1 entry is still to be checked, and is counted in no total} other{{count} entries are still to be checked, and are counted in no total}}",
+  "@accountsPendingNotCounted": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "accountsEmpty": "There are no entries yet.",
+  "accountsEmptyFiltered": "No entries match this filter.",
+  "accountsSearchHint": "Search a payee, a description or a reference",
+  "accountsFieldCategory": "Category",
+  "accountsFieldAmount": "Amount",
+  "accountsFieldDate": "Date",
+  "accountsFieldPaymentMode": "Payment mode",
+  "accountsFieldReference": "Reference number",
+  "accountsFieldPayee": "Paid to / received from",
+  "accountsFieldDescription": "Description",
+  "accountsPayeeHelp": "This name is never published on the website.",
+  "accountsDescriptionHelp": "Your own note for the books. Not published either.",
+  "accountsBill": "Bill or receipt",
+  "accountsAttachBill": "Attach a bill",
+  "accountsReplaceBill": "Replace the bill",
+  "accountsViewBill": "View the bill",
+  "accountsNoBill": "No bill attached",
+  "accountsBillHelp": "A photograph or a PDF. Only committee members can open it; it never appears on the website.",
+  "accountsBillLocked": "The bill on an approved entry cannot be replaced.",
+  "accountsApprove": "Approve",
+  "accountsApproveTitle": "Approve this entry?",
+  "accountsApproveBody": "Once approved, this amount counts in every total — including the page the village reads — and nothing but the description can be changed. The only correction after that is to reverse it and record it again.",
+  "accountsReverse": "Reverse",
+  "accountsReverseTitle": "Reverse this entry?",
+  "accountsReverseBody": "The row stays in the books, with its bill, and counts in no total. A reason is required — months later it is what explains why this amount was taken out.",
+  "accountsReverseReason": "Reason for reversing",
+  "accountsReversedOn": "Reversed on {date}",
+  "@accountsReversedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "accountsApprovedOn": "Approved on {date}",
+  "@accountsApprovedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "accountsRecordedBy": "Recorded by {name}",
+  "@accountsRecordedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountsApprovedBy": "Approved by {name}",
+  "@accountsApprovedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountsReversedBy": "Reversed by {name}",
+  "@accountsReversedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "accountsLockedNotice": "This entry has been approved and counted in the published totals, so nothing but the description can be changed. To correct it, reverse it and record it again.",
+  "accountsPendingNotice": "This entry is counted in no total yet. Approve it once you have checked it against the bill or the bank statement.",
+  "accountsDonationsElsewhere": "Donations are not entered here. They are recorded in the donation register and counted from it.",
+  "accountsCategoriesTitle": "Accounting categories",
+  "accountsCategoriesSubtitle": "The headings every entry in the books is filed under",
+  "accountsCategoryNew": "New category",
+  "accountsCategoryEdit": "Edit category",
+  "accountsCategoryNameHi": "Name (Hindi)",
+  "accountsCategoryNameEn": "Name (English)",
+  "accountsCategoryActive": "In use",
+  "accountsCategoryInactive": "Closed",
+  "accountsCategoryUsage": "{count, plural, =0{Not used by any entry} =1{Used by 1 entry} other{Used by {count} entries}}",
+  "@accountsCategoryUsage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "accountsCategoryDelete": "Delete",
+  "accountsCategoryDeleteTitle": "Delete this category?",
+  "accountsCategoryDeleteBody": "Nothing is filed under this heading, so it can be removed.",
+  "accountsCategoryDeactivate": "Close it",
+  "accountsCategoryReactivate": "Reopen it",
+  "accountsCategoryInUseNotice": "Entries are filed under this heading, so it can neither be deleted nor moved from income to expenditure — either would change what old entries mean. Close it instead: it stops being offered on new entries, and the old ones still read correctly.",
+  "accountsCategoryEmpty": "There are no categories yet.",
+  "accountsSettingsTitle": "Accounting settings",
+  "accountsSettingsSubtitle": "The opening balance, and publishing the books",
+  "accountsPublishBooks": "Show the accounts on the website",
+  "accountsPublishBooksHelp": "Turned on, the website shows the year's total income, total expenditure and the breakdown by heading. No donor or supplier is ever named. While it is off, no figure appears on the website at all.",
+  "accountsBooksArePublic": "The accounts are showing on the website",
+  "accountsBooksAreNotPublic": "The accounts are not on the website",
+  "accountsOpeningBalance": "Opening balance",
+  "accountsOpeningBalanceHelp": "What the temple held when the books were started here. Without it the published balance is short by exactly that much. Write a negative amount if the books begin in deficit.",
+  "accountsOpeningBalanceDate": "Opening balance date",
+  "accountsIntroHi": "Introduction (Hindi)",
+  "accountsIntroEn": "Introduction (English)",
+  "accountsNoteHi": "Note (Hindi)",
+  "accountsNoteEn": "Note (English)",
+  "accountsIntroHelp": "This sentence appears at the top of the accounts page.",
+  "errorTransactionLocked": "This entry has already been approved or reversed, so that is no longer possible.",
+  "errorAccountsNotPublished": "The temple has not published its accounts."
 }

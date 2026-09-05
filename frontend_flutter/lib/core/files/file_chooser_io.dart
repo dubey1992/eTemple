@@ -11,5 +11,8 @@ class FileChooser {
   /// through the repository instead.
   Future<PickedFile?> pickImage({List<String> accept = const []}) async => null;
 
+  /// The same. See [pickImage].
+  Future<PickedFile?> pickFile({List<String> accept = const []}) async => null;
+
   bool get isSupported => false;
 }

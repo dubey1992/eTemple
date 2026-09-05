@@ -1741,4 +1741,407 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get adminMenuOpen => 'मेन्यू खोलें';
+
+  @override
+  String get navAccounts => 'आय-व्यय';
+
+  @override
+  String get navAccountsDesc =>
+      'मंदिर की आय और व्यय दर्ज करें, जाँचें और स्वीकृत करें';
+
+  @override
+  String get navAccountingCategories => 'आय-व्यय श्रेणियाँ';
+
+  @override
+  String get navAccountingCategoriesDesc =>
+      'किस मद में आय या व्यय दर्ज होगा, वे शीर्षक';
+
+  @override
+  String get navAccountingSettings => 'लेखा सेटिंग्स';
+
+  @override
+  String get navAccountingSettingsDesc =>
+      'आरंभिक शेष, और लेखा-जोखा वेबसाइट पर दिखाना';
+
+  @override
+  String get navTransparency => 'आय-व्यय';
+
+  @override
+  String get transparencyTitle => 'आय-व्यय का लेखा-जोखा';
+
+  @override
+  String get transparencySubtitle =>
+      'मंदिर को क्या प्राप्त हुआ और कहाँ व्यय हुआ';
+
+  @override
+  String get transparencyNotPublishedTitle => 'लेखा-जोखा अभी प्रकाशित नहीं है';
+
+  @override
+  String get transparencyNotPublishedBody =>
+      'समिति ने अभी मंदिर का आय-व्यय विवरण वेबसाइट पर प्रकाशित नहीं किया है। अधिक जानकारी के लिए कृपया समिति से संपर्क करें।';
+
+  @override
+  String get transparencySelectYear => 'वित्तीय वर्ष चुनें';
+
+  @override
+  String transparencyYearHeading(String label) {
+    return 'वित्तीय वर्ष $label';
+  }
+
+  @override
+  String get transparencyOpeningBalance => 'वर्ष के आरंभ में शेष';
+
+  @override
+  String get transparencyDonations => 'दान से प्राप्त';
+
+  @override
+  String get transparencyOtherIncome => 'अन्य आय';
+
+  @override
+  String get transparencyTotalIncome => 'कुल आय';
+
+  @override
+  String get transparencyTotalExpense => 'कुल व्यय';
+
+  @override
+  String get transparencyClosingBalance => 'वर्ष के अंत में शेष';
+
+  @override
+  String get transparencyIncomeBreakdown => 'आय का विवरण';
+
+  @override
+  String get transparencyExpenseBreakdown => 'व्यय का विवरण';
+
+  @override
+  String transparencyDonationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count दान',
+      one: '1 दान',
+      zero: 'इस वर्ष कोई दान दर्ज नहीं',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get transparencyNoIncome =>
+      'इस वर्ष दान के अतिरिक्त कोई आय दर्ज नहीं है।';
+
+  @override
+  String get transparencyNoExpense => 'इस वर्ष कोई व्यय दर्ज नहीं है।';
+
+  @override
+  String get transparencyEmptyYear =>
+      'इस वित्तीय वर्ष का कोई लेखा अभी दर्ज नहीं हुआ है।';
+
+  @override
+  String get transparencyOnlyApprovedNote =>
+      'इन आँकड़ों में केवल वे प्रविष्टियाँ सम्मिलित हैं जिन्हें समिति ने बिल या बैंक विवरण से मिलान कर स्वीकृत किया है।';
+
+  @override
+  String get transparencyNoNamesNote =>
+      'यहाँ किसी दानदाता या विक्रेता का नाम प्रकाशित नहीं किया जाता — केवल कुल राशि और मद।';
+
+  @override
+  String transparencyAsOf(String date) {
+    return '$date तक';
+  }
+
+  @override
+  String transparencyOpeningBalanceOn(String date) {
+    return '$date से';
+  }
+
+  @override
+  String get accountsTitle => 'आय-व्यय';
+
+  @override
+  String get accountsSubtitle => 'मंदिर की बही';
+
+  @override
+  String get accountsNewEntry => 'नई प्रविष्टि';
+
+  @override
+  String get accountsEditEntry => 'प्रविष्टि संपादित करें';
+
+  @override
+  String get accountsTypeIncome => 'आय';
+
+  @override
+  String get accountsTypeExpense => 'व्यय';
+
+  @override
+  String get accountsStatusPending => 'जाँच शेष';
+
+  @override
+  String get accountsStatusApproved => 'स्वीकृत';
+
+  @override
+  String get accountsStatusReversed => 'निरस्त';
+
+  @override
+  String get accountsAllTypes => 'सभी';
+
+  @override
+  String get accountsAllStatuses => 'सभी स्थितियाँ';
+
+  @override
+  String get accountsAllCategories => 'सभी श्रेणियाँ';
+
+  @override
+  String get accountsApprovedIncome => 'स्वीकृत आय';
+
+  @override
+  String get accountsApprovedExpense => 'स्वीकृत व्यय';
+
+  @override
+  String get accountsNet => 'बही का शुद्ध';
+
+  @override
+  String accountsPendingNotCounted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count प्रविष्टियों की जाँच शेष है और वे किसी योग में नहीं गिनी गईं',
+      one: '1 प्रविष्टि की जाँच शेष है और वह किसी योग में नहीं गिनी गई',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountsEmpty => 'अभी कोई प्रविष्टि नहीं है।';
+
+  @override
+  String get accountsEmptyFiltered =>
+      'इस छाँट के अनुसार कोई प्रविष्टि नहीं मिली।';
+
+  @override
+  String get accountsSearchHint => 'किसे भुगतान, विवरण या संदर्भ खोजें';
+
+  @override
+  String get accountsFieldCategory => 'श्रेणी';
+
+  @override
+  String get accountsFieldAmount => 'राशि';
+
+  @override
+  String get accountsFieldDate => 'तिथि';
+
+  @override
+  String get accountsFieldPaymentMode => 'भुगतान का माध्यम';
+
+  @override
+  String get accountsFieldReference => 'संदर्भ संख्या';
+
+  @override
+  String get accountsFieldPayee => 'किसे भुगतान / किससे प्राप्त';
+
+  @override
+  String get accountsFieldDescription => 'विवरण';
+
+  @override
+  String get accountsPayeeHelp => 'यह नाम वेबसाइट पर कभी प्रकाशित नहीं होता।';
+
+  @override
+  String get accountsDescriptionHelp =>
+      'बही के लिए आपका अपना नोट। यह भी प्रकाशित नहीं होता।';
+
+  @override
+  String get accountsBill => 'बिल / रसीद';
+
+  @override
+  String get accountsAttachBill => 'बिल संलग्न करें';
+
+  @override
+  String get accountsReplaceBill => 'बिल बदलें';
+
+  @override
+  String get accountsViewBill => 'बिल देखें';
+
+  @override
+  String get accountsNoBill => 'कोई बिल संलग्न नहीं है';
+
+  @override
+  String get accountsBillHelp =>
+      'फोटो या PDF। बिल केवल समिति के सदस्य देख सकते हैं, वेबसाइट पर कभी नहीं दिखता।';
+
+  @override
+  String get accountsBillLocked =>
+      'स्वीकृत प्रविष्टि का बिल नहीं बदला जा सकता।';
+
+  @override
+  String get accountsApprove => 'स्वीकृत करें';
+
+  @override
+  String get accountsApproveTitle => 'यह प्रविष्टि स्वीकृत करें?';
+
+  @override
+  String get accountsApproveBody =>
+      'स्वीकृति के बाद यह राशि हर योग में गिनी जाएगी — उस पृष्ठ पर भी जो गाँव पढ़ता है — और तब विवरण के अतिरिक्त कुछ भी नहीं बदला जा सकेगा। सुधार का एकमात्र उपाय निरस्त कर दोबारा दर्ज करना है।';
+
+  @override
+  String get accountsReverse => 'निरस्त करें';
+
+  @override
+  String get accountsReverseTitle => 'यह प्रविष्टि निरस्त करें?';
+
+  @override
+  String get accountsReverseBody =>
+      'पंक्ति बही में बनी रहेगी, बिल सहित, और किसी योग में नहीं गिनी जाएगी। कारण लिखना आवश्यक है — महीनों बाद यही बताएगा कि यह राशि क्यों हटाई गई।';
+
+  @override
+  String get accountsReverseReason => 'निरस्त करने का कारण';
+
+  @override
+  String accountsReversedOn(String date) {
+    return '$date को निरस्त';
+  }
+
+  @override
+  String accountsApprovedOn(String date) {
+    return '$date को स्वीकृत';
+  }
+
+  @override
+  String accountsRecordedBy(String name) {
+    return 'दर्ज किया: $name';
+  }
+
+  @override
+  String accountsApprovedBy(String name) {
+    return 'स्वीकृत किया: $name';
+  }
+
+  @override
+  String accountsReversedBy(String name) {
+    return 'निरस्त किया: $name';
+  }
+
+  @override
+  String get accountsLockedNotice =>
+      'यह प्रविष्टि स्वीकृत हो चुकी है और प्रकाशित योगों में गिनी जा चुकी है, इसलिए विवरण के अतिरिक्त कुछ नहीं बदला जा सकता। सुधार के लिए इसे निरस्त कर दोबारा दर्ज करें।';
+
+  @override
+  String get accountsPendingNotice =>
+      'यह प्रविष्टि अभी किसी योग में नहीं गिनी गई है। बिल या बैंक विवरण से मिलान करने के बाद इसे स्वीकृत करें।';
+
+  @override
+  String get accountsDonationsElsewhere =>
+      'दान यहाँ दर्ज नहीं होते। वे दान रजिस्टर में दर्ज होते हैं और वहीं से गिने जाते हैं।';
+
+  @override
+  String get accountsCategoriesTitle => 'आय-व्यय श्रेणियाँ';
+
+  @override
+  String get accountsCategoriesSubtitle =>
+      'वे शीर्षक जिनके अंतर्गत बही की हर प्रविष्टि आती है';
+
+  @override
+  String get accountsCategoryNew => 'नई श्रेणी';
+
+  @override
+  String get accountsCategoryEdit => 'श्रेणी संपादित करें';
+
+  @override
+  String get accountsCategoryNameHi => 'नाम (हिन्दी)';
+
+  @override
+  String get accountsCategoryNameEn => 'नाम (अंग्रेज़ी)';
+
+  @override
+  String get accountsCategoryActive => 'प्रयोग में';
+
+  @override
+  String get accountsCategoryInactive => 'बंद';
+
+  @override
+  String accountsCategoryUsage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count प्रविष्टियों में',
+      one: '1 प्रविष्टि में',
+      zero: 'किसी प्रविष्टि में प्रयुक्त नहीं',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountsCategoryDelete => 'हटाएँ';
+
+  @override
+  String get accountsCategoryDeleteTitle => 'यह श्रेणी हटाएँ?';
+
+  @override
+  String get accountsCategoryDeleteBody =>
+      'इस शीर्षक के अंतर्गत कोई प्रविष्टि नहीं है, इसलिए इसे हटाया जा सकता है।';
+
+  @override
+  String get accountsCategoryDeactivate => 'बंद करें';
+
+  @override
+  String get accountsCategoryReactivate => 'फिर से चालू करें';
+
+  @override
+  String get accountsCategoryInUseNotice =>
+      'इस शीर्षक के अंतर्गत प्रविष्टियाँ दर्ज हैं, इसलिए इसे न हटाया जा सकता है और न आय से व्यय में बदला जा सकता है — दोनों से पुरानी प्रविष्टियों का अर्थ बदल जाएगा। इसे बंद कर दें: नई प्रविष्टियों में यह नहीं दिखेगा और पुरानी वैसी ही पढ़ी जाएँगी।';
+
+  @override
+  String get accountsCategoryEmpty => 'अभी कोई श्रेणी नहीं है।';
+
+  @override
+  String get accountsSettingsTitle => 'लेखा सेटिंग्स';
+
+  @override
+  String get accountsSettingsSubtitle =>
+      'आरंभिक शेष, और लेखा-जोखा सार्वजनिक करना';
+
+  @override
+  String get accountsPublishBooks => 'आय-व्यय वेबसाइट पर दिखाएँ';
+
+  @override
+  String get accountsPublishBooksHelp =>
+      'चालू करने पर मंदिर की वेबसाइट पर वर्ष का कुल आय, कुल व्यय और मदवार विवरण दिखने लगेगा। किसी दानदाता या विक्रेता का नाम कभी नहीं दिखता। जब तक यह बंद है, वेबसाइट पर कोई आँकड़ा नहीं दिखता।';
+
+  @override
+  String get accountsBooksArePublic => 'लेखा-जोखा वेबसाइट पर दिख रहा है';
+
+  @override
+  String get accountsBooksAreNotPublic =>
+      'लेखा-जोखा अभी वेबसाइट पर नहीं दिख रहा';
+
+  @override
+  String get accountsOpeningBalance => 'आरंभिक शेष';
+
+  @override
+  String get accountsOpeningBalanceHelp =>
+      'इस सॉफ़्टवेयर में लेखा आरंभ करते समय मंदिर के पास जो राशि थी। इसके बिना प्रकाशित शेष उतना ही कम दिखेगा। घाटे में आरंभ हो तो ऋणात्मक राशि लिखें।';
+
+  @override
+  String get accountsOpeningBalanceDate => 'आरंभिक शेष की तिथि';
+
+  @override
+  String get accountsIntroHi => 'परिचय (हिन्दी)';
+
+  @override
+  String get accountsIntroEn => 'परिचय (अंग्रेज़ी)';
+
+  @override
+  String get accountsNoteHi => 'टिप्पणी (हिन्दी)';
+
+  @override
+  String get accountsNoteEn => 'टिप्पणी (अंग्रेज़ी)';
+
+  @override
+  String get accountsIntroHelp => 'यह वाक्य आय-व्यय पृष्ठ के आरंभ में दिखेगा।';
+
+  @override
+  String get errorTransactionLocked =>
+      'यह प्रविष्टि स्वीकृत या निरस्त हो चुकी है, इसलिए यह कार्य अब संभव नहीं है।';
+
+  @override
+  String get errorAccountsNotPublished =>
+      'मंदिर ने अभी अपना लेखा-जोखा प्रकाशित नहीं किया है।';
 }

@@ -15,10 +15,38 @@ Legend: `NOT STARTED` · `IN PROGRESS` · `PARTIAL` · `BLOCKED` · `COMPLETE`
 | 6 | Donations & Receipts | **COMPLETE** | Money as integer paise; a receipt number issued on verification, unique by database index and immutable thereafter; no delete anywhere — reversal keeps the row, its number and a required reason. Donor detail reaches no public endpoint — `phase-reports/PHASE_6_COMPLETION.md`. |
 | 7 | Devotee Contact & Enquiries | **COMPLETE** | The public contact form, protected by four layers none of which is a third-party CAPTCHA: an IP rate limit with a daily ceiling, a honeypot, a timed single-use ticket, and a server-issued question after a threshold. No public read of an enquiry at any status, and no delete — `spam` keeps the row. Also fixed two defects carried in from earlier phases — `phase-reports/PHASE_7_COMPLETION.md`. |
 | 8 | Announcements & Notifications | **COMPLETE** | Publishing and sending are separate acts: saving sends nothing, publishing sends nothing, and a send needs an explicit channel choice and can happen once. The schedule is a `where` clause with no cron behind it. E-mail reaches committee accounts only. Also replaced the admin card grid with a side menu — `phase-reports/PHASE_8_COMPLETION.md`. |
-| 9 | Accounts & Transparency | NOT STARTED | Keys `accounts.*` exist. |
+| 9 | Accounts & Transparency | **COMPLETE** | The ledger, and the figures the village reads. Only approved money counts in any total; donations are read from their own register and the `donation` category code is refused, so nothing is published twice; bills live on a private disk with no URL to them; no delete anywhere. The public page carries totals by heading and **no person's name** — the consent question `donations.is_anonymous` could not answer. Also fixed a defect found by screenshotting: the console's net excluded donations while the public page included them, unlabelled — `phase-reports/PHASE_9_COMPLETION.md`. |
 | 10 | Reports & Analytics | NOT STARTED | Keys `reports.*` exist. |
 | 11 | Security, Backup & Audit | NOT STARTED | |
 | 12 | Testing, Deployment & Handover | NOT STARTED | |
+
+## Verification log — Phase 9 (2026-09-13)
+
+| Check | Result |
+|---|---|
+| `flutter analyze` | ✅ No issues found |
+| `dart format --set-exit-if-changed` | ✅ 0 of 208 files changed |
+| `flutter test` | ✅ **526/526** passed |
+| `flutter build web --release` | ✅ built |
+| `./vendor/bin/pint --test` | ✅ passed |
+| `php artisan test` | ✅ **609** passed (2161 assertions) |
+| migrate → rollback → migrate → seed (MariaDB) | ✅ reversible |
+| Only approved money counts | ✅ in the public totals **and** in the console's; pending and reversed appear in neither |
+| Donations are counted once | ✅ read from the donation register, reported as their own line; the `donation` category code is refused on a transaction |
+| An approved figure cannot be edited | ✅ 409 `TRANSACTION_LOCKED` over HTTP; only the description changes; the bill cannot be replaced either |
+| No hard delete | ✅ `DELETE` on a transaction is 405; reversal keeps the row, its bill and a required reason |
+| A used heading cannot be deleted or moved | ✅ 409 naming the count; the type is ignored rather than obeyed; `restrictOnDelete` says the same one layer down |
+| Money exactness | ✅ integer paise throughout; ten ten-paise entries sum to exactly one rupee |
+| The books are private until published | ✅ default false; an unpublished ledger returns **no summary block**, not zeros |
+| The opening balance is stated, and carries across years | ✅ computed from everything before the year, never stored |
+| No name reaches the public page | ✅ no donor, payee, reference, receipt number, description or author — asserted in tests and live |
+| The bill is private | ✅ private disk, path never serialized, `nosniff` download, 401 without a session, not served under `/storage` |
+| An upload is judged by its bytes | ✅ a PHP script named `bill.jpg` refused after a real multipart upload |
+| A Content Manager cannot see financial detail | ✅ 403 on **reading**, not only on writing |
+| A Viewer may read a bill | ✅ `accounts.view`, because that is what auditing is |
+| Live, through the running API | ✅ **72 checks** — including waiting out the rate limit rather than configuring it away |
+| Phase 0–8 tests | ✅ pass unchanged |
+| Every admin route has a breadcrumb trail | ✅ still asserted, now including the five accounting routes |
 
 ## Verification log — Phase 8 (2026-09-12)
 
@@ -177,8 +205,10 @@ MariaDB 12.3.3 · live health and 401 checks.
   (Phase 6 §9.1).
 - No 80G/PAN fields on the receipt — the temple's registration status is not
   something this project has been told (Phase 6 §9.2).
-- `donations.is_anonymous` is stored and respected by nothing yet; it exists for
-  the Phase 9 transparency figures.
+- **No donor roll.** Phase 9 publishes no name at all, and `is_anonymous` is not
+  the field that would allow one: it defaults to false, and a default is not
+  consent. A board needs a publication-consent question asked when the donation
+  is recorded, plus an effective-from date (Phase 9 §5).
 - No CSV/Excel export of the register — Phase 10.
 - No per-occurrence overrides: one day of a recurring event cannot be cancelled
   on its own (Phase 4 §10.1).
@@ -197,7 +227,16 @@ MariaDB 12.3.3 · live health and 401 checks.
 - An announcement sent with no queue worker running records itself as sent and
   delivers nothing; it cannot be detected from inside the request (Phase 8 §10).
 - The home banner's dismissal lasts the session only.
+- No CSV/PDF/Excel export of the ledger or the published figures — Phase 10.
+- Accounting approvals and reversals are not in an append-only audit log; the
+  columns on the row record who and when (Phase 11).
+- No bank statement import or reconciliation; matching is done by eye.
+- A transfer between the cash box and the bank cannot be recorded — deliberately,
+  since as an income and an expense it would inflate both published figures
+  (Phase 9 §12).
+- Attachment storage is unbounded: nothing prunes bills or warns when the disk
+  fills.
 - Pre-render tool not wired into CI.
 - No cross-stack end-to-end test (Phase 12).
 
-Phase 9 must not begin without explicit approval.
+Phase 10 must not begin without explicit approval.

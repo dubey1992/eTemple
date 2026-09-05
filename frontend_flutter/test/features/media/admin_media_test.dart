@@ -454,6 +454,10 @@ class _StubChooser implements FileChooser {
 
   @override
   Future<PickedFile?> pickImage({List<String> accept = const []}) async =>
+      pickFile(accept: accept);
+
+  @override
+  Future<PickedFile?> pickFile({List<String> accept = const []}) async =>
       PickedFile(
         name: 'aarti.jpg',
         bytes: testBytes(64),

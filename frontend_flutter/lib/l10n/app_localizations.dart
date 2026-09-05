@@ -3331,6 +3331,672 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'मेन्यू खोलें'**
   String get adminMenuOpen;
+
+  /// No description provided for @navAccounts.
+  ///
+  /// In hi, this message translates to:
+  /// **'आय-व्यय'**
+  String get navAccounts;
+
+  /// No description provided for @navAccountsDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर की आय और व्यय दर्ज करें, जाँचें और स्वीकृत करें'**
+  String get navAccountsDesc;
+
+  /// No description provided for @navAccountingCategories.
+  ///
+  /// In hi, this message translates to:
+  /// **'आय-व्यय श्रेणियाँ'**
+  String get navAccountingCategories;
+
+  /// No description provided for @navAccountingCategoriesDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'किस मद में आय या व्यय दर्ज होगा, वे शीर्षक'**
+  String get navAccountingCategoriesDesc;
+
+  /// No description provided for @navAccountingSettings.
+  ///
+  /// In hi, this message translates to:
+  /// **'लेखा सेटिंग्स'**
+  String get navAccountingSettings;
+
+  /// No description provided for @navAccountingSettingsDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'आरंभिक शेष, और लेखा-जोखा वेबसाइट पर दिखाना'**
+  String get navAccountingSettingsDesc;
+
+  /// No description provided for @navTransparency.
+  ///
+  /// In hi, this message translates to:
+  /// **'आय-व्यय'**
+  String get navTransparency;
+
+  /// No description provided for @transparencyTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'आय-व्यय का लेखा-जोखा'**
+  String get transparencyTitle;
+
+  /// No description provided for @transparencySubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर को क्या प्राप्त हुआ और कहाँ व्यय हुआ'**
+  String get transparencySubtitle;
+
+  /// No description provided for @transparencyNotPublishedTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'लेखा-जोखा अभी प्रकाशित नहीं है'**
+  String get transparencyNotPublishedTitle;
+
+  /// No description provided for @transparencyNotPublishedBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'समिति ने अभी मंदिर का आय-व्यय विवरण वेबसाइट पर प्रकाशित नहीं किया है। अधिक जानकारी के लिए कृपया समिति से संपर्क करें।'**
+  String get transparencyNotPublishedBody;
+
+  /// No description provided for @transparencySelectYear.
+  ///
+  /// In hi, this message translates to:
+  /// **'वित्तीय वर्ष चुनें'**
+  String get transparencySelectYear;
+
+  /// No description provided for @transparencyYearHeading.
+  ///
+  /// In hi, this message translates to:
+  /// **'वित्तीय वर्ष {label}'**
+  String transparencyYearHeading(String label);
+
+  /// No description provided for @transparencyOpeningBalance.
+  ///
+  /// In hi, this message translates to:
+  /// **'वर्ष के आरंभ में शेष'**
+  String get transparencyOpeningBalance;
+
+  /// No description provided for @transparencyDonations.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान से प्राप्त'**
+  String get transparencyDonations;
+
+  /// No description provided for @transparencyOtherIncome.
+  ///
+  /// In hi, this message translates to:
+  /// **'अन्य आय'**
+  String get transparencyOtherIncome;
+
+  /// No description provided for @transparencyTotalIncome.
+  ///
+  /// In hi, this message translates to:
+  /// **'कुल आय'**
+  String get transparencyTotalIncome;
+
+  /// No description provided for @transparencyTotalExpense.
+  ///
+  /// In hi, this message translates to:
+  /// **'कुल व्यय'**
+  String get transparencyTotalExpense;
+
+  /// No description provided for @transparencyClosingBalance.
+  ///
+  /// In hi, this message translates to:
+  /// **'वर्ष के अंत में शेष'**
+  String get transparencyClosingBalance;
+
+  /// No description provided for @transparencyIncomeBreakdown.
+  ///
+  /// In hi, this message translates to:
+  /// **'आय का विवरण'**
+  String get transparencyIncomeBreakdown;
+
+  /// No description provided for @transparencyExpenseBreakdown.
+  ///
+  /// In hi, this message translates to:
+  /// **'व्यय का विवरण'**
+  String get transparencyExpenseBreakdown;
+
+  /// No description provided for @transparencyDonationCount.
+  ///
+  /// In hi, this message translates to:
+  /// **'{count, plural, =0{इस वर्ष कोई दान दर्ज नहीं} =1{1 दान} other{{count} दान}}'**
+  String transparencyDonationCount(int count);
+
+  /// No description provided for @transparencyNoIncome.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस वर्ष दान के अतिरिक्त कोई आय दर्ज नहीं है।'**
+  String get transparencyNoIncome;
+
+  /// No description provided for @transparencyNoExpense.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस वर्ष कोई व्यय दर्ज नहीं है।'**
+  String get transparencyNoExpense;
+
+  /// No description provided for @transparencyEmptyYear.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस वित्तीय वर्ष का कोई लेखा अभी दर्ज नहीं हुआ है।'**
+  String get transparencyEmptyYear;
+
+  /// No description provided for @transparencyOnlyApprovedNote.
+  ///
+  /// In hi, this message translates to:
+  /// **'इन आँकड़ों में केवल वे प्रविष्टियाँ सम्मिलित हैं जिन्हें समिति ने बिल या बैंक विवरण से मिलान कर स्वीकृत किया है।'**
+  String get transparencyOnlyApprovedNote;
+
+  /// No description provided for @transparencyNoNamesNote.
+  ///
+  /// In hi, this message translates to:
+  /// **'यहाँ किसी दानदाता या विक्रेता का नाम प्रकाशित नहीं किया जाता — केवल कुल राशि और मद।'**
+  String get transparencyNoNamesNote;
+
+  /// No description provided for @transparencyAsOf.
+  ///
+  /// In hi, this message translates to:
+  /// **'{date} तक'**
+  String transparencyAsOf(String date);
+
+  /// No description provided for @transparencyOpeningBalanceOn.
+  ///
+  /// In hi, this message translates to:
+  /// **'{date} से'**
+  String transparencyOpeningBalanceOn(String date);
+
+  /// No description provided for @accountsTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'आय-व्यय'**
+  String get accountsTitle;
+
+  /// No description provided for @accountsSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर की बही'**
+  String get accountsSubtitle;
+
+  /// No description provided for @accountsNewEntry.
+  ///
+  /// In hi, this message translates to:
+  /// **'नई प्रविष्टि'**
+  String get accountsNewEntry;
+
+  /// No description provided for @accountsEditEntry.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रविष्टि संपादित करें'**
+  String get accountsEditEntry;
+
+  /// No description provided for @accountsTypeIncome.
+  ///
+  /// In hi, this message translates to:
+  /// **'आय'**
+  String get accountsTypeIncome;
+
+  /// No description provided for @accountsTypeExpense.
+  ///
+  /// In hi, this message translates to:
+  /// **'व्यय'**
+  String get accountsTypeExpense;
+
+  /// No description provided for @accountsStatusPending.
+  ///
+  /// In hi, this message translates to:
+  /// **'जाँच शेष'**
+  String get accountsStatusPending;
+
+  /// No description provided for @accountsStatusApproved.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्वीकृत'**
+  String get accountsStatusApproved;
+
+  /// No description provided for @accountsStatusReversed.
+  ///
+  /// In hi, this message translates to:
+  /// **'निरस्त'**
+  String get accountsStatusReversed;
+
+  /// No description provided for @accountsAllTypes.
+  ///
+  /// In hi, this message translates to:
+  /// **'सभी'**
+  String get accountsAllTypes;
+
+  /// No description provided for @accountsAllStatuses.
+  ///
+  /// In hi, this message translates to:
+  /// **'सभी स्थितियाँ'**
+  String get accountsAllStatuses;
+
+  /// No description provided for @accountsAllCategories.
+  ///
+  /// In hi, this message translates to:
+  /// **'सभी श्रेणियाँ'**
+  String get accountsAllCategories;
+
+  /// No description provided for @accountsApprovedIncome.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्वीकृत आय'**
+  String get accountsApprovedIncome;
+
+  /// No description provided for @accountsApprovedExpense.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्वीकृत व्यय'**
+  String get accountsApprovedExpense;
+
+  /// No description provided for @accountsNet.
+  ///
+  /// In hi, this message translates to:
+  /// **'बही का शुद्ध'**
+  String get accountsNet;
+
+  /// No description provided for @accountsPendingNotCounted.
+  ///
+  /// In hi, this message translates to:
+  /// **'{count, plural, =1{1 प्रविष्टि की जाँच शेष है और वह किसी योग में नहीं गिनी गई} other{{count} प्रविष्टियों की जाँच शेष है और वे किसी योग में नहीं गिनी गईं}}'**
+  String accountsPendingNotCounted(int count);
+
+  /// No description provided for @accountsEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी कोई प्रविष्टि नहीं है।'**
+  String get accountsEmpty;
+
+  /// No description provided for @accountsEmptyFiltered.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस छाँट के अनुसार कोई प्रविष्टि नहीं मिली।'**
+  String get accountsEmptyFiltered;
+
+  /// No description provided for @accountsSearchHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'किसे भुगतान, विवरण या संदर्भ खोजें'**
+  String get accountsSearchHint;
+
+  /// No description provided for @accountsFieldCategory.
+  ///
+  /// In hi, this message translates to:
+  /// **'श्रेणी'**
+  String get accountsFieldCategory;
+
+  /// No description provided for @accountsFieldAmount.
+  ///
+  /// In hi, this message translates to:
+  /// **'राशि'**
+  String get accountsFieldAmount;
+
+  /// No description provided for @accountsFieldDate.
+  ///
+  /// In hi, this message translates to:
+  /// **'तिथि'**
+  String get accountsFieldDate;
+
+  /// No description provided for @accountsFieldPaymentMode.
+  ///
+  /// In hi, this message translates to:
+  /// **'भुगतान का माध्यम'**
+  String get accountsFieldPaymentMode;
+
+  /// No description provided for @accountsFieldReference.
+  ///
+  /// In hi, this message translates to:
+  /// **'संदर्भ संख्या'**
+  String get accountsFieldReference;
+
+  /// No description provided for @accountsFieldPayee.
+  ///
+  /// In hi, this message translates to:
+  /// **'किसे भुगतान / किससे प्राप्त'**
+  String get accountsFieldPayee;
+
+  /// No description provided for @accountsFieldDescription.
+  ///
+  /// In hi, this message translates to:
+  /// **'विवरण'**
+  String get accountsFieldDescription;
+
+  /// No description provided for @accountsPayeeHelp.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह नाम वेबसाइट पर कभी प्रकाशित नहीं होता।'**
+  String get accountsPayeeHelp;
+
+  /// No description provided for @accountsDescriptionHelp.
+  ///
+  /// In hi, this message translates to:
+  /// **'बही के लिए आपका अपना नोट। यह भी प्रकाशित नहीं होता।'**
+  String get accountsDescriptionHelp;
+
+  /// No description provided for @accountsBill.
+  ///
+  /// In hi, this message translates to:
+  /// **'बिल / रसीद'**
+  String get accountsBill;
+
+  /// No description provided for @accountsAttachBill.
+  ///
+  /// In hi, this message translates to:
+  /// **'बिल संलग्न करें'**
+  String get accountsAttachBill;
+
+  /// No description provided for @accountsReplaceBill.
+  ///
+  /// In hi, this message translates to:
+  /// **'बिल बदलें'**
+  String get accountsReplaceBill;
+
+  /// No description provided for @accountsViewBill.
+  ///
+  /// In hi, this message translates to:
+  /// **'बिल देखें'**
+  String get accountsViewBill;
+
+  /// No description provided for @accountsNoBill.
+  ///
+  /// In hi, this message translates to:
+  /// **'कोई बिल संलग्न नहीं है'**
+  String get accountsNoBill;
+
+  /// No description provided for @accountsBillHelp.
+  ///
+  /// In hi, this message translates to:
+  /// **'फोटो या PDF। बिल केवल समिति के सदस्य देख सकते हैं, वेबसाइट पर कभी नहीं दिखता।'**
+  String get accountsBillHelp;
+
+  /// No description provided for @accountsBillLocked.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्वीकृत प्रविष्टि का बिल नहीं बदला जा सकता।'**
+  String get accountsBillLocked;
+
+  /// No description provided for @accountsApprove.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्वीकृत करें'**
+  String get accountsApprove;
+
+  /// No description provided for @accountsApproveTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह प्रविष्टि स्वीकृत करें?'**
+  String get accountsApproveTitle;
+
+  /// No description provided for @accountsApproveBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्वीकृति के बाद यह राशि हर योग में गिनी जाएगी — उस पृष्ठ पर भी जो गाँव पढ़ता है — और तब विवरण के अतिरिक्त कुछ भी नहीं बदला जा सकेगा। सुधार का एकमात्र उपाय निरस्त कर दोबारा दर्ज करना है।'**
+  String get accountsApproveBody;
+
+  /// No description provided for @accountsReverse.
+  ///
+  /// In hi, this message translates to:
+  /// **'निरस्त करें'**
+  String get accountsReverse;
+
+  /// No description provided for @accountsReverseTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह प्रविष्टि निरस्त करें?'**
+  String get accountsReverseTitle;
+
+  /// No description provided for @accountsReverseBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'पंक्ति बही में बनी रहेगी, बिल सहित, और किसी योग में नहीं गिनी जाएगी। कारण लिखना आवश्यक है — महीनों बाद यही बताएगा कि यह राशि क्यों हटाई गई।'**
+  String get accountsReverseBody;
+
+  /// No description provided for @accountsReverseReason.
+  ///
+  /// In hi, this message translates to:
+  /// **'निरस्त करने का कारण'**
+  String get accountsReverseReason;
+
+  /// No description provided for @accountsReversedOn.
+  ///
+  /// In hi, this message translates to:
+  /// **'{date} को निरस्त'**
+  String accountsReversedOn(String date);
+
+  /// No description provided for @accountsApprovedOn.
+  ///
+  /// In hi, this message translates to:
+  /// **'{date} को स्वीकृत'**
+  String accountsApprovedOn(String date);
+
+  /// No description provided for @accountsRecordedBy.
+  ///
+  /// In hi, this message translates to:
+  /// **'दर्ज किया: {name}'**
+  String accountsRecordedBy(String name);
+
+  /// No description provided for @accountsApprovedBy.
+  ///
+  /// In hi, this message translates to:
+  /// **'स्वीकृत किया: {name}'**
+  String accountsApprovedBy(String name);
+
+  /// No description provided for @accountsReversedBy.
+  ///
+  /// In hi, this message translates to:
+  /// **'निरस्त किया: {name}'**
+  String accountsReversedBy(String name);
+
+  /// No description provided for @accountsLockedNotice.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह प्रविष्टि स्वीकृत हो चुकी है और प्रकाशित योगों में गिनी जा चुकी है, इसलिए विवरण के अतिरिक्त कुछ नहीं बदला जा सकता। सुधार के लिए इसे निरस्त कर दोबारा दर्ज करें।'**
+  String get accountsLockedNotice;
+
+  /// No description provided for @accountsPendingNotice.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह प्रविष्टि अभी किसी योग में नहीं गिनी गई है। बिल या बैंक विवरण से मिलान करने के बाद इसे स्वीकृत करें।'**
+  String get accountsPendingNotice;
+
+  /// No description provided for @accountsDonationsElsewhere.
+  ///
+  /// In hi, this message translates to:
+  /// **'दान यहाँ दर्ज नहीं होते। वे दान रजिस्टर में दर्ज होते हैं और वहीं से गिने जाते हैं।'**
+  String get accountsDonationsElsewhere;
+
+  /// No description provided for @accountsCategoriesTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'आय-व्यय श्रेणियाँ'**
+  String get accountsCategoriesTitle;
+
+  /// No description provided for @accountsCategoriesSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'वे शीर्षक जिनके अंतर्गत बही की हर प्रविष्टि आती है'**
+  String get accountsCategoriesSubtitle;
+
+  /// No description provided for @accountsCategoryNew.
+  ///
+  /// In hi, this message translates to:
+  /// **'नई श्रेणी'**
+  String get accountsCategoryNew;
+
+  /// No description provided for @accountsCategoryEdit.
+  ///
+  /// In hi, this message translates to:
+  /// **'श्रेणी संपादित करें'**
+  String get accountsCategoryEdit;
+
+  /// No description provided for @accountsCategoryNameHi.
+  ///
+  /// In hi, this message translates to:
+  /// **'नाम (हिन्दी)'**
+  String get accountsCategoryNameHi;
+
+  /// No description provided for @accountsCategoryNameEn.
+  ///
+  /// In hi, this message translates to:
+  /// **'नाम (अंग्रेज़ी)'**
+  String get accountsCategoryNameEn;
+
+  /// No description provided for @accountsCategoryActive.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रयोग में'**
+  String get accountsCategoryActive;
+
+  /// No description provided for @accountsCategoryInactive.
+  ///
+  /// In hi, this message translates to:
+  /// **'बंद'**
+  String get accountsCategoryInactive;
+
+  /// No description provided for @accountsCategoryUsage.
+  ///
+  /// In hi, this message translates to:
+  /// **'{count, plural, =0{किसी प्रविष्टि में प्रयुक्त नहीं} =1{1 प्रविष्टि में} other{{count} प्रविष्टियों में}}'**
+  String accountsCategoryUsage(int count);
+
+  /// No description provided for @accountsCategoryDelete.
+  ///
+  /// In hi, this message translates to:
+  /// **'हटाएँ'**
+  String get accountsCategoryDelete;
+
+  /// No description provided for @accountsCategoryDeleteTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह श्रेणी हटाएँ?'**
+  String get accountsCategoryDeleteTitle;
+
+  /// No description provided for @accountsCategoryDeleteBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस शीर्षक के अंतर्गत कोई प्रविष्टि नहीं है, इसलिए इसे हटाया जा सकता है।'**
+  String get accountsCategoryDeleteBody;
+
+  /// No description provided for @accountsCategoryDeactivate.
+  ///
+  /// In hi, this message translates to:
+  /// **'बंद करें'**
+  String get accountsCategoryDeactivate;
+
+  /// No description provided for @accountsCategoryReactivate.
+  ///
+  /// In hi, this message translates to:
+  /// **'फिर से चालू करें'**
+  String get accountsCategoryReactivate;
+
+  /// No description provided for @accountsCategoryInUseNotice.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस शीर्षक के अंतर्गत प्रविष्टियाँ दर्ज हैं, इसलिए इसे न हटाया जा सकता है और न आय से व्यय में बदला जा सकता है — दोनों से पुरानी प्रविष्टियों का अर्थ बदल जाएगा। इसे बंद कर दें: नई प्रविष्टियों में यह नहीं दिखेगा और पुरानी वैसी ही पढ़ी जाएँगी।'**
+  String get accountsCategoryInUseNotice;
+
+  /// No description provided for @accountsCategoryEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी कोई श्रेणी नहीं है।'**
+  String get accountsCategoryEmpty;
+
+  /// No description provided for @accountsSettingsTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'लेखा सेटिंग्स'**
+  String get accountsSettingsTitle;
+
+  /// No description provided for @accountsSettingsSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'आरंभिक शेष, और लेखा-जोखा सार्वजनिक करना'**
+  String get accountsSettingsSubtitle;
+
+  /// No description provided for @accountsPublishBooks.
+  ///
+  /// In hi, this message translates to:
+  /// **'आय-व्यय वेबसाइट पर दिखाएँ'**
+  String get accountsPublishBooks;
+
+  /// No description provided for @accountsPublishBooksHelp.
+  ///
+  /// In hi, this message translates to:
+  /// **'चालू करने पर मंदिर की वेबसाइट पर वर्ष का कुल आय, कुल व्यय और मदवार विवरण दिखने लगेगा। किसी दानदाता या विक्रेता का नाम कभी नहीं दिखता। जब तक यह बंद है, वेबसाइट पर कोई आँकड़ा नहीं दिखता।'**
+  String get accountsPublishBooksHelp;
+
+  /// No description provided for @accountsBooksArePublic.
+  ///
+  /// In hi, this message translates to:
+  /// **'लेखा-जोखा वेबसाइट पर दिख रहा है'**
+  String get accountsBooksArePublic;
+
+  /// No description provided for @accountsBooksAreNotPublic.
+  ///
+  /// In hi, this message translates to:
+  /// **'लेखा-जोखा अभी वेबसाइट पर नहीं दिख रहा'**
+  String get accountsBooksAreNotPublic;
+
+  /// No description provided for @accountsOpeningBalance.
+  ///
+  /// In hi, this message translates to:
+  /// **'आरंभिक शेष'**
+  String get accountsOpeningBalance;
+
+  /// No description provided for @accountsOpeningBalanceHelp.
+  ///
+  /// In hi, this message translates to:
+  /// **'इस सॉफ़्टवेयर में लेखा आरंभ करते समय मंदिर के पास जो राशि थी। इसके बिना प्रकाशित शेष उतना ही कम दिखेगा। घाटे में आरंभ हो तो ऋणात्मक राशि लिखें।'**
+  String get accountsOpeningBalanceHelp;
+
+  /// No description provided for @accountsOpeningBalanceDate.
+  ///
+  /// In hi, this message translates to:
+  /// **'आरंभिक शेष की तिथि'**
+  String get accountsOpeningBalanceDate;
+
+  /// No description provided for @accountsIntroHi.
+  ///
+  /// In hi, this message translates to:
+  /// **'परिचय (हिन्दी)'**
+  String get accountsIntroHi;
+
+  /// No description provided for @accountsIntroEn.
+  ///
+  /// In hi, this message translates to:
+  /// **'परिचय (अंग्रेज़ी)'**
+  String get accountsIntroEn;
+
+  /// No description provided for @accountsNoteHi.
+  ///
+  /// In hi, this message translates to:
+  /// **'टिप्पणी (हिन्दी)'**
+  String get accountsNoteHi;
+
+  /// No description provided for @accountsNoteEn.
+  ///
+  /// In hi, this message translates to:
+  /// **'टिप्पणी (अंग्रेज़ी)'**
+  String get accountsNoteEn;
+
+  /// No description provided for @accountsIntroHelp.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह वाक्य आय-व्यय पृष्ठ के आरंभ में दिखेगा।'**
+  String get accountsIntroHelp;
+
+  /// No description provided for @errorTransactionLocked.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह प्रविष्टि स्वीकृत या निरस्त हो चुकी है, इसलिए यह कार्य अब संभव नहीं है।'**
+  String get errorTransactionLocked;
+
+  /// No description provided for @errorAccountsNotPublished.
+  ///
+  /// In hi, this message translates to:
+  /// **'मंदिर ने अभी अपना लेखा-जोखा प्रकाशित नहीं किया है।'**
+  String get errorAccountsNotPublished;
 }
 
 class _AppLocalizationsDelegate

@@ -134,6 +134,18 @@ class AdminDestinations {
         Permissions.donationsManage,
       ],
     ),
+    // Reading the books needs accounts.view; recording and approving need
+    // accounts.manage. Either is reason to offer the door — and a Content
+    // Manager, who holds neither, is not shown one: the specification says a
+    // Content Manager never sees financial detail.
+    AdminDestination(
+      id: 'accounts',
+      icon: Icons.account_balance_outlined,
+      title: l10n.accountsTitle,
+      description: l10n.navAccountsDesc,
+      route: RoutePaths.adminAccounts,
+      permissions: const [Permissions.accountsView, Permissions.accountsManage],
+    ),
     // Reading the inbox and answering it are the same right: there is no
     // view-only tier for a villager's telephone number and their complaint
     // (PHASE_7_PLAN assumption N9).

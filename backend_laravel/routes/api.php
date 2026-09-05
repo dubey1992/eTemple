@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\Admin\AccountingCategoryController;
+use App\Http\Controllers\Api\Admin\AccountingSettingsController;
 use App\Http\Controllers\Api\Admin\AdminPingController;
 use App\Http\Controllers\Api\Admin\AlbumController;
 use App\Http\Controllers\Api\Admin\AnnouncementController as AdminAnnouncementController;
@@ -15,6 +17,7 @@ use App\Http\Controllers\Api\Admin\PageController as AdminPageController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\SiteSettingsController as AdminSiteSettingsController;
 use App\Http\Controllers\Api\Admin\TempleProfileController;
+use App\Http\Controllers\Api\Admin\TransactionController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\HealthController;
@@ -26,6 +29,7 @@ use App\Http\Controllers\Api\PublicSite\MediaController as PublicMediaController
 use App\Http\Controllers\Api\PublicSite\PageController as PublicPageController;
 use App\Http\Controllers\Api\PublicSite\SiteSettingsController as PublicSiteSettingsController;
 use App\Http\Controllers\Api\PublicSite\TempleController as PublicTempleController;
+use App\Http\Controllers\Api\PublicSite\TransparencyController as PublicTransparencyController;
 use App\Support\Permission;
 use Illuminate\Support\Facades\Route;
 
@@ -124,6 +128,15 @@ Route::prefix('public')
         // next week is not reachable today by any request.
         Route::get('/announcements', [PublicAnnouncementController::class, 'index'])
             ->name('announcements.index');
+
+        // What the temple did with the money (Phase 9). Aggregates only: no
+        // individual transaction and no person's name reaches this endpoint at
+        // any status, and only approved money is counted. When the committee
+        // has not published its books it says so plainly rather than serving a
+        // page of zeros, which would read as "the temple received nothing"
+        // (PHASE_9_PLAN assumptions N6, N7 and N9).
+        Route::get('/transparency', [PublicTransparencyController::class, 'show'])
+            ->name('transparency');
 
         // The contact form (Phase 7). Two endpoints and no third: fetch a
         // form, send a message. There is deliberately **no public read** of an
@@ -350,4 +363,65 @@ Route::prefix('admin')
         Route::post('/announcements/{announcement}/send', [AdminAnnouncementController::class, 'send'])
             ->whereNumber('announcement')
             ->middleware('can:'.Permission::ANNOUNCEMENTS_MANAGE)->name('announcements.send');
+
+        // --- Accounts and transparency (Phase 9) -----------------------
+        // Reading the books needs accounts.view; recording, approving and
+        // reversing need accounts.manage. Both keys have been in the matrix
+        // since Phase 2: a Treasurer holds both, a Viewer holds the first, and
+        // a Content Manager holds neither — the specification says a Content
+        // Manager never sees financial detail.
+        //
+        // As with donations there is **no DELETE on a transaction**: reversal,
+        // which keeps the row, its bill and a stated reason, is the only undo.
+        Route::get('/transactions', [TransactionController::class, 'index'])
+            ->middleware('can:'.Permission::ACCOUNTS_VIEW)->name('transactions.index');
+        Route::get('/transactions/summary', [TransactionController::class, 'summary'])
+            ->middleware('can:'.Permission::ACCOUNTS_VIEW)->name('transactions.summary');
+        Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])
+            ->whereNumber('transaction')
+            ->middleware('can:'.Permission::ACCOUNTS_VIEW)->name('transactions.show');
+
+        // The bill, streamed from a private disk. `accounts.view` rather than
+        // `accounts.manage` on purpose: a Viewer auditing the books needs to
+        // see the evidence, which is the entire reason for attaching it. The
+        // stored path is never serialized anywhere (PHASE_9_PLAN assumption N5).
+        Route::get('/transactions/{transaction}/attachment', [TransactionController::class, 'attachment'])
+            ->whereNumber('transaction')
+            ->middleware('can:'.Permission::ACCOUNTS_VIEW)->name('transactions.attachment');
+
+        Route::post('/transactions', [TransactionController::class, 'store'])
+            ->middleware('can:'.Permission::ACCOUNTS_MANAGE)->name('transactions.store');
+        Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])
+            ->whereNumber('transaction')
+            ->middleware('can:'.Permission::ACCOUNTS_MANAGE)->name('transactions.update');
+        Route::post('/transactions/{transaction}/approve', [TransactionController::class, 'approve'])
+            ->whereNumber('transaction')
+            ->middleware('can:'.Permission::ACCOUNTS_MANAGE)->name('transactions.approve');
+        Route::post('/transactions/{transaction}/reverse', [TransactionController::class, 'reverse'])
+            ->whereNumber('transaction')
+            ->middleware('can:'.Permission::ACCOUNTS_MANAGE)->name('transactions.reverse');
+
+        // Categories carry a DELETE, unlike everything else in Phases 6-9, and
+        // it is narrow: a heading that has never been used is a typo, not
+        // history. One that has been used is refused, and the database says the
+        // same thing one layer down via restrictOnDelete.
+        Route::get('/accounting-categories', [AccountingCategoryController::class, 'index'])
+            ->middleware('can:'.Permission::ACCOUNTS_VIEW)->name('accounting-categories.index');
+        Route::post('/accounting-categories', [AccountingCategoryController::class, 'store'])
+            ->middleware('can:'.Permission::ACCOUNTS_MANAGE)->name('accounting-categories.store');
+        Route::put('/accounting-categories/{category}', [AccountingCategoryController::class, 'update'])
+            ->whereNumber('category')
+            ->middleware('can:'.Permission::ACCOUNTS_MANAGE)->name('accounting-categories.update');
+        Route::delete('/accounting-categories/{category}', [AccountingCategoryController::class, 'destroy'])
+            ->whereNumber('category')
+            ->middleware('can:'.Permission::ACCOUNTS_MANAGE)->name('accounting-categories.destroy');
+
+        // Whether the books are public at all, and where they start. Behind the
+        // money permission for the same reason the bank details are: a
+        // compromised content account must not be able to publish, unpublish or
+        // restate the temple's accounts.
+        Route::get('/accounting-settings', [AccountingSettingsController::class, 'show'])
+            ->middleware('can:'.Permission::ACCOUNTS_VIEW)->name('accounting-settings.show');
+        Route::put('/accounting-settings', [AccountingSettingsController::class, 'update'])
+            ->middleware('can:'.Permission::ACCOUNTS_MANAGE)->name('accounting-settings.update');
     });

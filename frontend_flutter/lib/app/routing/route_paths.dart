@@ -29,6 +29,11 @@ class RoutePaths {
   /// catch-all slug route.
   static const String contact = '/contact';
 
+  /// What the temple did with the money. Aggregates only — there is no route
+  /// to an individual entry here, because there is no endpoint behind one.
+  /// Declared before the catch-all slug route.
+  static const String transparency = '/transparency';
+
   /// [album] is an album slug, so a link to one festival's photographs is
   /// shareable.
   static String galleryAlbum(String album) => '/gallery?album=$album';
@@ -93,6 +98,16 @@ class RoutePaths {
 
   static String adminAnnouncementEditor(int id) => '/admin/announcements/$id';
 
+  static const String adminAccounts = '/admin/accounts';
+  static const String adminAccountNew = '/admin/accounts/new';
+
+  static String adminAccountDetail(int id) => '/admin/accounts/$id';
+
+  static const String adminAccountingCategories =
+      '/admin/accounting-categories';
+
+  static const String adminAccountingSettings = '/admin/accounting-settings';
+
   static const String adminEnquiries = '/admin/enquiries';
 
   static String adminEnquiryDetail(int id) => '/admin/enquiries/$id';
@@ -136,6 +151,11 @@ class RouteNames {
   static const String adminAlbumEditor = 'admin-album-editor';
   static const String donate = 'donate';
   static const String contact = 'contact';
+  static const String transparency = 'transparency';
+  static const String adminAccounts = 'admin-accounts';
+  static const String adminAccountEditor = 'admin-account-editor';
+  static const String adminAccountingCategories = 'admin-accounting-categories';
+  static const String adminAccountingSettings = 'admin-accounting-settings';
   static const String adminAnnouncements = 'admin-announcements';
   static const String adminAnnouncementEditor = 'admin-announcement-editor';
   static const String adminEnquiries = 'admin-enquiries';

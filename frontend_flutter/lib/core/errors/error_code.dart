@@ -43,6 +43,18 @@ enum ErrorCode {
   /// Sending was asked for on an announcement that is not published (Phase 8).
   announcementNotPublished('ANNOUNCEMENT_NOT_PUBLISHED'),
 
+  /// A ledger entry cannot be changed, approved or reversed because of the
+  /// state it is already in (Phase 9) — or a category cannot be removed
+  /// because entries are filed under it. The sibling of [donationLocked], and
+  /// a separate code because the sentence the reader needs is different: an
+  /// approved figure has been counted in a total the village has read.
+  transactionLocked('TRANSACTION_LOCKED'),
+
+  /// The temple has not published its accounts (Phase 9). Not a fault: the
+  /// page shows the temple's own words instead of an error, and instead of a
+  /// column of zeros that would read as "the temple received nothing".
+  accountsNotPublished('ACCOUNTS_NOT_PUBLISHED'),
+
   serverError('SERVER_ERROR'),
 
   // --- Client-only ----------------------------------------------------------

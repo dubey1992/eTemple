@@ -18,6 +18,11 @@ class FileChooser {
   /// attribute in a page is not a check.
   Future<PickedFile?> pickImage({
     List<String> accept = const ['image/jpeg', 'image/png', 'image/webp'],
+  }) => pickFile(accept: accept);
+
+  /// The same, for anything the browser can hand over — a bill may be a PDF.
+  Future<PickedFile?> pickFile({
+    List<String> accept = const ['image/jpeg', 'image/png', 'image/webp'],
   }) {
     final completer = Completer<PickedFile?>();
 

@@ -144,6 +144,40 @@ class ApiEndpoints {
   static String adminAnnouncementSend(int id) =>
       '/admin/announcements/$id/send';
 
+  // Accounts and transparency (Phase 9)
+
+  /// What the temple did with the money: aggregates for one financial year.
+  /// No individual entry and no person's name is reachable here, at any
+  /// status (PHASE_9_PLAN assumptions N6 and N9).
+  static const String publicTransparency = '/public/transparency';
+
+  static const String adminTransactions = '/admin/transactions';
+
+  static const String adminTransactionSummary = '/admin/transactions/summary';
+
+  static String adminTransaction(int id) => '/admin/transactions/$id';
+
+  static String adminTransactionApprove(int id) =>
+      '/admin/transactions/$id/approve';
+
+  /// The only undo in the ledger. Keeps the row, its bill and its reason.
+  static String adminTransactionReverse(int id) =>
+      '/admin/transactions/$id/reverse';
+
+  /// The bill, streamed from a private disk behind `accounts.view`. Addressed
+  /// by transaction id because the stored path is never sent to any client —
+  /// there is deliberately no URL here to build one from.
+  static String adminTransactionAttachment(int id) =>
+      '/admin/transactions/$id/attachment';
+
+  static const String adminAccountingCategories =
+      '/admin/accounting-categories';
+
+  static String adminAccountingCategory(int id) =>
+      '/admin/accounting-categories/$id';
+
+  static const String adminAccountingSettings = '/admin/accounting-settings';
+
   static const String resetPassword = '/auth/reset-password';
 
   /// Served from the application root, not from under `/api`.

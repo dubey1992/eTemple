@@ -65,6 +65,26 @@ acceptance and handover are Phase 12.
 - [ ] **No scheduler is needed for announcements to go live.** Whether a notice
       is showing is computed from the clock on every request, deliberately, so
       that hosting without cron still works. Nothing here needs a cron entry
+- [ ] **`ACCOUNTS_ATTACHMENT_DISK` is a private disk** — `local`
+      (`storage/app/private`), never `public`. Bills carry a trader's name,
+      telephone number and sometimes a signature; on the public disk they would
+      be a permanent URL. Verify after deployment by asking for
+      `https://<domain>/storage/accounts/attachments/` and confirming it is not
+      served
+- [ ] **The temple's accounts are not public until somebody turns them on.**
+      `accounting_settings.is_published` starts false and there is no
+      environment variable for it: it is a committee decision, made in the
+      console. Half-entered books published automatically would misstate the
+      temple's finances to the village
+- [ ] **Set the opening balance before publishing.** Without it the published
+      balance is short by exactly whatever the temple held on the day the books
+      were started here, and the figure is wrong in a way no reader can detect
+- [ ] `ACCOUNTS_REQUIRE_SECOND_APPROVER` — leave `false` for a temple with one
+      treasurer. Turn it on only once two people can sign in separately, or the
+      books deadlock and the committee shares a login instead
+- [ ] **No scheduler and no queue worker are needed for the accounts.** Every
+      published figure is computed from the database at request time; nothing in
+      Phase 9 is sent, queued or timed
 
 ## Backend server
 
@@ -146,6 +166,12 @@ acceptance and handover are Phase 12.
 - [ ] `/admin` redirects to `/login` in a fresh private window
 - [ ] `curl https://api.<domain>/api/admin/ping` without a session returns 401
 - [ ] A deactivated account is refused at login and loses access mid-session
+- [ ] `GET /api/public/transparency` reports `is_published: false` on a fresh
+      installation, and carries **no `summary` block at all** — not zeros
+- [ ] Once published, the public accounts page carries no donor name, no payee
+      and no individual entry; the totals match what the console shows
+- [ ] A bill uploaded in the console is **not** reachable at any URL under
+      `/storage`, and downloads only for a signed-in account
 - [ ] Layout checked at 360 px, 768 px and 1440 px widths
 - [ ] Checked in Chrome/Edge on desktop and in a common Android mobile browser
 

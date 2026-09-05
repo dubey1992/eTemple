@@ -77,5 +77,21 @@ final class ApiErrorCode
      */
     public const ANNOUNCEMENT_NOT_PUBLISHED = 'ANNOUNCEMENT_NOT_PUBLISHED';
 
+    /**
+     * A transaction cannot be changed, approved or reversed because of the
+     * state it is already in (spec Phase 9). The sibling of DONATION_LOCKED,
+     * and a separate code because the client's message names a different thing:
+     * an approved figure has been counted in a published total.
+     */
+    public const TRANSACTION_LOCKED = 'TRANSACTION_LOCKED';
+
+    /**
+     * The temple has not published its accounts (spec Phase 9). Not an error
+     * and not an empty page of zeros: `is_published` is false, and saying so
+     * plainly is the honest answer. The client shows the temple's own words
+     * rather than a fault.
+     */
+    public const ACCOUNTS_NOT_PUBLISHED = 'ACCOUNTS_NOT_PUBLISHED';
+
     public const SERVER_ERROR = 'SERVER_ERROR';
 }

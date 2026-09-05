@@ -112,6 +112,23 @@ void main() {
       expect(trail.last.isLink, isFalse);
     });
 
+    /// The categories and the settings are reached from the ledger, so the
+    /// ledger — not the dashboard — is where "back" lands.
+    test('the accounting screens sit under the ledger', () {
+      final categories = adminTrail(RoutePaths.adminAccountingCategories, hi);
+
+      expect(categories.map((c) => c.label), [
+        hi.adminDashboardTitle,
+        hi.accountsTitle,
+        hi.accountsCategoriesTitle,
+      ]);
+      expect(categories[1].route, RoutePaths.adminAccounts);
+      expect(categories.last.isLink, isFalse);
+
+      final settings = adminTrail(RoutePaths.adminAccountingSettings, hi);
+      expect(settings[1].route, RoutePaths.adminAccounts);
+    });
+
     test('every admin route produces a trail', () {
       final routes = <String>[
         RoutePaths.admin,
@@ -145,6 +162,11 @@ void main() {
         RoutePaths.adminAnnouncements,
         RoutePaths.adminAnnouncementNew,
         RoutePaths.adminAnnouncementEditor(1),
+        RoutePaths.adminAccounts,
+        RoutePaths.adminAccountNew,
+        RoutePaths.adminAccountDetail(1),
+        RoutePaths.adminAccountingCategories,
+        RoutePaths.adminAccountingSettings,
       ];
 
       for (final route in routes) {

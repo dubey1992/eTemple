@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         // production. Both are idempotent and contain no invented content.
         $this->call(RoleSeeder::class);
         $this->call(PageStructureSeeder::class);
+        $this->call(AccountingCategorySeeder::class);
 
         // Clearly separated development/demo data — both no-op in production.
         $this->call(DevelopmentAdminSeeder::class);

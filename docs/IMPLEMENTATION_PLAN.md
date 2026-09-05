@@ -151,9 +151,9 @@ Explicitly **out** of Phase 0: CMS pages, home/about content, user CRUD screens,
 
 ## Phase 9 — Accounts & Transparency
 
-- [ ] `accounting_categories`, `transactions` (`type`, `category_id`, `amount`, `transaction_date`, `payment_mode`, `reference_number`, `description`, `attachment_url`, `approved_by`, `status`, `created_by`)
-- [ ] Admin transaction + summary endpoints, `GET /api/public/transparency`
-- [ ] Only approved data in public totals; attachments private; reversal preserves audit trail
+- [x] `accounting_categories`, `transactions` (`type`, `category_id`, `amount`, `transaction_date`, `payment_mode`, `reference_number`, `description`, `attachment_url`, `approved_by`, `status`, `created_by`) — plus an `accounting_settings` singleton; `attachment_url` is implemented as `attachment_path` on a private disk (PHASE_9_COMPLETION §3)
+- [x] Admin transaction + summary endpoints, `GET /api/public/transparency`
+- [x] Only approved data in public totals; attachments private; reversal preserves audit trail
 
 ## Phase 10 — Reports & Analytics
 

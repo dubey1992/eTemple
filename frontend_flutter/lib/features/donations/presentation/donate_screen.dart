@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../app/localization/locale_controller.dart';
 import '../../../app/routing/route_paths.dart';
@@ -65,6 +66,20 @@ class DonateScreen extends ConsumerWidget {
                 data: (data) => data == null
                     ? const DonationDetailsUnavailable()
                     : DonationDetailsCard(details: data),
+              ),
+
+              // "Where does my money go" is the question a donor is already
+              // asking on this screen, so the answer is offered here rather
+              // than left to be found in a menu (Phase 9).
+              const SizedBox(height: AppSpacing.lg),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  key: const Key('donate-transparency-link'),
+                  onPressed: () => context.go(RoutePaths.transparency),
+                  icon: const Icon(Icons.account_balance_outlined, size: 18),
+                  label: Text(l10n.transparencyTitle),
+                ),
               ),
               const SizedBox(height: AppSpacing.xxl),
             ],

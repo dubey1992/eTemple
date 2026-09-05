@@ -31,6 +31,11 @@ import '../../features/announcements/presentation/admin_announcements_screen.dar
 import '../../features/enquiries/presentation/admin_enquiries_screen.dart';
 import '../../features/enquiries/presentation/admin_enquiry_detail_screen.dart';
 import '../../features/enquiries/presentation/contact_screen.dart';
+import '../../features/accounts/presentation/admin_accounting_categories_screen.dart';
+import '../../features/accounts/presentation/admin_accounting_settings_screen.dart';
+import '../../features/accounts/presentation/admin_accounts_screen.dart';
+import '../../features/accounts/presentation/admin_transaction_editor_screen.dart';
+import '../../features/accounts/presentation/transparency_screen.dart';
 import '../../features/media/presentation/admin_album_editor_screen.dart';
 import '../../features/media/presentation/admin_albums_screen.dart';
 import '../../features/media/presentation/admin_media_editor_screen.dart';
@@ -138,6 +143,13 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: RoutePaths.contact,
             name: RouteNames.contact,
             builder: (context, state) => const ContactScreen(),
+          ),
+          GoRoute(
+            // Declared here rather than left to the catch-all slug route, so
+            // /transparency is never mistaken for a CMS page.
+            path: RoutePaths.transparency,
+            name: RouteNames.transparency,
+            builder: (context, state) => const TransparencyScreen(),
           ),
           GoRoute(
             // Declared here rather than left to the catch-all slug route, so
@@ -353,6 +365,37 @@ final routerProvider = Provider<GoRouter>((ref) {
               if (id == null) return const NotFoundScreen();
               return AdminAnnouncementEditorScreen(announcementId: id);
             },
+          ),
+          // Accounts (Phase 9). `new` is declared before the `:id` pattern so
+          // it is never parsed as a transaction whose id is the word "new".
+          GoRoute(
+            path: RoutePaths.adminAccounts,
+            name: RouteNames.adminAccounts,
+            builder: (context, state) => const AdminAccountsScreen(),
+          ),
+          GoRoute(
+            path: RoutePaths.adminAccountNew,
+            builder: (context, state) => const AdminTransactionEditorScreen(),
+          ),
+          GoRoute(
+            path: '${RoutePaths.adminAccounts}/:id',
+            name: RouteNames.adminAccountEditor,
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '');
+              if (id == null) return const NotFoundScreen();
+              return AdminTransactionEditorScreen(transactionId: id);
+            },
+          ),
+          GoRoute(
+            path: RoutePaths.adminAccountingCategories,
+            name: RouteNames.adminAccountingCategories,
+            builder: (context, state) =>
+                const AdminAccountingCategoriesScreen(),
+          ),
+          GoRoute(
+            path: RoutePaths.adminAccountingSettings,
+            name: RouteNames.adminAccountingSettings,
+            builder: (context, state) => const AdminAccountingSettingsScreen(),
           ),
           GoRoute(
             path: RoutePaths.adminEnquiries,

@@ -2,14 +2,13 @@ openapi: 3.1.0
 
 info:
   title: Radha Krishna Thakurbari API
-  version: 0.9.0
+  version: 0.10.0
   description: |
     REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
     admin console.
 
-    **Scope: Phases 0-8.** Endpoints for accounts and reports are added in
-    their own phases and must be documented here in the same change that
-    implements them.
+    **Scope: Phases 0-9.** Endpoints for reports are added in their own phase
+    and must be documented here in the same change that implements them.
 
     ## Authorization
 
@@ -91,6 +90,12 @@ tags:
       Notices for the website, and sending them. Publishing and sending are
       separate acts on separate endpoints: an unpublished notice is invisible
       and fixable, a sent one is gone.
+  - name: Accounts
+    description: |
+      The temple's books, and what is published from them. Only approved money
+      is counted anywhere; the public endpoint carries totals and no person's
+      name; and there is no DELETE on a transaction, because reversal - which
+      keeps the row, its bill and a stated reason - is the only undo.
 
 paths:
   /api/health:
@@ -2187,6 +2192,373 @@ paths:
             attempt is refused; or ANNOUNCEMENT_NOT_PUBLISHED.
         '422': { description: VALIDATION_FAILED - no channel chosen, or one with no provider }
 
+  /api/public/transparency:
+    get:
+      tags: [Accounts]
+      summary: What the temple did with the money
+      description: |
+        Public, and **aggregates only**. No individual transaction and no
+        person's name is reachable here at any status - not a donor, not a
+        payee, not a supplier. Category totals answer the question a villager
+        actually asks and identify nobody.
+
+        Only **approved** money is counted. Pending is unchecked and reversed
+        is cancelled; neither appears in any figure, at any granularity.
+
+        **Donated income is read from the donation register, not the ledger.**
+        A donation entered in both places would be published at twice its
+        value, so the two sources are separate and are reported as separate
+        lines. The `donation` category code is reserved and refused on a
+        hand-entered transaction, which makes the rule structural rather than
+        advisory.
+
+        When the committee has not published its books, `is_published` is false
+        and there is **no `summary` block at all** - not a set of zeros. Zeros
+        would read as "the temple received nothing", which is a false statement
+        about somebody's finances rather than a missing feature.
+
+        A year that is out of range or has no records is answered with the
+        current financial year rather than an error: a stale bookmark should
+        show this year's accounts, not a fault page.
+      parameters:
+        - { name: year, in: query, schema: { type: integer }, description: 'The April a financial year starts in: 2026 means 2026-27. Defaults to the current one.' }
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en] } }
+      responses:
+        '200':
+          description: The published figures, or a statement that there are none
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Transparency' }
+
+  /api/admin/transactions:
+    get:
+      tags: [Accounts]
+      summary: The ledger
+      description: Requires `accounts.view`. A Content Manager holds neither accounts key and is refused.
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [pending, approved, reversed] } }
+        - { name: type, in: query, schema: { type: string, enum: [income, expense] } }
+        - { name: category_id, in: query, schema: { type: integer } }
+        - { name: mode, in: query, schema: { type: string } }
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+        - { name: q, in: query, schema: { type: string }, description: Matches a payee, a description or a reference }
+        - { name: page, in: query, schema: { type: integer, default: 1 } }
+        - { name: per_page, in: query, schema: { type: integer, default: 25, maximum: 100 } }
+      responses:
+        '200':
+          description: One page of the ledger
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/Transaction' }
+                      meta: { $ref: '#/components/schemas/PaginationMeta' }
+        '401': { description: UNAUTHENTICATED }
+        '403': { description: FORBIDDEN }
+    post:
+      tags: [Accounts]
+      summary: Record one movement of money
+      description: |
+        Requires `accounts.manage`. The result is **pending**: counted in no
+        total, public or admin, until somebody approves it.
+
+        `status` and everything about approval are ignored if they appear in
+        the payload. Approving is a decision with its own endpoint, not a field
+        a request can reach by naming it.
+
+        Accepts `multipart/form-data` when a bill is attached. The file's type
+        is decided by **reading its bytes**, never by its name or the browser's
+        `Content-Type`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TransactionInput' }
+          multipart/form-data:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/TransactionInput'
+                - type: object
+                  properties:
+                    attachment: { type: string, format: binary }
+      responses:
+        '201': { description: The new pending entry }
+        '403': { description: FORBIDDEN }
+        '422':
+          description: |
+            VALIDATION_FAILED - an amount that is not positive or not readable,
+            a date in the future, a missing reference on a non-cash entry, an
+            inactive category, a category on the other side of the books, a
+            file whose bytes are not an accepted type, or the reserved
+            `donation` category.
+
+  /api/admin/transactions/summary:
+    get:
+      tags: [Accounts]
+      summary: The running figures for a filter
+      description: |
+        Requires `accounts.view`. The same filters as the list **minus the
+        status**: a summary that honoured it would report "spent: 0" whenever
+        the reader happened to be looking at the pending tab.
+
+        Approved money only, computed by the database over the whole filter -
+        never by adding up a page. Pending money is reported on its own lines,
+        named as pending.
+
+        These figures are the **ledger's**, and exclude donations, which are
+        counted from their own register. The client says so on the screen, or a
+        committee reads the wrong number out at a meeting.
+      responses:
+        '200':
+          description: The figures
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/AccountsSummary' }
+        '403': { description: FORBIDDEN }
+
+  /api/admin/transactions/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [Accounts]
+      summary: One entry, with who recorded, approved and reversed it
+      description: Requires `accounts.view`.
+      responses:
+        '200':
+          description: The entry
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/Transaction' }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+    put:
+      tags: [Accounts]
+      summary: Correct an entry
+      description: |
+        Requires `accounts.manage`. **Once approved, only `description` may
+        change** - the figure has been counted in a total the village reads, and
+        editing it silently would leave the page and the books disagreeing with
+        no trace of which changed. Anything else is 409, with a message saying
+        to reverse and record again.
+
+        The bill on an approved entry cannot be replaced either: it is the
+        evidence for a published figure, not a note.
+      responses:
+        '200': { description: The updated entry }
+        '403': { description: FORBIDDEN }
+        '409': { description: TRANSACTION_LOCKED }
+        '422': { description: VALIDATION_FAILED }
+
+  /api/admin/transactions/{id}/attachment:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [Accounts]
+      summary: The bill
+      description: |
+        Requires **`accounts.view`**, not `accounts.manage`: a Viewer auditing
+        the books needs to see the evidence, which is the entire reason for
+        attaching it.
+
+        Streams the bytes from a private disk. The specification's column is
+        named `attachment_url`; it is stored as a path and **never serialized**,
+        so there is no URL for a client to build, leak in a screenshot or find
+        in a browser history. Sent as `Content-Disposition: attachment` with
+        `X-Content-Type-Options: nosniff`, so nothing that got past the byte
+        check can execute in the admin session's origin.
+      responses:
+        '200': { description: The file }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND - there is no bill on this entry }
+
+  /api/admin/transactions/{id}/approve:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    post:
+      tags: [Accounts]
+      summary: Check an entry, and count it
+      description: |
+        Requires `accounts.manage`. From here the figure is in every total,
+        including the one the village reads, and the row is locked to
+        everything but its description.
+
+        Refused with 409 if the entry is already approved, or has been
+        reversed. Refused as well when `ACCOUNTS_REQUIRE_SECOND_APPROVER` is on
+        and the approver is the person who recorded it - off by default,
+        because a temple with one treasurer would be deadlocked on day one and
+        would share a login instead, which is worse than no control at all.
+      responses:
+        '200': { description: The approved entry }
+        '403': { description: FORBIDDEN }
+        '409': { description: TRANSACTION_LOCKED }
+
+  /api/admin/transactions/{id}/reverse:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    post:
+      tags: [Accounts]
+      summary: The only undo
+      description: |
+        Requires `accounts.manage`. The row stays, keeps its bill, and stops
+        counting towards every total.
+
+        `reversal_reason` is **required and has no default**. This is the only
+        undo in the phase, the row stays in the books afterwards, and the reason
+        is the entire explanation of why a figure that was once counted no
+        longer is. A default would put the same sentence on every reversal in
+        the temple's history.
+
+        **There is no DELETE anywhere in this module.**
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reversal_reason]
+              properties:
+                reversal_reason: { type: string, minLength: 3, maxLength: 500 }
+      responses:
+        '200': { description: The reversed entry }
+        '403': { description: FORBIDDEN }
+        '409': { description: TRANSACTION_LOCKED - already reversed }
+        '422': { description: VALIDATION_FAILED - no reason given }
+
+  /api/admin/accounting-categories:
+    get:
+      tags: [Accounts]
+      summary: The headings the books are filed under
+      description: Requires `accounts.view`. Carries the usage count, which decides what may still be done to each.
+      parameters:
+        - { name: type, in: query, schema: { type: string, enum: [income, expense] } }
+        - { name: active_only, in: query, schema: { type: boolean } }
+      responses:
+        '200':
+          description: Every heading, active first
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/AccountingCategory' }
+        '403': { description: FORBIDDEN }
+    post:
+      tags: [Accounts]
+      summary: Write a heading
+      description: |
+        Requires `accounts.manage`. The code `donation` is **reserved** and
+        refused: donated income is counted from the donation register, and a
+        heading by that name is an invitation to count it twice.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AccountingCategoryInput' }
+      responses:
+        '201': { description: The new heading }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED - including the reserved code }
+
+  /api/admin/accounting-categories/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    put:
+      tags: [Accounts]
+      summary: Correct a heading
+      description: |
+        Requires `accounts.manage`. **The `type` and `code` of a heading that
+        has been used are ignored**, not obeyed: flipping a heading from expense
+        to income would move every historical entry filed under it to the other
+        side of the books, silently, in figures the village has already read.
+      responses:
+        '200': { description: The updated heading }
+        '403': { description: FORBIDDEN }
+    delete:
+      tags: [Accounts]
+      summary: Remove an unused heading
+      description: |
+        Requires `accounts.manage`. This is the **only DELETE in Phases 6-9**,
+        and it is narrow: a heading nothing is filed under is a mistyped
+        heading, not history.
+
+        One that has been used is refused with a message naming the count and
+        offering deactivation instead - which stops it being offered on new
+        entries and leaves every old one still readable. The database says the
+        same thing one layer down, via `restrictOnDelete`.
+      responses:
+        '204': { description: Removed }
+        '403': { description: FORBIDDEN }
+        '409': { description: TRANSACTION_LOCKED - entries are filed under it }
+
+  /api/admin/accounting-settings:
+    get:
+      tags: [Accounts]
+      summary: Whether the books are public, and where they start
+      description: Requires `accounts.view`.
+      responses:
+        '200':
+          description: The settings
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/AccountingSettings' }
+        '403': { description: FORBIDDEN }
+    put:
+      tags: [Accounts]
+      summary: Publish the books, or set the opening balance
+      description: |
+        Requires **`accounts.manage`**, behind the money permission for the same
+        reason the bank details are: a compromised content account must not be
+        able to publish, unpublish or restate the temple's accounts.
+
+        `is_published` starts **false**. A ledger that publishes itself the
+        moment the first row is saved is only ever built by accident;
+        half-entered books are not transparency, they are a misstatement with
+        the temple's name on it.
+
+        `opening_balance` may be negative - a temple that begins in deficit
+        should be able to say so rather than rounding its own history up to
+        zero. Without it, the published balance is short by exactly whatever was
+        in the cash box on the day the books were started here.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AccountingSettingsInput' }
+      responses:
+        '200': { description: The updated settings }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED }
+
 components:
   securitySchemes:
     sessionCookie:
@@ -3072,6 +3444,216 @@ components:
         created_by_name: { type: [string, 'null'] }
         created_at: { type: string, format: date-time }
         updated_at: { type: string, format: date-time }
+
+    Transaction:
+      type: object
+      description: |
+        One ledger entry as the committee sees it. There is no public
+        counterpart and there is not going to be: the public page publishes
+        category totals, and this row carries who was paid.
+
+        `attachment_path` is **absent by design** - see the attachment
+        endpoint.
+      properties:
+        id: { type: integer }
+        type: { type: string, enum: [income, expense] }
+        type_label: { type: string }
+        category_id: { type: integer }
+        category: { $ref: '#/components/schemas/AccountingCategory' }
+        amount_paise:
+          type: integer
+          description: The authority. Integer paise; nothing divides by a hundred but the display.
+        amount_formatted: { type: string, description: '"1,25,500.00" with the rupee sign, grouped the Indian way' }
+        transaction_date: { type: string, format: date }
+        payment_mode: { type: string }
+        payment_mode_label: { type: string }
+        reference_number: { type: [string, 'null'] }
+        requires_reference: { type: boolean, description: True for every mode but cash }
+        payee_name: { type: [string, 'null'], description: Never public }
+        description: { type: [string, 'null'], description: A working note. Never public }
+        has_attachment: { type: boolean }
+        attachment_name: { type: [string, 'null'] }
+        attachment_size: { type: [integer, 'null'] }
+        attachment_mime: { type: [string, 'null'] }
+        status: { type: string, enum: [pending, approved, reversed] }
+        is_locked: { type: boolean, description: True once approved. Only the description may change }
+        approved_at: { type: [string, 'null'], format: date-time }
+        approved_by_name: { type: [string, 'null'] }
+        reversed_at: { type: [string, 'null'], format: date-time }
+        reversed_by_name: { type: [string, 'null'] }
+        reversal_reason: { type: [string, 'null'] }
+        created_by_name: { type: [string, 'null'] }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+
+    TransactionInput:
+      type: object
+      required: [amount, transaction_date, category_id, payment_mode]
+      properties:
+        amount:
+          type: string
+          description: |
+            As typed - "1200", "1,200.50" and "1200" all parse. A string
+            because it is parsed once, into exact paise, by the server; a
+            client that parsed it too would be a second opinion about
+            somebody's money.
+        transaction_date: { type: string, format: date, description: Never in the future }
+        category_id: { type: integer }
+        type:
+          type: string
+          enum: [income, expense]
+          description: |
+            Optional. The category decides which side of the books an entry is
+            on; sending one that disagrees is refused rather than silently
+            corrected, because a disagreement means somebody chose wrongly.
+        payment_mode: { type: string }
+        reference_number: { type: [string, 'null'], description: Required for every mode but cash }
+        payee_name: { type: [string, 'null'], maxLength: 200 }
+        description: { type: [string, 'null'], maxLength: 2000 }
+
+    AccountingCategory:
+      type: object
+      properties:
+        id: { type: integer }
+        code: { type: string }
+        type: { type: string, enum: [income, expense] }
+        type_label: { type: string }
+        name_hi: { type: string }
+        name_en: { type: [string, 'null'], description: Absent means absent. The read falls back to Hindi }
+        description_hi: { type: [string, 'null'] }
+        description_en: { type: [string, 'null'] }
+        sort_order: { type: integer }
+        is_active: { type: boolean }
+        transaction_count:
+          type: integer
+          description: |
+            Present when the caller asked for it. What decides whether the type
+            may still be changed and whether deletion is available at all.
+
+    AccountingCategoryInput:
+      type: object
+      required: [type, name_hi]
+      properties:
+        code: { type: [string, 'null'], maxLength: 50, description: Slugged. `donation` is reserved }
+        type: { type: string, enum: [income, expense] }
+        name_hi: { type: string, maxLength: 150 }
+        name_en: { type: [string, 'null'], maxLength: 150 }
+        description_hi: { type: [string, 'null'], maxLength: 500 }
+        description_en: { type: [string, 'null'], maxLength: 500 }
+        sort_order: { type: [integer, 'null'] }
+        is_active: { type: [boolean, 'null'] }
+
+    AccountsSummary:
+      type: object
+      description: The ledger's figures. Excludes donations, which are counted from their own register.
+      properties:
+        income_paise: { type: integer, description: Approved only }
+        expense_paise: { type: integer, description: Approved only }
+        net_paise:
+          type: integer
+          description: |
+            Signed. A month that spent more than it received is a real month,
+            and clamping at zero would hide exactly the fact a treasurer needs
+            to see.
+        approved_count: { type: integer }
+        pending_count: { type: integer }
+        pending_income_paise: { type: integer, description: Counted in no total. Reported on its own line }
+        pending_expense_paise: { type: integer }
+        reversed_count: { type: integer }
+
+    AccountingSettings:
+      type: object
+      properties:
+        is_published: { type: boolean, description: Starts false, deliberately }
+        opening_balance_paise: { type: integer, description: Signed }
+        opening_balance_formatted: { type: string }
+        opening_balance_date: { type: [string, 'null'], format: date }
+        intro_hi: { type: [string, 'null'] }
+        intro_en: { type: [string, 'null'] }
+        note_hi: { type: [string, 'null'] }
+        note_en: { type: [string, 'null'] }
+        updated_at: { type: [string, 'null'], format: date-time }
+        updated_by_name: { type: [string, 'null'] }
+
+    AccountingSettingsInput:
+      type: object
+      properties:
+        is_published: { type: [boolean, 'null'] }
+        opening_balance: { type: [string, 'null'], description: As typed, and may be negative }
+        opening_balance_date: { type: [string, 'null'], format: date }
+        intro_hi: { type: [string, 'null'], maxLength: 2000 }
+        intro_en: { type: [string, 'null'], maxLength: 2000 }
+        note_hi: { type: [string, 'null'], maxLength: 2000 }
+        note_en: { type: [string, 'null'], maxLength: 2000 }
+
+    Transparency:
+      type: object
+      description: |
+        What the temple has published about its accounts. `is_published` false
+        is a value, not a failure - and it comes with **no summary block at
+        all**, not a set of zeros.
+      properties:
+        is_published: { type: boolean }
+        intro: { $ref: '#/components/schemas/LocalizedText' }
+        note: { $ref: '#/components/schemas/LocalizedText' }
+        opening_balance_date: { type: [string, 'null'], format: date }
+        available_years:
+          type: array
+          description: |
+            Newest first. The current financial year is always offered, even
+            while empty, and is always first: a page that quietly showed last
+            year because this one has no entries yet would put one year's
+            heading over another year's figures.
+          items:
+            type: object
+            properties:
+              year: { type: integer }
+              label: { type: string, description: '"2026-27"' }
+        summary: { $ref: '#/components/schemas/TransparencyYear' }
+
+    TransparencyYear:
+      type: object
+      description: One financial year, April to March. Every figure is a SUM over a filtered query.
+      properties:
+        year: { type: integer }
+        year_label: { type: string }
+        starts_on: { type: string, format: date }
+        ends_on: { type: string, format: date }
+        opening_balance_paise:
+          type: integer
+          description: |
+            The stated opening balance plus everything approved before this
+            year began. Computed, never stored, so a correction to an old entry
+            cannot leave last year's closing and this year's opening
+            disagreeing.
+        donations_paise:
+          type: integer
+          description: |
+            Confirmed donations, read from the donation register. Reported
+            separately from other income so a reader can see which is which and
+            check each against its own source.
+        other_income_paise: { type: integer, description: Approved income transactions }
+        total_income_paise: { type: integer }
+        total_expense_paise: { type: integer }
+        closing_balance_paise: { type: integer }
+        donation_count:
+          type: integer
+          description: A count, never a name. No donor is identified anywhere in this response.
+        income_by_category:
+          type: array
+          items: { $ref: '#/components/schemas/CategoryTotal' }
+        expense_by_category:
+          type: array
+          description: Largest first. A heading with nothing against it is omitted rather than listed at zero.
+          items: { $ref: '#/components/schemas/CategoryTotal' }
+        as_of: { type: string, format: date-time }
+
+    CategoryTotal:
+      type: object
+      properties:
+        code: { type: string }
+        name: { $ref: '#/components/schemas/LocalizedText' }
+        total_paise: { type: integer }
 
 security:
   - sessionCookie: []

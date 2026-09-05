@@ -1745,4 +1745,410 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminMenuOpen => 'Open the menu';
+
+  @override
+  String get navAccounts => 'Accounts';
+
+  @override
+  String get navAccountsDesc =>
+      'Record, check and approve the temple\'s income and expenditure';
+
+  @override
+  String get navAccountingCategories => 'Accounting categories';
+
+  @override
+  String get navAccountingCategoriesDesc =>
+      'The headings every entry in the books is filed under';
+
+  @override
+  String get navAccountingSettings => 'Accounting settings';
+
+  @override
+  String get navAccountingSettingsDesc =>
+      'The opening balance, and whether the books are public';
+
+  @override
+  String get navTransparency => 'Accounts';
+
+  @override
+  String get transparencyTitle => 'Accounts and transparency';
+
+  @override
+  String get transparencySubtitle =>
+      'What the temple received, and where it was spent';
+
+  @override
+  String get transparencyNotPublishedTitle =>
+      'The accounts are not published yet';
+
+  @override
+  String get transparencyNotPublishedBody =>
+      'The committee has not yet published the temple\'s income and expenditure on this website. Please contact the committee if you would like to know more.';
+
+  @override
+  String get transparencySelectYear => 'Choose a financial year';
+
+  @override
+  String transparencyYearHeading(String label) {
+    return 'Financial year $label';
+  }
+
+  @override
+  String get transparencyOpeningBalance => 'Balance at the start of the year';
+
+  @override
+  String get transparencyDonations => 'Received as donations';
+
+  @override
+  String get transparencyOtherIncome => 'Other income';
+
+  @override
+  String get transparencyTotalIncome => 'Total received';
+
+  @override
+  String get transparencyTotalExpense => 'Total spent';
+
+  @override
+  String get transparencyClosingBalance => 'Balance at the end of the year';
+
+  @override
+  String get transparencyIncomeBreakdown => 'Where the income came from';
+
+  @override
+  String get transparencyExpenseBreakdown => 'Where the money went';
+
+  @override
+  String transparencyDonationCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count donations',
+      one: '1 donation',
+      zero: 'No donations recorded this year',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get transparencyNoIncome =>
+      'No income other than donations was recorded this year.';
+
+  @override
+  String get transparencyNoExpense => 'No expenditure was recorded this year.';
+
+  @override
+  String get transparencyEmptyYear =>
+      'Nothing has been recorded for this financial year yet.';
+
+  @override
+  String get transparencyOnlyApprovedNote =>
+      'These figures include only entries the committee has checked against a bill or a bank statement and approved.';
+
+  @override
+  String get transparencyNoNamesNote =>
+      'No donor or supplier is named here — only totals and the headings they fall under.';
+
+  @override
+  String transparencyAsOf(String date) {
+    return 'As at $date';
+  }
+
+  @override
+  String transparencyOpeningBalanceOn(String date) {
+    return 'From $date';
+  }
+
+  @override
+  String get accountsTitle => 'Accounts';
+
+  @override
+  String get accountsSubtitle => 'The temple\'s books';
+
+  @override
+  String get accountsNewEntry => 'New entry';
+
+  @override
+  String get accountsEditEntry => 'Edit entry';
+
+  @override
+  String get accountsTypeIncome => 'Income';
+
+  @override
+  String get accountsTypeExpense => 'Expenditure';
+
+  @override
+  String get accountsStatusPending => 'To check';
+
+  @override
+  String get accountsStatusApproved => 'Approved';
+
+  @override
+  String get accountsStatusReversed => 'Reversed';
+
+  @override
+  String get accountsAllTypes => 'All';
+
+  @override
+  String get accountsAllStatuses => 'All statuses';
+
+  @override
+  String get accountsAllCategories => 'All categories';
+
+  @override
+  String get accountsApprovedIncome => 'Approved income';
+
+  @override
+  String get accountsApprovedExpense => 'Approved expenditure';
+
+  @override
+  String get accountsNet => 'Ledger net';
+
+  @override
+  String accountsPendingNotCounted(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count entries are still to be checked, and are counted in no total',
+      one: '1 entry is still to be checked, and is counted in no total',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountsEmpty => 'There are no entries yet.';
+
+  @override
+  String get accountsEmptyFiltered => 'No entries match this filter.';
+
+  @override
+  String get accountsSearchHint =>
+      'Search a payee, a description or a reference';
+
+  @override
+  String get accountsFieldCategory => 'Category';
+
+  @override
+  String get accountsFieldAmount => 'Amount';
+
+  @override
+  String get accountsFieldDate => 'Date';
+
+  @override
+  String get accountsFieldPaymentMode => 'Payment mode';
+
+  @override
+  String get accountsFieldReference => 'Reference number';
+
+  @override
+  String get accountsFieldPayee => 'Paid to / received from';
+
+  @override
+  String get accountsFieldDescription => 'Description';
+
+  @override
+  String get accountsPayeeHelp =>
+      'This name is never published on the website.';
+
+  @override
+  String get accountsDescriptionHelp =>
+      'Your own note for the books. Not published either.';
+
+  @override
+  String get accountsBill => 'Bill or receipt';
+
+  @override
+  String get accountsAttachBill => 'Attach a bill';
+
+  @override
+  String get accountsReplaceBill => 'Replace the bill';
+
+  @override
+  String get accountsViewBill => 'View the bill';
+
+  @override
+  String get accountsNoBill => 'No bill attached';
+
+  @override
+  String get accountsBillHelp =>
+      'A photograph or a PDF. Only committee members can open it; it never appears on the website.';
+
+  @override
+  String get accountsBillLocked =>
+      'The bill on an approved entry cannot be replaced.';
+
+  @override
+  String get accountsApprove => 'Approve';
+
+  @override
+  String get accountsApproveTitle => 'Approve this entry?';
+
+  @override
+  String get accountsApproveBody =>
+      'Once approved, this amount counts in every total — including the page the village reads — and nothing but the description can be changed. The only correction after that is to reverse it and record it again.';
+
+  @override
+  String get accountsReverse => 'Reverse';
+
+  @override
+  String get accountsReverseTitle => 'Reverse this entry?';
+
+  @override
+  String get accountsReverseBody =>
+      'The row stays in the books, with its bill, and counts in no total. A reason is required — months later it is what explains why this amount was taken out.';
+
+  @override
+  String get accountsReverseReason => 'Reason for reversing';
+
+  @override
+  String accountsReversedOn(String date) {
+    return 'Reversed on $date';
+  }
+
+  @override
+  String accountsApprovedOn(String date) {
+    return 'Approved on $date';
+  }
+
+  @override
+  String accountsRecordedBy(String name) {
+    return 'Recorded by $name';
+  }
+
+  @override
+  String accountsApprovedBy(String name) {
+    return 'Approved by $name';
+  }
+
+  @override
+  String accountsReversedBy(String name) {
+    return 'Reversed by $name';
+  }
+
+  @override
+  String get accountsLockedNotice =>
+      'This entry has been approved and counted in the published totals, so nothing but the description can be changed. To correct it, reverse it and record it again.';
+
+  @override
+  String get accountsPendingNotice =>
+      'This entry is counted in no total yet. Approve it once you have checked it against the bill or the bank statement.';
+
+  @override
+  String get accountsDonationsElsewhere =>
+      'Donations are not entered here. They are recorded in the donation register and counted from it.';
+
+  @override
+  String get accountsCategoriesTitle => 'Accounting categories';
+
+  @override
+  String get accountsCategoriesSubtitle =>
+      'The headings every entry in the books is filed under';
+
+  @override
+  String get accountsCategoryNew => 'New category';
+
+  @override
+  String get accountsCategoryEdit => 'Edit category';
+
+  @override
+  String get accountsCategoryNameHi => 'Name (Hindi)';
+
+  @override
+  String get accountsCategoryNameEn => 'Name (English)';
+
+  @override
+  String get accountsCategoryActive => 'In use';
+
+  @override
+  String get accountsCategoryInactive => 'Closed';
+
+  @override
+  String accountsCategoryUsage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Used by $count entries',
+      one: 'Used by 1 entry',
+      zero: 'Not used by any entry',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accountsCategoryDelete => 'Delete';
+
+  @override
+  String get accountsCategoryDeleteTitle => 'Delete this category?';
+
+  @override
+  String get accountsCategoryDeleteBody =>
+      'Nothing is filed under this heading, so it can be removed.';
+
+  @override
+  String get accountsCategoryDeactivate => 'Close it';
+
+  @override
+  String get accountsCategoryReactivate => 'Reopen it';
+
+  @override
+  String get accountsCategoryInUseNotice =>
+      'Entries are filed under this heading, so it can neither be deleted nor moved from income to expenditure — either would change what old entries mean. Close it instead: it stops being offered on new entries, and the old ones still read correctly.';
+
+  @override
+  String get accountsCategoryEmpty => 'There are no categories yet.';
+
+  @override
+  String get accountsSettingsTitle => 'Accounting settings';
+
+  @override
+  String get accountsSettingsSubtitle =>
+      'The opening balance, and publishing the books';
+
+  @override
+  String get accountsPublishBooks => 'Show the accounts on the website';
+
+  @override
+  String get accountsPublishBooksHelp =>
+      'Turned on, the website shows the year\'s total income, total expenditure and the breakdown by heading. No donor or supplier is ever named. While it is off, no figure appears on the website at all.';
+
+  @override
+  String get accountsBooksArePublic =>
+      'The accounts are showing on the website';
+
+  @override
+  String get accountsBooksAreNotPublic => 'The accounts are not on the website';
+
+  @override
+  String get accountsOpeningBalance => 'Opening balance';
+
+  @override
+  String get accountsOpeningBalanceHelp =>
+      'What the temple held when the books were started here. Without it the published balance is short by exactly that much. Write a negative amount if the books begin in deficit.';
+
+  @override
+  String get accountsOpeningBalanceDate => 'Opening balance date';
+
+  @override
+  String get accountsIntroHi => 'Introduction (Hindi)';
+
+  @override
+  String get accountsIntroEn => 'Introduction (English)';
+
+  @override
+  String get accountsNoteHi => 'Note (Hindi)';
+
+  @override
+  String get accountsNoteEn => 'Note (English)';
+
+  @override
+  String get accountsIntroHelp =>
+      'This sentence appears at the top of the accounts page.';
+
+  @override
+  String get errorTransactionLocked =>
+      'This entry has already been approved or reversed, so that is no longer possible.';
+
+  @override
+  String get errorAccountsNotPublished =>
+      'The temple has not published its accounts.';
 }
