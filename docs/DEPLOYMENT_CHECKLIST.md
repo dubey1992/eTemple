@@ -54,6 +54,17 @@ acceptance and handover are Phase 12.
 - [ ] `QUEUE_CONNECTION` has a worker running if the acknowledgement is enabled;
       it is queued so a slow SMTP server cannot hold a public request open, and
       with no worker the mail is never sent
+- [ ] **The same queue worker is required for announcements.** An announcement
+      sent with no worker running records itself as sent and delivers nothing,
+      which is the worst of both: the committee believes the message went out
+      and it never left. Verify by sending one to yourself before handover
+- [ ] `ANNOUNCEMENT_SMS_ENABLED` and `ANNOUNCEMENT_WHATSAPP_ENABLED` stay
+      `false` until a provider is chosen, approved **and wired up**. Setting
+      either to true without an implementation behind it makes the send appear
+      to succeed and deliver nothing
+- [ ] **No scheduler is needed for announcements to go live.** Whether a notice
+      is showing is computed from the clock on every request, deliberately, so
+      that hosting without cron still works. Nothing here needs a cron entry
 
 ## Backend server
 

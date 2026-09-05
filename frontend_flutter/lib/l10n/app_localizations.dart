@@ -3019,6 +3019,318 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'किसी सदस्य को सौंपें'**
   String get enquiryChooseMember;
+
+  /// No description provided for @navAnnouncements.
+  ///
+  /// In hi, this message translates to:
+  /// **'सूचनाएं'**
+  String get navAnnouncements;
+
+  /// No description provided for @navAnnouncementsDesc.
+  ///
+  /// In hi, this message translates to:
+  /// **'वेबसाइट की सूचनाएं, और उन्हें समिति को भेजना'**
+  String get navAnnouncementsDesc;
+
+  /// No description provided for @announcementsTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'सूचनाएं'**
+  String get announcementsTitle;
+
+  /// No description provided for @announcementsSubtitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'वेबसाइट पर क्या दिख रहा है, क्या निर्धारित है, और क्या भेजा जा चुका है।'**
+  String get announcementsSubtitle;
+
+  /// No description provided for @announcementsEmpty.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी तक कोई सूचना नहीं।'**
+  String get announcementsEmpty;
+
+  /// No description provided for @announcementNew.
+  ///
+  /// In hi, this message translates to:
+  /// **'नई सूचना लिखें'**
+  String get announcementNew;
+
+  /// No description provided for @announcementEdit.
+  ///
+  /// In hi, this message translates to:
+  /// **'सूचना संपादित करें'**
+  String get announcementEdit;
+
+  /// No description provided for @announcementSaved.
+  ///
+  /// In hi, this message translates to:
+  /// **'सूचना सहेजी गई।'**
+  String get announcementSaved;
+
+  /// No description provided for @announcementPublished.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रकाशित। निर्धारित अवधि में यह वेबसाइट पर दिखेगी।'**
+  String get announcementPublished;
+
+  /// No description provided for @announcementArchived.
+  ///
+  /// In hi, this message translates to:
+  /// **'संग्रहीत। वेबसाइट से हटा दी गई है, पर सुरक्षित है।'**
+  String get announcementArchived;
+
+  /// No description provided for @announcementStatusDraft.
+  ///
+  /// In hi, this message translates to:
+  /// **'मसौदा'**
+  String get announcementStatusDraft;
+
+  /// No description provided for @announcementStatusPublished.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रकाशित'**
+  String get announcementStatusPublished;
+
+  /// No description provided for @announcementStatusArchived.
+  ///
+  /// In hi, this message translates to:
+  /// **'संग्रहीत'**
+  String get announcementStatusArchived;
+
+  /// No description provided for @announcementShowingNow.
+  ///
+  /// In hi, this message translates to:
+  /// **'अभी वेबसाइट पर'**
+  String get announcementShowingNow;
+
+  /// No description provided for @announcementScheduledFor.
+  ///
+  /// In hi, this message translates to:
+  /// **'आरंभ: {date}'**
+  String announcementScheduledFor(String date);
+
+  /// No description provided for @announcementExpiredOn.
+  ///
+  /// In hi, this message translates to:
+  /// **'समाप्त: {date}'**
+  String announcementExpiredOn(String date);
+
+  /// No description provided for @announcementPriorityNormal.
+  ///
+  /// In hi, this message translates to:
+  /// **'सामान्य'**
+  String get announcementPriorityNormal;
+
+  /// No description provided for @announcementPriorityImportant.
+  ///
+  /// In hi, this message translates to:
+  /// **'महत्वपूर्ण'**
+  String get announcementPriorityImportant;
+
+  /// No description provided for @announcementPriorityUrgent.
+  ///
+  /// In hi, this message translates to:
+  /// **'अत्यावश्यक'**
+  String get announcementPriorityUrgent;
+
+  /// No description provided for @fieldAnnouncementTitleHindi.
+  ///
+  /// In hi, this message translates to:
+  /// **'शीर्षक (हिन्दी)'**
+  String get fieldAnnouncementTitleHindi;
+
+  /// No description provided for @fieldAnnouncementTitleEnglish.
+  ///
+  /// In hi, this message translates to:
+  /// **'शीर्षक (अंग्रेज़ी)'**
+  String get fieldAnnouncementTitleEnglish;
+
+  /// No description provided for @fieldAnnouncementMessageHindi.
+  ///
+  /// In hi, this message translates to:
+  /// **'संदेश (हिन्दी)'**
+  String get fieldAnnouncementMessageHindi;
+
+  /// No description provided for @fieldAnnouncementMessageEnglish.
+  ///
+  /// In hi, this message translates to:
+  /// **'संदेश (अंग्रेज़ी)'**
+  String get fieldAnnouncementMessageEnglish;
+
+  /// No description provided for @fieldAnnouncementPriority.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्राथमिकता'**
+  String get fieldAnnouncementPriority;
+
+  /// No description provided for @fieldAnnouncementStart.
+  ///
+  /// In hi, this message translates to:
+  /// **'कब से दिखे'**
+  String get fieldAnnouncementStart;
+
+  /// No description provided for @fieldAnnouncementEnd.
+  ///
+  /// In hi, this message translates to:
+  /// **'कब तक दिखे'**
+  String get fieldAnnouncementEnd;
+
+  /// No description provided for @fieldAnnouncementEndHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'खाली छोड़ें तो संग्रहीत करने तक दिखती रहेगी'**
+  String get fieldAnnouncementEndHint;
+
+  /// No description provided for @fieldAnnouncementLink.
+  ///
+  /// In hi, this message translates to:
+  /// **'अधिक जानकारी का लिंक'**
+  String get fieldAnnouncementLink;
+
+  /// No description provided for @actionPublish2.
+  ///
+  /// In hi, this message translates to:
+  /// **'प्रकाशित करें'**
+  String get actionPublish2;
+
+  /// No description provided for @actionArchive.
+  ///
+  /// In hi, this message translates to:
+  /// **'संग्रहीत करें'**
+  String get actionArchive;
+
+  /// No description provided for @announcementSend.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह सूचना भेजें'**
+  String get announcementSend;
+
+  /// No description provided for @announcementSendTitle.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह सूचना भेजें?'**
+  String get announcementSendTitle;
+
+  /// No description provided for @announcementSendBody.
+  ///
+  /// In hi, this message translates to:
+  /// **'भेजने पर यह सूचना समिति के हर सक्रिय खाते के इनबॉक्स में पहुंचेगी। इसे वापस नहीं लिया जा सकता, और यह केवल एक बार भेजी जा सकती है।'**
+  String get announcementSendBody;
+
+  /// No description provided for @announcementSendConfirm.
+  ///
+  /// In hi, this message translates to:
+  /// **'भेज दें'**
+  String get announcementSendConfirm;
+
+  /// No description provided for @announcementSent.
+  ///
+  /// In hi, this message translates to:
+  /// **'{count} समिति सदस्यों को भेजी गई।'**
+  String announcementSent(int count);
+
+  /// No description provided for @announcementSentOn.
+  ///
+  /// In hi, this message translates to:
+  /// **'भेजी गई: {date}'**
+  String announcementSentOn(String date);
+
+  /// No description provided for @announcementSentNotice.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह सूचना भेजी जा चुकी है और दोबारा नहीं भेजी जा सकती।'**
+  String get announcementSentNotice;
+
+  /// No description provided for @announcementChannels.
+  ///
+  /// In hi, this message translates to:
+  /// **'किस माध्यम से भेजें'**
+  String get announcementChannels;
+
+  /// No description provided for @announcementChannelSite.
+  ///
+  /// In hi, this message translates to:
+  /// **'केवल वेबसाइट'**
+  String get announcementChannelSite;
+
+  /// No description provided for @announcementChannelEmail.
+  ///
+  /// In hi, this message translates to:
+  /// **'समिति को ईमेल'**
+  String get announcementChannelEmail;
+
+  /// No description provided for @announcementChannelSms.
+  ///
+  /// In hi, this message translates to:
+  /// **'एसएमएस'**
+  String get announcementChannelSms;
+
+  /// No description provided for @announcementChannelWhatsapp.
+  ///
+  /// In hi, this message translates to:
+  /// **'WhatsApp'**
+  String get announcementChannelWhatsapp;
+
+  /// No description provided for @announcementChannelUnavailable.
+  ///
+  /// In hi, this message translates to:
+  /// **'किसी प्रदाता से जुड़ा नहीं है'**
+  String get announcementChannelUnavailable;
+
+  /// No description provided for @announcementRecipientsNote.
+  ///
+  /// In hi, this message translates to:
+  /// **'ईमेल केवल समिति के खातों को जाता है। मंदिर को संदेश भेजने वाले भक्त किसी मेलिंग सूची में नहीं हैं।'**
+  String get announcementRecipientsNote;
+
+  /// No description provided for @announcementPublishBeforeSending.
+  ///
+  /// In hi, this message translates to:
+  /// **'भेजने से पहले इस सूचना को प्रकाशित करें।'**
+  String get announcementPublishBeforeSending;
+
+  /// No description provided for @announcementSearchHint.
+  ///
+  /// In hi, this message translates to:
+  /// **'शीर्षक या संदेश खोजें'**
+  String get announcementSearchHint;
+
+  /// No description provided for @announcementShowArchived.
+  ///
+  /// In hi, this message translates to:
+  /// **'संग्रहीत भी दिखाएं'**
+  String get announcementShowArchived;
+
+  /// No description provided for @announcementBannerDismiss.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह सूचना बंद करें'**
+  String get announcementBannerDismiss;
+
+  /// No description provided for @errorAnnouncementAlreadySent.
+  ///
+  /// In hi, this message translates to:
+  /// **'यह सूचना पहले ही भेजी जा चुकी है। दोबारा कहने के लिए नई सूचना लिखें।'**
+  String get errorAnnouncementAlreadySent;
+
+  /// No description provided for @errorAnnouncementNotPublished.
+  ///
+  /// In hi, this message translates to:
+  /// **'भेजने से पहले इस सूचना को प्रकाशित करें।'**
+  String get errorAnnouncementNotPublished;
+
+  /// No description provided for @adminMenu.
+  ///
+  /// In hi, this message translates to:
+  /// **'मेन्यू'**
+  String get adminMenu;
+
+  /// No description provided for @adminMenuOpen.
+  ///
+  /// In hi, this message translates to:
+  /// **'मेन्यू खोलें'**
+  String get adminMenuOpen;
 }
 
 class _AppLocalizationsDelegate

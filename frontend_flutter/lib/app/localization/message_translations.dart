@@ -26,6 +26,8 @@ extension AppExceptionMessage on AppException {
     ErrorCode.donationLocked => l10n.errorDonationLocked,
     ErrorCode.enquiryFormExpired => l10n.errorEnquiryFormExpired,
     ErrorCode.enquiryChallengeRequired => l10n.errorEnquiryChallengeRequired,
+    ErrorCode.announcementAlreadySent => l10n.errorAnnouncementAlreadySent,
+    ErrorCode.announcementNotPublished => l10n.errorAnnouncementNotPublished,
     ErrorCode.serverError => l10n.errorServer,
     ErrorCode.cancelled => l10n.errorUnknown,
     ErrorCode.malformedResponse => l10n.errorServer,

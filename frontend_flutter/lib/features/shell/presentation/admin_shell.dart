@@ -2,34 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'admin_breadcrumbs.dart';
-
 import '../../../app/localization/locale_controller.dart';
 import '../../../app/routing/route_paths.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/widgets/breakpoints.dart';
 import '../../../core/widgets/language_switch.dart';
 import '../../auth/presentation/auth_controller.dart';
+import 'admin_breadcrumbs.dart';
+import 'admin_menu.dart';
 
 /// Chrome for the protected admin area.
 ///
-/// Carries a breadcrumb trail beneath the app bar. Detail screens are reached
-/// by their own URLs, so without it a deep link or a hard refresh left no way
-/// back to the list except the browser's own button.
+/// Since Phase 8 it carries a **side menu**: on a wide screen a fixed rail
+/// beside the content, on a phone a drawer behind the app bar's menu button.
+/// Before that, every switch between modules cost a round trip to the dashboard
+/// and back, which with eleven modules had stopped scaling (PHASE_8_PLAN §9).
+///
+/// The breadcrumb trail stays. It answers a different question: the menu says
+/// which module, the trail says how deep — and without it a deep link or a hard
+/// refresh leaves no way back to the list but the browser's own button.
 class AdminShell extends ConsumerWidget {
   const AdminShell({super.key, required this.child});
 
   final Widget child;
 
+  /// Wide enough for a rail and a usable column of content beside it. Below
+  /// this the menu becomes a drawer rather than squeezing both.
+  static const double railBreakpoint = 900;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final isCompact = Breakpoints.of(context).isCompact;
+    final location = GoRouterState.of(context).uri.path;
+    final showRail = MediaQuery.sizeOf(context).width >= railBreakpoint;
 
     Future<void> signOut() async {
       await ref.read(authControllerProvider.notifier).signOut();
       if (context.mounted) context.go(RoutePaths.home);
     }
+
+    final content = Column(
+      children: [
+        AdminBreadcrumbs(location: location),
+        Expanded(child: child),
+      ],
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -57,13 +75,34 @@ class AdminShell extends ConsumerWidget {
           ],
         ],
       ),
+      // Only when the rail is not showing, so a wide screen has no hamburger
+      // for a menu that is already on it.
+      drawer: showRail
+          ? null
+          : Drawer(
+              key: const Key('admin-menu-drawer'),
+              child: SafeArea(
+                child: AdminMenu(
+                  location: location,
+                  onNavigate: () => Navigator.of(context).maybePop(),
+                ),
+              ),
+            ),
       body: SafeArea(
-        child: Column(
-          children: [
-            AdminBreadcrumbs(location: GoRouterState.of(context).uri.path),
-            Expanded(child: child),
-          ],
-        ),
+        child: showRail
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(
+                    key: const Key('admin-menu-rail'),
+                    width: 232,
+                    child: AdminMenu(location: location),
+                  ),
+                  const VerticalDivider(width: 1, thickness: 1),
+                  Expanded(child: content),
+                ],
+              )
+            : content,
       ),
     );
   }

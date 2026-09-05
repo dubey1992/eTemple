@@ -144,10 +144,10 @@ Explicitly **out** of Phase 0: CMS pages, home/about content, user CRUD screens,
 
 ## Phase 8 — Announcements & Notifications
 
-- [ ] `announcements` (bilingual title/message, `priority`, `start_at`, `end_at`, `channels`, `status`, `created_by`)
-- [ ] Public announcements endpoint + admin create/send endpoints
-- [ ] Homepage banner respecting backend schedule/expiry
-- [ ] Optional email; SMS/WhatsApp only after provider approval; no sends without explicit admin action
+- [x] `announcements` (bilingual title/message, `priority`, `start_at`, `end_at`, `channels`, `status`, `created_by`)
+- [x] Public announcements endpoint + admin create/send endpoints
+- [x] Homepage banner respecting backend schedule/expiry
+- [x] Optional email; SMS/WhatsApp only after provider approval; no sends without explicit admin action
 
 ## Phase 9 — Accounts & Transparency
 

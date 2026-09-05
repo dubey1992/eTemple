@@ -124,6 +124,26 @@ class ApiEndpoints {
 
   static String adminEnquiryStatus(int id) => '/admin/enquiries/$id/status';
 
+  // Announcements and notifications (Phase 8)
+
+  /// Published notices inside their window. The server decides which, from its
+  /// own clock — the schedule is a query, not a display convention.
+  static const String publicAnnouncements = '/public/announcements';
+
+  static const String adminAnnouncements = '/admin/announcements';
+
+  static String adminAnnouncement(int id) => '/admin/announcements/$id';
+
+  static String adminAnnouncementPublish(int id) =>
+      '/admin/announcements/$id/publish';
+
+  static String adminAnnouncementArchive(int id) =>
+      '/admin/announcements/$id/archive';
+
+  /// The one endpoint in this API that cannot be undone.
+  static String adminAnnouncementSend(int id) =>
+      '/admin/announcements/$id/send';
+
   static const String resetPassword = '/auth/reset-password';
 
   /// Served from the application root, not from under `/api`.

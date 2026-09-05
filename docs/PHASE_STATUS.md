@@ -14,11 +14,38 @@ Legend: `NOT STARTED` · `IN PROGRESS` · `PARTIAL` · `BLOCKED` · `COMPLETE`
 | 5 | Gallery & Video Darshan | **COMPLETE** | Uploads validated by their bytes, stripped of location/camera data by re-encoding, and stored as three responsive variants; albums; a deletion guard that names what still points at a file. `logo_url`, `photo_url` and `poster_url` are now filled from the library — `phase-reports/PHASE_5_COMPLETION.md`. |
 | 6 | Donations & Receipts | **COMPLETE** | Money as integer paise; a receipt number issued on verification, unique by database index and immutable thereafter; no delete anywhere — reversal keeps the row, its number and a required reason. Donor detail reaches no public endpoint — `phase-reports/PHASE_6_COMPLETION.md`. |
 | 7 | Devotee Contact & Enquiries | **COMPLETE** | The public contact form, protected by four layers none of which is a third-party CAPTCHA: an IP rate limit with a daily ceiling, a honeypot, a timed single-use ticket, and a server-issued question after a threshold. No public read of an enquiry at any status, and no delete — `spam` keeps the row. Also fixed two defects carried in from earlier phases — `phase-reports/PHASE_7_COMPLETION.md`. |
-| 8 | Announcements & Notifications | NOT STARTED | Key `announcements.manage` exists. |
+| 8 | Announcements & Notifications | **COMPLETE** | Publishing and sending are separate acts: saving sends nothing, publishing sends nothing, and a send needs an explicit channel choice and can happen once. The schedule is a `where` clause with no cron behind it. E-mail reaches committee accounts only. Also replaced the admin card grid with a side menu — `phase-reports/PHASE_8_COMPLETION.md`. |
 | 9 | Accounts & Transparency | NOT STARTED | Keys `accounts.*` exist. |
 | 10 | Reports & Analytics | NOT STARTED | Keys `reports.*` exist. |
 | 11 | Security, Backup & Audit | NOT STARTED | |
 | 12 | Testing, Deployment & Handover | NOT STARTED | |
+
+## Verification log — Phase 8 (2026-09-12)
+
+| Check | Result |
+|---|---|
+| `flutter analyze` | ✅ No issues found |
+| `dart format --set-exit-if-changed` | ✅ 0 of 196 files changed |
+| `flutter test` | ✅ **494/494** passed |
+| `flutter build web --release` | ✅ built |
+| `./vendor/bin/pint --test` | ✅ passed |
+| `php artisan test` | ✅ **544** passed (1914 assertions) |
+| migrate → rollback → migrate (MariaDB) | ✅ reversible |
+| Saving sends nothing; publishing sends nothing | ✅ asserted with a faked mailer, and live over HTTP |
+| A send needs an explicit channel | ✅ no default; an empty list is 422 |
+| A send happens once | ✅ the second attempt is 409 and queues nothing |
+| A draft or archived notice cannot be sent | ✅ 409 `ANNOUNCEMENT_NOT_PUBLISHED` |
+| A channel with no provider is refused with a reason | ✅ and one bad channel refuses the whole send |
+| E-mail reaches committee accounts only | ✅ an enquiry address in the database is never written to; blocked accounts excluded |
+| The schedule is enforced in the query | ✅ a notice dated for next week is absent from the public endpoint, with no scheduler involved |
+| The public notice carries nothing private | ✅ no `sent_at`, `recipient_count`, `channels`, `status`, `created_by` or `is_showing` |
+| `status`/`sent_at` cannot be set by naming them | ✅ ignored by the running server |
+| No hard delete | ✅ `DELETE` is 405; archiving keeps the row and its send record |
+| Bilingual fallback | ✅ Hindi served for a missing English value, `fallback_used` true |
+| The menu and the dashboard cannot disagree | ✅ one catalogue, asserted by test |
+| Live, through the running API | ✅ **54 checks** over two passes |
+| Phase 0–7 tests | ✅ pass unchanged |
+| Every admin route has a breadcrumb trail | ✅ still asserted, now including the three announcement routes |
 
 ## Verification log — Phase 7 (2026-09-11)
 
@@ -164,7 +191,13 @@ MariaDB 12.3.3 · live health and 401 checks.
 - Handing an enquiry to another member needs `users.view`, which
   `enquiries.manage` does not imply; an "assignable members" endpoint would fix
   it (Phase 7 §10).
+- No devotee mailing list: announcement e-mail reaches committee accounts only
+  (Phase 8 §5). Opt-in, confirmation and unsubscribe are unbuilt.
+- SMS and WhatsApp are refused cleanly, not implemented (Phase 8 §6).
+- An announcement sent with no queue worker running records itself as sent and
+  delivers nothing; it cannot be detected from inside the request (Phase 8 §10).
+- The home banner's dismissal lasts the session only.
 - Pre-render tool not wired into CI.
 - No cross-stack end-to-end test (Phase 12).
 
-Phase 8 must not begin without explicit approval.
+Phase 9 must not begin without explicit approval.

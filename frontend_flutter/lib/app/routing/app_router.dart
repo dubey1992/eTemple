@@ -26,6 +26,8 @@ import '../../features/donations/presentation/admin_donation_editor_screen.dart'
 import '../../features/donations/presentation/admin_donation_settings_screen.dart';
 import '../../features/donations/presentation/admin_donations_screen.dart';
 import '../../features/donations/presentation/donate_screen.dart';
+import '../../features/announcements/presentation/admin_announcement_editor_screen.dart';
+import '../../features/announcements/presentation/admin_announcements_screen.dart';
 import '../../features/enquiries/presentation/admin_enquiries_screen.dart';
 import '../../features/enquiries/presentation/admin_enquiry_detail_screen.dart';
 import '../../features/enquiries/presentation/contact_screen.dart';
@@ -332,6 +334,24 @@ final routerProvider = Provider<GoRouter>((ref) {
               final id = int.tryParse(state.pathParameters['id'] ?? '');
               if (id == null) return const NotFoundScreen();
               return AdminDonationEditorScreen(donationId: id);
+            },
+          ),
+          GoRoute(
+            path: RoutePaths.adminAnnouncements,
+            name: RouteNames.adminAnnouncements,
+            builder: (context, state) => const AdminAnnouncementsScreen(),
+          ),
+          GoRoute(
+            path: RoutePaths.adminAnnouncementNew,
+            builder: (context, state) => const AdminAnnouncementEditorScreen(),
+          ),
+          GoRoute(
+            path: '${RoutePaths.adminAnnouncements}/:id',
+            name: RouteNames.adminAnnouncementEditor,
+            builder: (context, state) {
+              final id = int.tryParse(state.pathParameters['id'] ?? '');
+              if (id == null) return const NotFoundScreen();
+              return AdminAnnouncementEditorScreen(announcementId: id);
             },
           ),
           GoRoute(

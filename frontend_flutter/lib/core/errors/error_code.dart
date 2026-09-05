@@ -36,6 +36,13 @@ enum ErrorCode {
   /// (Phase 7). Recoverable by fetching a fresh form, which carries one.
   enquiryChallengeRequired('ENQUIRY_CHALLENGE_REQUIRED'),
 
+  /// An announcement has already been sent, and a message cannot be unsent
+  /// (Phase 8). A fact about the notice rather than a fault in the request.
+  announcementAlreadySent('ANNOUNCEMENT_ALREADY_SENT'),
+
+  /// Sending was asked for on an announcement that is not published (Phase 8).
+  announcementNotPublished('ANNOUNCEMENT_NOT_PUBLISHED'),
+
   serverError('SERVER_ERROR'),
 
   // --- Client-only ----------------------------------------------------------

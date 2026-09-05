@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rkt_web/app/localization/locale_controller.dart';
 import 'package:rkt_web/app/routing/route_paths.dart';
 import 'package:rkt_web/app/theme/app_theme.dart';
+import 'package:rkt_web/features/announcements/data/announcement_providers.dart';
 import 'package:rkt_web/features/donations/data/donation_providers.dart';
 import 'package:rkt_web/features/enquiries/data/enquiry_providers.dart';
 import 'package:rkt_web/features/events/data/event_providers.dart';
@@ -15,6 +16,7 @@ import 'package:rkt_web/features/media/data/media_providers.dart';
 import 'package:rkt_web/features/temple/data/temple_providers.dart';
 import 'package:rkt_web/l10n/app_localizations.dart';
 
+import 'fake_announcement_repository.dart';
 import 'fake_donation_repository.dart';
 import 'fake_enquiry_repository.dart';
 import 'fake_event_repository.dart';
@@ -52,6 +54,9 @@ const contactPlaceholderKey = Key('test-contact-placeholder');
 /// Key on the stand-in screen the enquiry inbox renders.
 const enquiriesPlaceholderKey = Key('test-enquiries-placeholder');
 
+/// Key on the stand-in screen the announcements list renders.
+const announcementsPlaceholderKey = Key('test-announcements-placeholder');
+
 /// Pumps a single screen inside the real theme and localization setup.
 ///
 /// A minimal router is provided so screens that navigate (the login screen, for
@@ -77,6 +82,7 @@ Future<void> pumpScreen(
   FakeMediaRepository? media,
   FakeDonationRepository? donations,
   FakeEnquiryRepository? enquiries,
+  FakeAnnouncementRepository? announcements,
 }) async {
   if (surfaceSize != null) {
     // Set the logical size directly: devicePixelRatio 1.0 makes the physical
@@ -159,6 +165,13 @@ Future<void> pumpScreen(
             const Scaffold(key: contactPlaceholderKey, body: SizedBox.shrink()),
       ),
       GoRoute(
+        path: RoutePaths.adminAnnouncements,
+        builder: (_, _) => const Scaffold(
+          key: announcementsPlaceholderKey,
+          body: SizedBox.shrink(),
+        ),
+      ),
+      GoRoute(
         path: RoutePaths.adminEnquiries,
         builder: (_, _) => const Scaffold(
           key: enquiriesPlaceholderKey,
@@ -181,6 +194,9 @@ Future<void> pumpScreen(
         ),
         enquiryRepositoryProvider.overrideWithValue(
           enquiries ?? FakeEnquiryRepository(),
+        ),
+        announcementRepositoryProvider.overrideWithValue(
+          announcements ?? FakeAnnouncementRepository(),
         ),
         mediaRepositoryProvider.overrideWithValue(
           media ?? FakeMediaRepository(),

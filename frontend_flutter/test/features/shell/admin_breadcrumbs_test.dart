@@ -142,6 +142,9 @@ void main() {
         RoutePaths.adminDonationSettings,
         RoutePaths.adminEnquiries,
         RoutePaths.adminEnquiryDetail(1),
+        RoutePaths.adminAnnouncements,
+        RoutePaths.adminAnnouncementNew,
+        RoutePaths.adminAnnouncementEditor(1),
       ];
 
       for (final route in routes) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Api\Admin\AdminPingController;
 use App\Http\Controllers\Api\Admin\AlbumController;
+use App\Http\Controllers\Api\Admin\AnnouncementController as AdminAnnouncementController;
 use App\Http\Controllers\Api\Admin\CommitteeMemberController;
 use App\Http\Controllers\Api\Admin\DonationController as AdminDonationController;
 use App\Http\Controllers\Api\Admin\DonationSettingsController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Api\Admin\TempleProfileController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\PublicSite\AnnouncementController as PublicAnnouncementController;
 use App\Http\Controllers\Api\PublicSite\DonationController as PublicDonationController;
 use App\Http\Controllers\Api\PublicSite\EnquiryController as PublicEnquiryController;
 use App\Http\Controllers\Api\PublicSite\EventController as PublicEventController;
@@ -116,6 +118,12 @@ Route::prefix('public')
         // is Phase 9's requirement rather than an omission here.
         Route::get('/donation-settings', [PublicDonationController::class, 'settings'])
             ->name('donation-settings');
+
+        // The temple's current notices (Phase 8). Published **and** inside
+        // their window — the schedule is a where clause, so a notice dated for
+        // next week is not reachable today by any request.
+        Route::get('/announcements', [PublicAnnouncementController::class, 'index'])
+            ->name('announcements.index');
 
         // The contact form (Phase 7). Two endpoints and no third: fetch a
         // form, send a message. There is deliberately **no public read** of an
@@ -309,4 +317,37 @@ Route::prefix('admin')
         Route::put('/enquiries/{enquiry}/status', [AdminEnquiryController::class, 'updateStatus'])
             ->whereNumber('enquiry')
             ->middleware('can:'.Permission::ENQUIRIES_MANAGE)->name('enquiries.update-status');
+
+        // --- Announcements and notifications (Phase 8) -----------------
+        // Reading is granted with content.view, as for the calendar and the
+        // gallery; writing, publishing, archiving and sending all need
+        // announcements.manage.
+        //
+        // Publishing, archiving and **sending** are separate endpoints rather
+        // than a status somebody can PUT. They have different consequences and
+        // one of them cannot be undone: giving the irreversible one its own URL
+        // is what makes "no sends without explicit admin action" true of the
+        // API and not merely of the screen (PHASE_8_PLAN assumption N1).
+        //
+        // No DELETE: archiving keeps the row and its record of what was sent.
+        Route::get('/announcements', [AdminAnnouncementController::class, 'index'])
+            ->middleware('can:'.Permission::CONTENT_VIEW)->name('announcements.index');
+        Route::get('/announcements/{announcement}', [AdminAnnouncementController::class, 'show'])
+            ->whereNumber('announcement')
+            ->middleware('can:'.Permission::CONTENT_VIEW)->name('announcements.show');
+
+        Route::post('/announcements', [AdminAnnouncementController::class, 'store'])
+            ->middleware('can:'.Permission::ANNOUNCEMENTS_MANAGE)->name('announcements.store');
+        Route::put('/announcements/{announcement}', [AdminAnnouncementController::class, 'update'])
+            ->whereNumber('announcement')
+            ->middleware('can:'.Permission::ANNOUNCEMENTS_MANAGE)->name('announcements.update');
+        Route::post('/announcements/{announcement}/publish', [AdminAnnouncementController::class, 'publish'])
+            ->whereNumber('announcement')
+            ->middleware('can:'.Permission::ANNOUNCEMENTS_MANAGE)->name('announcements.publish');
+        Route::post('/announcements/{announcement}/archive', [AdminAnnouncementController::class, 'archive'])
+            ->whereNumber('announcement')
+            ->middleware('can:'.Permission::ANNOUNCEMENTS_MANAGE)->name('announcements.archive');
+        Route::post('/announcements/{announcement}/send', [AdminAnnouncementController::class, 'send'])
+            ->whereNumber('announcement')
+            ->middleware('can:'.Permission::ANNOUNCEMENTS_MANAGE)->name('announcements.send');
     });

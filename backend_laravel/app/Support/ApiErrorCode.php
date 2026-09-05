@@ -63,5 +63,19 @@ final class ApiErrorCode
      */
     public const ENQUIRY_CHALLENGE_REQUIRED = 'ENQUIRY_CHALLENGE_REQUIRED';
 
+    /**
+     * An announcement has already been sent, and a message cannot be unsent
+     * (spec Phase 8). A state refusal, not a bad request: the client shows it
+     * as a fact about the notice rather than a fault in the form.
+     */
+    public const ANNOUNCEMENT_ALREADY_SENT = 'ANNOUNCEMENT_ALREADY_SENT';
+
+    /**
+     * Sending was asked for on an announcement that is not published (spec
+     * Phase 8). What goes out by e-mail should be the notice the website is
+     * showing.
+     */
+    public const ANNOUNCEMENT_NOT_PUBLISHED = 'ANNOUNCEMENT_NOT_PUBLISHED';
+
     public const SERVER_ERROR = 'SERVER_ERROR';
 }

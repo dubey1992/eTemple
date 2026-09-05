@@ -88,6 +88,11 @@ class RoutePaths {
 
   static const String adminDonationSettings = '/admin/donation-settings';
 
+  static const String adminAnnouncements = '/admin/announcements';
+  static const String adminAnnouncementNew = '/admin/announcements/new';
+
+  static String adminAnnouncementEditor(int id) => '/admin/announcements/$id';
+
   static const String adminEnquiries = '/admin/enquiries';
 
   static String adminEnquiryDetail(int id) => '/admin/enquiries/$id';
@@ -131,6 +136,8 @@ class RouteNames {
   static const String adminAlbumEditor = 'admin-album-editor';
   static const String donate = 'donate';
   static const String contact = 'contact';
+  static const String adminAnnouncements = 'admin-announcements';
+  static const String adminAnnouncementEditor = 'admin-announcement-editor';
   static const String adminEnquiries = 'admin-enquiries';
   static const String adminEnquiryDetail = 'admin-enquiry-detail';
   static const String adminDonations = 'admin-donations';

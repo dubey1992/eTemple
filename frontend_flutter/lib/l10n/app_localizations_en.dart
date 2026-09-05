@@ -1570,4 +1570,179 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enquiryChooseMember => 'Give it to a member';
+
+  @override
+  String get navAnnouncements => 'Announcements';
+
+  @override
+  String get navAnnouncementsDesc =>
+      'Notices for the website, and sending them to the committee';
+
+  @override
+  String get announcementsTitle => 'Announcements';
+
+  @override
+  String get announcementsSubtitle =>
+      'What the website is showing, what is scheduled, and what has been sent.';
+
+  @override
+  String get announcementsEmpty => 'No announcements yet.';
+
+  @override
+  String get announcementNew => 'Write an announcement';
+
+  @override
+  String get announcementEdit => 'Edit announcement';
+
+  @override
+  String get announcementSaved => 'Announcement saved.';
+
+  @override
+  String get announcementPublished =>
+      'Published. It is on the website for its scheduled window.';
+
+  @override
+  String get announcementArchived =>
+      'Archived. It is off the website and has been kept.';
+
+  @override
+  String get announcementStatusDraft => 'Draft';
+
+  @override
+  String get announcementStatusPublished => 'Published';
+
+  @override
+  String get announcementStatusArchived => 'Archived';
+
+  @override
+  String get announcementShowingNow => 'On the website now';
+
+  @override
+  String announcementScheduledFor(String date) {
+    return 'Starts $date';
+  }
+
+  @override
+  String announcementExpiredOn(String date) {
+    return 'Ended $date';
+  }
+
+  @override
+  String get announcementPriorityNormal => 'Normal';
+
+  @override
+  String get announcementPriorityImportant => 'Important';
+
+  @override
+  String get announcementPriorityUrgent => 'Urgent';
+
+  @override
+  String get fieldAnnouncementTitleHindi => 'Title (Hindi)';
+
+  @override
+  String get fieldAnnouncementTitleEnglish => 'Title (English)';
+
+  @override
+  String get fieldAnnouncementMessageHindi => 'Message (Hindi)';
+
+  @override
+  String get fieldAnnouncementMessageEnglish => 'Message (English)';
+
+  @override
+  String get fieldAnnouncementPriority => 'Priority';
+
+  @override
+  String get fieldAnnouncementStart => 'Shows from';
+
+  @override
+  String get fieldAnnouncementEnd => 'Shows until';
+
+  @override
+  String get fieldAnnouncementEndHint =>
+      'Leave empty to show it until you archive it';
+
+  @override
+  String get fieldAnnouncementLink => 'Read-more link';
+
+  @override
+  String get actionPublish2 => 'Publish';
+
+  @override
+  String get actionArchive => 'Archive';
+
+  @override
+  String get announcementSend => 'Send this announcement';
+
+  @override
+  String get announcementSendTitle => 'Send this announcement?';
+
+  @override
+  String get announcementSendBody =>
+      'Sending puts this notice in the inbox of every active committee account. It cannot be unsent, and it can only be done once.';
+
+  @override
+  String get announcementSendConfirm => 'Send it';
+
+  @override
+  String announcementSent(int count) {
+    return 'Sent to $count committee members.';
+  }
+
+  @override
+  String announcementSentOn(String date) {
+    return 'Sent $date';
+  }
+
+  @override
+  String get announcementSentNotice =>
+      'This announcement has been sent and cannot be sent again.';
+
+  @override
+  String get announcementChannels => 'Send by';
+
+  @override
+  String get announcementChannelSite => 'Website only';
+
+  @override
+  String get announcementChannelEmail => 'E-mail to the committee';
+
+  @override
+  String get announcementChannelSms => 'SMS';
+
+  @override
+  String get announcementChannelWhatsapp => 'WhatsApp';
+
+  @override
+  String get announcementChannelUnavailable => 'Not connected to a provider';
+
+  @override
+  String get announcementRecipientsNote =>
+      'E-mail goes to committee accounts only. Devotees who wrote to the temple are not on a mailing list.';
+
+  @override
+  String get announcementPublishBeforeSending =>
+      'Publish this announcement before sending it.';
+
+  @override
+  String get announcementSearchHint => 'Search a title or a message';
+
+  @override
+  String get announcementShowArchived => 'Show archived';
+
+  @override
+  String get announcementBannerDismiss => 'Close this notice';
+
+  @override
+  String get errorAnnouncementAlreadySent =>
+      'This announcement has already been sent. To say it again, write a new one.';
+
+  @override
+  String get errorAnnouncementNotPublished =>
+      'Publish this announcement before sending it.';
+
+  @override
+  String get adminMenu => 'Menu';
+
+  @override
+  String get adminMenuOpen => 'Open the menu';
 }

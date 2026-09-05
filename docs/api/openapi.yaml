@@ -2,14 +2,14 @@ openapi: 3.1.0
 
 info:
   title: Radha Krishna Thakurbari API
-  version: 0.8.0
+  version: 0.9.0
   description: |
     REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
     admin console.
 
-    **Scope: Phases 0-7.** Endpoints for announcements, accounts and reports
-    are added in their own phases and must be documented here in the same
-    change that implements them.
+    **Scope: Phases 0-8.** Endpoints for accounts and reports are added in
+    their own phases and must be documented here in the same change that
+    implements them.
 
     ## Authorization
 
@@ -86,6 +86,11 @@ tags:
       only endpoint an anonymous request can write with; the inbox is
       readable only with `enquiries.manage`, and an enquiry reaches no
       public endpoint at any status.
+  - name: Announcements
+    description: |
+      Notices for the website, and sending them. Publishing and sending are
+      separate acts on separate endpoints: an unpublished notice is invisible
+      and fixable, a sent one is gone.
 
 paths:
   /api/health:
@@ -1978,6 +1983,210 @@ paths:
         '404': { description: NOT_FOUND }
         '422': { description: VALIDATION_FAILED - including an assignee who cannot open the inbox }
 
+  /api/public/announcements:
+    get:
+      tags: [Announcements]
+      summary: The temple's current notices
+      description: |
+        Public. Returns only announcements that are **published and inside
+        their window** - `start_at <= now` and `end_at` either null or in the
+        future.
+
+        That filter is a `where` clause, not a serializer decision. If it lived
+        in the serializer then "scheduled for next Tuesday" would be a display
+        convention, and the first caller to hit this endpoint directly would
+        read next week's news.
+
+        No scheduler is involved. `status` is what a person decided; whether a
+        notice is showing is computed from the clock on every request, because a
+        status flipped by cron goes live only if cron is installed - and on
+        modest hosting it may not be.
+
+        Loudest first: urgent, then important, then normal. The list is small
+        and bounded; the client shows one.
+
+        Carries the notice and nothing about how it came to be there - no
+        author, no status, no schedule, no record of what was sent.
+      parameters:
+        - { name: lang, in: query, schema: { type: string, enum: [hi, en] } }
+      responses:
+        '200':
+          description: The notices currently showing
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/PublicAnnouncement' }
+
+  /api/admin/announcements:
+    get:
+      tags: [Announcements]
+      summary: Every notice the committee has written
+      description: |
+        Requires `content.view`, as for the calendar and the gallery. Archived
+        notices are excluded unless `include_archived` is set - kept, not
+        deleted.
+      parameters:
+        - { name: status, in: query, schema: { type: string, enum: [draft, published, archived] } }
+        - { name: priority, in: query, schema: { type: string, enum: [normal, important, urgent] } }
+        - { name: search, in: query, schema: { type: string } }
+        - { name: include_archived, in: query, schema: { type: boolean } }
+        - { name: page, in: query, schema: { type: integer, default: 1 } }
+        - { name: per_page, in: query, schema: { type: integer, default: 25, maximum: 100 } }
+      responses:
+        '200':
+          description: One page of announcements
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items: { $ref: '#/components/schemas/AdminAnnouncement' }
+                      meta: { $ref: '#/components/schemas/PaginationMeta' }
+        '401': { description: UNAUTHENTICATED }
+        '403': { description: FORBIDDEN }
+    post:
+      tags: [Announcements]
+      summary: Write a notice
+      description: |
+        Requires `announcements.manage`. The result is a **draft**: this shows
+        nothing on the website and sends nothing to anybody.
+
+        `status`, `channels` and everything about sending are ignored if they
+        appear in the payload. Publishing and sending are decisions with their
+        own endpoints, not fields a request can reach by naming them.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnnouncementInput' }
+      responses:
+        '201': { description: The new draft }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED - including a window that ends before it starts }
+
+  /api/admin/announcements/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    get:
+      tags: [Announcements]
+      summary: One notice, as the editor loads it
+      description: |
+        Requires `content.view`. Both languages are returned raw: a resolved
+        value with the Hindi fallback applied would make an empty English field
+        look filled in, and the next save would write the Hindi into it.
+      responses:
+        '200':
+          description: The announcement
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data: { $ref: '#/components/schemas/AdminAnnouncement' }
+        '403': { description: FORBIDDEN }
+        '404': { description: NOT_FOUND }
+    put:
+      tags: [Announcements]
+      summary: Correct a notice
+      description: Requires `announcements.manage`. Sends nothing.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AnnouncementInput' }
+      responses:
+        '200': { description: The updated announcement }
+        '403': { description: FORBIDDEN }
+        '422': { description: VALIDATION_FAILED }
+
+  /api/admin/announcements/{id}/publish:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    post:
+      tags: [Announcements]
+      summary: Put a notice on the website
+      description: |
+        Requires `announcements.manage`. Puts the notice on the website for its
+        window - and **sends nothing**. Publishing and sending are two different
+        acts with two different undos.
+      responses:
+        '200': { description: The published announcement }
+        '403': { description: FORBIDDEN }
+
+  /api/admin/announcements/{id}/archive:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    post:
+      tags: [Announcements]
+      summary: Take a notice off the website
+      description: |
+        Requires `announcements.manage`. Keeps the row, including whatever
+        record of sending it carries. There is **no DELETE**.
+      responses:
+        '200': { description: The archived announcement }
+        '403': { description: FORBIDDEN }
+
+  /api/admin/announcements/{id}/send:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer } }
+    post:
+      tags: [Announcements]
+      summary: Send a notice - once
+      description: |
+        Requires `announcements.manage`. **The only irreversible operation in
+        this API.**
+
+        `channels` is required and must not be empty. There is no default,
+        deliberately: the specification's rule is "no sends without explicit
+        admin action", and a default channel would mean the most consequential
+        action here could happen without anybody choosing it.
+
+        E-mail goes to **active committee accounts and nobody else**. There is
+        no subscriber list, and the addresses that exist must not become one: a
+        villager who left an e-mail on an enquiry gave it to get an answer to
+        their question.
+
+        SMS and WhatsApp are known codes but are refused until a provider has
+        been approved and configured, with a message that says so - a channel
+        that appears to send and quietly does nothing is worse than none.
+
+        `recipient_count` records what the queue was handed. It is not a
+        delivery guarantee, which no mail system can offer.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [channels]
+              properties:
+                channels:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    enum: [site, email, sms, whatsapp]
+      responses:
+        '200': { description: The sent announcement, with sent_at and recipient_count }
+        '403': { description: FORBIDDEN }
+        '409':
+          description: |
+            ANNOUNCEMENT_ALREADY_SENT - a message cannot be unsent, so a second
+            attempt is refused; or ANNOUNCEMENT_NOT_PUBLISHED.
+        '422': { description: VALIDATION_FAILED - no channel chosen, or one with no provider }
+
 components:
   securitySchemes:
     sessionCookie:
@@ -2796,6 +3005,73 @@ components:
         spam: { type: integer }
         open: { type: integer, description: new + in_progress }
 
+    PublicAnnouncement:
+      type: object
+      description: |
+        A notice as a visitor sees it. Carries nothing about how it came to be
+        there - no author, no status, no schedule, no record of what was sent.
+      properties:
+        id: { type: integer }
+        requested_language: { type: string, enum: [hi, en] }
+        title: { $ref: '#/components/schemas/LocalizedText' }
+        message: { $ref: '#/components/schemas/LocalizedText' }
+        priority: { type: string, enum: [normal, important, urgent] }
+        link_url: { type: [string, 'null'] }
+        ends_at:
+          type: [string, 'null']
+          format: date-time
+          description: |
+            So a page left open can drop the banner as the notice expires
+            without asking the server again. `start_at` is not sent: everything
+            that reaches this resource has already started.
+
+    AnnouncementInput:
+      type: object
+      required: [title_hi, message_hi]
+      properties:
+        title_hi: { type: string, maxLength: 200 }
+        title_en: { type: [string, 'null'], maxLength: 200 }
+        message_hi: { type: string, maxLength: 5000 }
+        message_en: { type: [string, 'null'], maxLength: 5000 }
+        priority: { type: string, enum: [normal, important, urgent] }
+        start_at: { type: string, format: date-time }
+        end_at: { type: [string, 'null'], format: date-time, description: Null means until it is archived }
+        link_url: { type: [string, 'null'], maxLength: 500 }
+
+    AdminAnnouncement:
+      type: object
+      properties:
+        id: { type: integer }
+        title_hi: { type: string }
+        title_en: { type: [string, 'null'] }
+        message_hi: { type: string }
+        message_en: { type: [string, 'null'] }
+        priority: { type: string, enum: [normal, important, urgent] }
+        priority_label: { type: string }
+        start_at: { type: string, format: date-time }
+        end_at: { type: [string, 'null'], format: date-time }
+        link_url: { type: [string, 'null'] }
+        status: { type: string, enum: [draft, published, archived] }
+        is_showing:
+          type: boolean
+          description: Computed from the clock on every read, never stored.
+        is_scheduled: { type: boolean, description: Published, but its window has not opened }
+        has_expired: { type: boolean, description: Published, but its window has closed }
+        was_sent: { type: boolean }
+        sent_at: { type: [string, 'null'], format: date-time }
+        sent_by_name: { type: [string, 'null'] }
+        recipient_count:
+          type: [integer, 'null']
+          description: What the queue was handed. Not a delivery guarantee.
+        channels:
+          type: array
+          items: { type: string }
+        channel_labels:
+          type: array
+          items: { type: string }
+        created_by_name: { type: [string, 'null'] }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+
 security:
   - sessionCookie: []
-

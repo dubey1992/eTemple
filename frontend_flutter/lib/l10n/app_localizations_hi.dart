@@ -1566,4 +1566,179 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get enquiryChooseMember => 'किसी सदस्य को सौंपें';
+
+  @override
+  String get navAnnouncements => 'सूचनाएं';
+
+  @override
+  String get navAnnouncementsDesc =>
+      'वेबसाइट की सूचनाएं, और उन्हें समिति को भेजना';
+
+  @override
+  String get announcementsTitle => 'सूचनाएं';
+
+  @override
+  String get announcementsSubtitle =>
+      'वेबसाइट पर क्या दिख रहा है, क्या निर्धारित है, और क्या भेजा जा चुका है।';
+
+  @override
+  String get announcementsEmpty => 'अभी तक कोई सूचना नहीं।';
+
+  @override
+  String get announcementNew => 'नई सूचना लिखें';
+
+  @override
+  String get announcementEdit => 'सूचना संपादित करें';
+
+  @override
+  String get announcementSaved => 'सूचना सहेजी गई।';
+
+  @override
+  String get announcementPublished =>
+      'प्रकाशित। निर्धारित अवधि में यह वेबसाइट पर दिखेगी।';
+
+  @override
+  String get announcementArchived =>
+      'संग्रहीत। वेबसाइट से हटा दी गई है, पर सुरक्षित है।';
+
+  @override
+  String get announcementStatusDraft => 'मसौदा';
+
+  @override
+  String get announcementStatusPublished => 'प्रकाशित';
+
+  @override
+  String get announcementStatusArchived => 'संग्रहीत';
+
+  @override
+  String get announcementShowingNow => 'अभी वेबसाइट पर';
+
+  @override
+  String announcementScheduledFor(String date) {
+    return 'आरंभ: $date';
+  }
+
+  @override
+  String announcementExpiredOn(String date) {
+    return 'समाप्त: $date';
+  }
+
+  @override
+  String get announcementPriorityNormal => 'सामान्य';
+
+  @override
+  String get announcementPriorityImportant => 'महत्वपूर्ण';
+
+  @override
+  String get announcementPriorityUrgent => 'अत्यावश्यक';
+
+  @override
+  String get fieldAnnouncementTitleHindi => 'शीर्षक (हिन्दी)';
+
+  @override
+  String get fieldAnnouncementTitleEnglish => 'शीर्षक (अंग्रेज़ी)';
+
+  @override
+  String get fieldAnnouncementMessageHindi => 'संदेश (हिन्दी)';
+
+  @override
+  String get fieldAnnouncementMessageEnglish => 'संदेश (अंग्रेज़ी)';
+
+  @override
+  String get fieldAnnouncementPriority => 'प्राथमिकता';
+
+  @override
+  String get fieldAnnouncementStart => 'कब से दिखे';
+
+  @override
+  String get fieldAnnouncementEnd => 'कब तक दिखे';
+
+  @override
+  String get fieldAnnouncementEndHint =>
+      'खाली छोड़ें तो संग्रहीत करने तक दिखती रहेगी';
+
+  @override
+  String get fieldAnnouncementLink => 'अधिक जानकारी का लिंक';
+
+  @override
+  String get actionPublish2 => 'प्रकाशित करें';
+
+  @override
+  String get actionArchive => 'संग्रहीत करें';
+
+  @override
+  String get announcementSend => 'यह सूचना भेजें';
+
+  @override
+  String get announcementSendTitle => 'यह सूचना भेजें?';
+
+  @override
+  String get announcementSendBody =>
+      'भेजने पर यह सूचना समिति के हर सक्रिय खाते के इनबॉक्स में पहुंचेगी। इसे वापस नहीं लिया जा सकता, और यह केवल एक बार भेजी जा सकती है।';
+
+  @override
+  String get announcementSendConfirm => 'भेज दें';
+
+  @override
+  String announcementSent(int count) {
+    return '$count समिति सदस्यों को भेजी गई।';
+  }
+
+  @override
+  String announcementSentOn(String date) {
+    return 'भेजी गई: $date';
+  }
+
+  @override
+  String get announcementSentNotice =>
+      'यह सूचना भेजी जा चुकी है और दोबारा नहीं भेजी जा सकती।';
+
+  @override
+  String get announcementChannels => 'किस माध्यम से भेजें';
+
+  @override
+  String get announcementChannelSite => 'केवल वेबसाइट';
+
+  @override
+  String get announcementChannelEmail => 'समिति को ईमेल';
+
+  @override
+  String get announcementChannelSms => 'एसएमएस';
+
+  @override
+  String get announcementChannelWhatsapp => 'WhatsApp';
+
+  @override
+  String get announcementChannelUnavailable => 'किसी प्रदाता से जुड़ा नहीं है';
+
+  @override
+  String get announcementRecipientsNote =>
+      'ईमेल केवल समिति के खातों को जाता है। मंदिर को संदेश भेजने वाले भक्त किसी मेलिंग सूची में नहीं हैं।';
+
+  @override
+  String get announcementPublishBeforeSending =>
+      'भेजने से पहले इस सूचना को प्रकाशित करें।';
+
+  @override
+  String get announcementSearchHint => 'शीर्षक या संदेश खोजें';
+
+  @override
+  String get announcementShowArchived => 'संग्रहीत भी दिखाएं';
+
+  @override
+  String get announcementBannerDismiss => 'यह सूचना बंद करें';
+
+  @override
+  String get errorAnnouncementAlreadySent =>
+      'यह सूचना पहले ही भेजी जा चुकी है। दोबारा कहने के लिए नई सूचना लिखें।';
+
+  @override
+  String get errorAnnouncementNotPublished =>
+      'भेजने से पहले इस सूचना को प्रकाशित करें।';
+
+  @override
+  String get adminMenu => 'मेन्यू';
+
+  @override
+  String get adminMenuOpen => 'मेन्यू खोलें';
 }

@@ -79,6 +79,20 @@ List<Crumb> adminTrail(String location, AppLocalizations l10n) {
         Crumb(rest.first == 'new' ? l10n.donationNew : l10n.donationEdit),
       ];
 
+    case 'announcements':
+      final announcements = Crumb(
+        l10n.announcementsTitle,
+        RoutePaths.adminAnnouncements,
+      );
+      if (rest.isEmpty) return [dashboard, Crumb(l10n.announcementsTitle)];
+      return [
+        dashboard,
+        announcements,
+        Crumb(
+          rest.first == 'new' ? l10n.announcementNew : l10n.announcementEdit,
+        ),
+      ];
+
     case 'enquiries':
       if (rest.isEmpty) return [dashboard, Crumb(l10n.enquiryInboxTitle)];
       return [

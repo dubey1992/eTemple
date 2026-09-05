@@ -9,6 +9,7 @@ import '../../../app/theme/app_colors.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../../core/widgets/section_band.dart';
 import '../../../core/widgets/state_views.dart';
+import '../../announcements/presentation/widgets/announcement_banner.dart';
 import '../../events/data/event_providers.dart';
 import '../../events/presentation/widgets/event_card.dart';
 import '../../donations/data/donation_providers.dart';
@@ -70,6 +71,10 @@ class HomeScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Above everything, including the hero: a notice the temple
+                // wants read is not a notice below the fold. Renders nothing at
+                // all when there is none, rather than an empty band.
+                const AnnouncementBanner(),
                 SectionBand(
                   gradient: AppColors.heroGradient,
                   verticalPadding: AppSpacing.xxl,
