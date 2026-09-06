@@ -529,6 +529,40 @@ php artisan config:cache && php artisan route:cache && php artisan view:clear
 php artisan deploy:check
 ```
 
+### Publishing the front end when there is no shell
+
+Step 3 above assumes a shell this account does not have. What actually works,
+and what was used on 2026-09-06 to ship the "View site" button:
+
+1. Zip the *contents* of `build/web` — not the folder. `.htaccess` is a real
+   file in there and must be in the archive; `Compress-Archive` and a plain
+   `zip *` both miss it.
+2. Upload the zip to `~` (cPanel → File Manager, or `Fileman/upload_files`).
+3. Write a `~/deploy_step.sh` that backs up `public_html` to a tarball and then
+   extracts. Use **PHP's `ZipArchive`**, not `unzip` — the zip extension is
+   loaded on this account and `unzip` may not be there:
+   `/opt/cpanel/ea-php83/root/usr/bin/php -r '$z=new ZipArchive; ...'`
+4. Add a one-off `* * * * *` cron running it, wait, read the log, **delete the
+   cron**.
+5. Verify by hash, not by eye: download `main.dart.js`, `flutter_bootstrap.js`
+   and `index.html` from the live site and compare their sha256 against the
+   local `build/web`. A half-extracted bundle serves a 200 on every URL and
+   fails only in the browser.
+
+**Take the lock at the start of the script, not at the end.** Backing up 42 MB
+and extracting it takes longer than a minute, so the per-minute cron fires a
+second copy while the first is still working. Moving the script aside as its
+last act — which is what was done — is far too late. The extraction is
+idempotent so the site came out correct, but the second run's `tar` ran *during*
+the first run's extraction and produced a backup that looked ordinary and was
+internally inconsistent. That is worse than no backup at all, because it is only
+discovered by someone trying to restore from it. Begin the script with:
+
+```sh
+[ -e "$H/deploy.lock" ] && exit 0
+touch "$H/deploy.lock"
+```
+
 **Never** run `migrate:fresh`, `db:wipe` or `migrate:refresh` on this host. Each
 of them destroys the temple's records, and none of them is recoverable from
 anything but the backup taken in step 2.
