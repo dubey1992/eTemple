@@ -25,7 +25,7 @@ change in *Going live*, which is at the registrar and not in cPanel.
 | Storage | `storage:link` run; `deploy/cpanel/storage.htaccess` installed |
 | Queue worker | cron, every minute, `queue:work --stop-when-empty --max-time=50` |
 | Backup | cron, 02:30 nightly, `deploy/cpanel/backup.sh` |
-| First account | one Super Admin, with a temporary password to be changed at first sign-in |
+| First account | one Super Admin, `super.admin@thakurwadi.com`, with a temporary password to be changed at first sign-in |
 
 **`php artisan deploy:check`: 37 passed, 0 failed.**
 
@@ -41,7 +41,7 @@ it by hand, since DNS still points elsewhere:
 | `.env` is not served | ✅ 444, and the same for a traversal attempt |
 | The private uploads path is not served | ✅ 404 — bills are on a disk outside every document root |
 | An admin endpoint without a session | ✅ 401 |
-| Signing in | ✅ 200, `super-admin`, 20 permissions |
+| Signing in | ✅ 200, `super-admin`, 20 permissions — and the address it replaced is refused with 401 |
 | Reading the audit trail as Super Admin | ✅ 200 |
 | Security headers | ✅ nosniff, DENY, Referrer-Policy, Permissions-Policy, CSP, HSTS |
 
@@ -63,6 +63,13 @@ without touching mail. (Changing the nameservers to the host's would move
 Then, once it has propagated: **cPanel → SSL/TLS Status → Run AutoSSL** for both
 the domain and `api.`. Until the certificate is issued, browsers will warn —
 AutoSSL cannot validate a domain that does not resolve to the server.
+
+**The Super Admin's address is on a domain this account does not host.**
+`super.admin@thakurwadi.com` is fine as a name to sign in with, but nothing on
+this server can deliver to it, so "forgot password" has nowhere to send a link.
+Either create a mailbox for it wherever that domain's mail lives, or move the
+account to an address on `radhakrishnathakurwadi.com` once the DNS is here.
+Until then, the password is the only way in — keep it somewhere safe.
 
 Two things to do after the certificate is in place, both named by
 `deploy:check` because PHP cannot see them from inside:
