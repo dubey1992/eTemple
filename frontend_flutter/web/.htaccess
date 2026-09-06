@@ -6,6 +6,21 @@
 #
 # See docs/DEPLOYMENT_CPANEL.md.
 
+# --- HTTPS -------------------------------------------------------------------
+# cPanel's AutoSSL issues the certificate; this is what stops a plain-HTTP visit
+# from staying plain. Comment it out only while a certificate is still pending.
+#
+# This MUST come before the single-page rewrite below. That block ends every
+# request with [L] — an existing file matches `^ - [L]`, everything else matches
+# `^ index.html [L]` — so any rule placed after it is unreachable. Ordered the
+# other way round, this redirect silently never fires and the whole site answers
+# on plain HTTP, which is exactly how it shipped until 2026-09-06.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
 # --- Send every unknown path to the app -------------------------------------
 # The site is a single page: /gallery, /events/12 and /admin/donations are all
 # routes inside one bundle, not files. Without this, a visitor who reloads on
@@ -25,15 +40,6 @@
   RewriteRule ^ index.html [L]
 </IfModule>
 
-# --- HTTPS -------------------------------------------------------------------
-# cPanel's AutoSSL issues the certificate; this is what stops a plain-HTTP visit
-# from staying plain. Comment it out only while a certificate is still pending.
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteCond %{HTTPS} off
-  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-</IfModule>
-
 # --- Headers -----------------------------------------------------------------
 # The API sets its own (App\Http\Middleware\SecurityHeaders). These are for the
 # static bundle, which never reaches PHP.
@@ -45,6 +51,16 @@
   # Not DENY: the site embeds nothing and is embedded by nobody, and a temple
   # site inside somebody else's frame is how a fake donation page is built.
   Header always set X-Frame-Options "SAMEORIGIN"
+
+  # The redirect above moves a visitor to HTTPS once; this stops the plain-HTTP
+  # request being made again at all, so there is no first request left to
+  # intercept. Matches the API's own max-age. Only meaningful over HTTPS — a
+  # browser ignores it on a plain-HTTP response — hence env=HTTPS.
+  #
+  # includeSubDomains covers api.radhakrishnathakurwadi.com, which has the same
+  # certificate and is already HTTPS-only. Deliberately not `preload`: that is
+  # published in the browsers themselves and is slow and awkward to undo.
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
 
   # index.html must never be cached: a stale one points at a bundle that has
   # been replaced, and the app fails to boot after a deployment with no error a
