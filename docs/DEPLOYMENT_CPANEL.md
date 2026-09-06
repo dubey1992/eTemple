@@ -137,6 +137,45 @@ steps that follow.
 | **SSH** | ❌ no port answers (22, 2222, 2200, 22222) |
 | **cPanel Terminal** | ❌ `api_shell` is disabled on this plan |
 
+### The host refuses PUT, PATCH and DELETE
+
+Found on 2026-09-06, after go-live, when saving the temple profile failed.
+
+```
+GET  (no body)  200   reaches Laravel
+POST            200   reaches Laravel
+PUT             403   LiteSpeed HTML, PHP never runs
+PATCH           403   same
+DELETE          403   same
+GET  with body  403   same
+```
+
+The 403 is a **web-server** page, not Laravel's. It carries no
+`Access-Control-Allow-Origin`, because the header is added by Laravel's CORS
+middleware and Laravel never saw the request — so a browser reports it as a CORS
+failure and never shows the status. The original bug report read *"403"* and
+*"blocked by CORS policy"* on one line: two different requests, described
+together.
+
+Every edit and every delete in the console rode on those verbs. Only creating
+and reading worked, which is why go-live verification missed it entirely — every
+check was a GET or a POST.
+
+**The client now tunnels all three through POST** with `X-HTTP-Method-Override`,
+which Laravel reads natively (`ApiClient._applyMethodOverride`). Two things have
+to stay true, and each has a test:
+
+1. `Request::capture()` must keep enabling the method-parameter override —
+   `MethodOverrideTest`.
+2. `X-HTTP-Method-Override` must stay in `config/cors.php` `allowed_headers` —
+   `CorsPreflightTest`. Leave it out and the preflight still answers 204 while
+   the browser silently refuses to send the real request.
+
+**Verify saving from a browser, not with curl.** curl sends any header it is
+given and never enforces CORS, so the API answered every one of these checks
+correctly while no browser could save anything. Sign in, change something, save
+it, and read the network panel.
+
 ### Two consequences worth reading before you start
 
 **There is no shell.** Composer and `php artisan` cannot be typed anywhere. The

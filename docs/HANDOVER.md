@@ -72,6 +72,7 @@ the rest. A backup that has never been restored from is a hope.
 | The Excel export fails and CSV works | The `zip` extension is missing |
 | The contact form throttles everybody after a few messages | The real client IP is not reaching Laravel — see `DEPLOYMENT_CPANEL.md` §11.2 |
 | A stack trace appears on a public page | `APP_DEBUG=true`. Fix it immediately: it prints paths and configuration |
+| Nothing can be saved or deleted, and the console reports a CORS error | The host blocks PUT/PATCH/DELETE. The client tunnels them through POST; check `X-HTTP-Method-Override` is still in `config/cors.php` — see `DEPLOYMENT_CPANEL.md` |
 
 ---
 
