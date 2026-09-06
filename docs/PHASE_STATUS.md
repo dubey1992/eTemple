@@ -387,8 +387,13 @@ MariaDB 12.3.3 · live health and 401 checks.
 - `deploy:check` reads the CLI's `php.ini`; on cPanel the web server often reads
   a different one. The command says so, and the two browser checks at the end of
   `DEPLOYMENT_CPANEL.md` §11 are what cover the gap.
-- The production deployment itself has not been performed, and committee
-  acceptance has not happened — both are the committee's to do.
+- **Deployed to the hosting account on 2026-09-06** and verified there
+  (`DEPLOYMENT_CPANEL.md`, *What is already deployed*). Two things remain, and
+  both are the committee's: pointing the domain's DNS at the host, and
+  acceptance.
+- Mail leaves through the host's `sendmail` rather than an authenticated
+  mailbox. It works, but until DNS moves here the domain's SPF record is the old
+  provider's, so a message may be filed as spam. Revisit after going live.
 
 **All twelve phases are COMPLETE.** What remains is the committee's:
 `docs/DEPLOYMENT_CPANEL.md` to put it on radhakrishnathakurwadi.com,

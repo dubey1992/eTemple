@@ -2,6 +2,76 @@
 
 **Target:** https://radhakrishnathakurwadi.com/ · cPanel shared hosting
 **Written:** 2026-09-16 · Phase 12
+**Performed:** 2026-09-06 — see *What is already deployed* below
+
+---
+
+## What is already deployed
+
+Steps 1–11 below were **carried out on 2026-09-06**. The site is installed,
+configured and verified on the hosting account; the only thing left is the DNS
+change in *Going live*, which is at the registrar and not in cPanel.
+
+| | |
+|---|---|
+| PHP | `ea-php83` — 8.3.33, with gd, zip, intl, mbstring, pdo_mysql, fileinfo, openssl, exif all loaded |
+| Code | cloned to `/home/radhakrishn/thakurwadi` from the public repository |
+| Composer | `install --no-dev --optimize-autoloader`, on the host |
+| Database | `radhakrishn_temple`, user `radhakrishn_app`, ALL PRIVILEGES |
+| Migrations | all 25, plus `RoleSeeder` — five roles |
+| `.env` | from `.env.production.example`, permissions **0600** |
+| Site | `build/web` extracted into `public_html`, `.htaccess` included |
+| API | `api.radhakrishnathakurwadi.com` → `thakurwadi/backend_laravel/public` |
+| Storage | `storage:link` run; `deploy/cpanel/storage.htaccess` installed |
+| Queue worker | cron, every minute, `queue:work --stop-when-empty --max-time=50` |
+| Backup | cron, 02:30 nightly, `deploy/cpanel/backup.sh` |
+| First account | one Super Admin, with a temporary password to be changed at first sign-in |
+
+**`php artisan deploy:check`: 37 passed, 0 failed.**
+
+Verified against the hosting IP (`103.191.209.38`) with the domain resolved to
+it by hand, since DNS still points elsewhere:
+
+| Check | Result |
+|---|---|
+| The site loads and is named correctly | ✅ `राधा कृष्ण ठाकुरवाड़ी \| Radha Krishna Thakurwadi` |
+| A deep link works on a cold load | ✅ `/gallery` → 200, so the SPA rewrite is in force |
+| The API answers | ✅ `/api/health` → `database: connected`, `environment: production` |
+| The whole public surface answers on an empty database | ✅ all ten endpoints → 200 |
+| `.env` is not served | ✅ 444, and the same for a traversal attempt |
+| The private uploads path is not served | ✅ 404 — bills are on a disk outside every document root |
+| An admin endpoint without a session | ✅ 401 |
+| Signing in | ✅ 200, `super-admin`, 20 permissions |
+| Reading the audit trail as Super Admin | ✅ 200 |
+| Security headers | ✅ nosniff, DENY, Referrer-Policy, Permissions-Policy, CSP, HSTS |
+
+### Going live
+
+The domain still serves a **GoDaddy Website Builder** page. To point it here, at
+the registrar's DNS:
+
+| Record | Name | Value |
+|---|---|---|
+| A | `@` | `103.191.209.38` |
+| A | `www` | `103.191.209.38` |
+| A | `api` | `103.191.209.38` |
+
+Leave MX and TXT records alone — changing the A records moves the website
+without touching mail. (Changing the nameservers to the host's would move
+*everything*, including mail, and is the more disruptive option.)
+
+Then, once it has propagated: **cPanel → SSL/TLS Status → Run AutoSSL** for both
+the domain and `api.`. Until the certificate is issued, browsers will warn —
+AutoSSL cannot validate a domain that does not resolve to the server.
+
+Two things to do after the certificate is in place, both named by
+`deploy:check` because PHP cannot see them from inside:
+
+1. Open `https://api.radhakrishnathakurwadi.com/storage/accounts/attachments/`
+   in a browser and confirm it is **not** served.
+2. Submit the contact form from **two different networks**. If the second is
+   refused as a repeat of the first, the real client IP is not reaching Laravel
+   and every anti-spam limit shares one bucket.
 
 Follow this in order. Steps 1–6 are done once; steps 7–11 are done once and then
 checked; step 12 is every release afterwards.
