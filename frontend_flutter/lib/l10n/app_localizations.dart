@@ -164,6 +164,12 @@ abstract class AppLocalizations {
   /// **'साइन आउट'**
   String get signOut;
 
+  /// Admin app bar action that leaves the console for the public home page. The session is kept, and the public header offers the way back.
+  ///
+  /// In hi, this message translates to:
+  /// **'साइट देखें'**
+  String get viewSite;
+
   /// Phase 0 placeholder heading; replaced by the CMS home page in Phase 1
   ///
   /// In hi, this message translates to:

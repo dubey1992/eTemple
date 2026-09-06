@@ -43,6 +43,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get signOut => 'साइन आउट';
 
   @override
+  String get viewSite => 'साइट देखें';
+
+  @override
   String get foundationHeadline => 'वेबसाइट तैयार की जा रही है';
 
   @override

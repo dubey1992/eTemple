@@ -212,6 +212,37 @@ void main() {
     expect(find.byType(NotFoundScreen), findsOneWidget);
   });
 
+  testWidgets(
+    'the admin console offers a way to the public site without signing out',
+    (tester) async {
+      final (router, container) = await bootRouter(
+        tester,
+        FakeAuthRepository(session: testUser()),
+      );
+
+      router.go(RoutePaths.admin);
+      await tester.pumpAndSettle();
+      expect(currentLocation(router), RoutePaths.admin);
+
+      await tester.tap(find.byKey(const Key('admin-view-site')));
+      await tester.pumpAndSettle();
+
+      expect(currentLocation(router), RoutePaths.home);
+      expect(find.byType(HomeScreen), findsOneWidget);
+
+      // The point of the button. Before it, the only exit from the console was
+      // signing out, so looking at the site meant giving up the session and
+      // typing the password again to carry on editing.
+      expect(container.read(isAuthenticatedProvider), isTrue);
+
+      // And the way back is still offered, so this is a round trip rather than
+      // a one-way door.
+      router.go(RoutePaths.admin);
+      await tester.pumpAndSettle();
+      expect(currentLocation(router), RoutePaths.admin);
+    },
+  );
+
   group('RoutePaths.isAdmin', () {
     test('matches the admin group and nothing else', () {
       expect(RoutePaths.isAdmin('/admin'), isTrue);
