@@ -65,6 +65,37 @@ class DeployCheckTest extends TestCase
         ]);
     }
 
+    /**
+     * Set a real environment value for the duration of one test.
+     *
+     * `putenv()` alone is not enough: the `.env` file's own value is already in
+     * `$_ENV` and `$_SERVER`, and the repository reads those adapters before
+     * the putenv one — so the empty value from `.env` would keep winning. These
+     * are the two the repository actually consults.
+     */
+    private function withEnvironmentValue(string $key, string $value): void
+    {
+        $previousEnv = $_ENV[$key] ?? null;
+        $previousServer = $_SERVER[$key] ?? null;
+
+        $_ENV[$key] = $value;
+        $_SERVER[$key] = $value;
+
+        $this->beforeApplicationDestroyed(static function () use ($key, $previousEnv, $previousServer): void {
+            if ($previousEnv === null) {
+                unset($_ENV[$key]);
+            } else {
+                $_ENV[$key] = $previousEnv;
+            }
+
+            if ($previousServer === null) {
+                unset($_SERVER[$key]);
+            } else {
+                $_SERVER[$key] = $previousServer;
+            }
+        });
+    }
+
     /** Runs the command and returns [exit code, output]. */
     private function runCheck(): array
     {
@@ -217,6 +248,42 @@ class DeployCheckTest extends TestCase
 
         $this->assertSame(1, $exit);
         $this->assertMatchesRegularExpression('/XX\s+Announcement channels have providers behind them/', $output);
+    }
+
+    /**
+     * An empty `DEV_ADMIN_EMAIL=` is the correct production state, not a
+     * finding.
+     *
+     * The committed template ships the key present and empty so it is visibly
+     * unset, and `env()` returns "" rather than null for that. Reading it as
+     * "configured" failed a correctly deployed site — found on the real host on
+     * 2026-09-06, where every other check passed.
+     */
+    public function test_an_empty_dev_admin_setting_is_not_a_finding(): void
+    {
+        $this->productionConfiguration();
+        $this->withEnvironmentValue('DEV_ADMIN_EMAIL', '');
+
+        [, $output] = $this->runCheck();
+
+        $this->assertMatchesRegularExpression(
+            '/ok\s+No development administrator is configured/',
+            $output,
+        );
+    }
+
+    public function test_a_dev_admin_that_really_is_set_is_caught(): void
+    {
+        $this->productionConfiguration();
+        $this->withEnvironmentValue('DEV_ADMIN_EMAIL', 'admin@example.test');
+
+        [$exit, $output] = $this->runCheck();
+
+        $this->assertSame(1, $exit);
+        $this->assertMatchesRegularExpression(
+            '/XX\s+No development administrator is configured/',
+            $output,
+        );
     }
 
     /**

@@ -341,10 +341,18 @@ class DeployCheck extends Command
      */
     private function checkDevelopmentLeftovers(): void
     {
+        // `DEV_ADMIN_EMAIL=` with nothing after it is the *correct* production
+        // state — the committed template ships it that way so the key is
+        // visible and obviously empty — and `env()` returns "" for it rather
+        // than null. Reading that as "configured" made a correctly deployed
+        // site fail its own check, which is worse than not checking: it teaches
+        // whoever runs it that a red line is normal.
+        $configured = static fn (mixed $value): bool => is_string($value) && trim($value) !== '';
+
         $this->assert(
             'No development administrator is configured',
-            env('DEV_ADMIN_EMAIL') === null && env('DEV_ADMIN_PASSWORD') === null,
-            'DEV_ADMIN_EMAIL/DEV_ADMIN_PASSWORD are set. Remove them from .env.',
+            ! $configured(env('DEV_ADMIN_EMAIL')) && ! $configured(env('DEV_ADMIN_PASSWORD')),
+            'DEV_ADMIN_EMAIL/DEV_ADMIN_PASSWORD have values. Empty them in .env.',
         );
 
         // The demo accounts created for role testing, and the seeded example
