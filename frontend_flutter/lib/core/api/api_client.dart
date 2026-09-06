@@ -64,6 +64,7 @@ class ApiClient {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           _attachCsrfHeader(options);
+          _applyMethodOverride(options);
           _logger.debug('→ ${options.method} ${options.path}');
           handler.next(options);
         },
@@ -83,6 +84,29 @@ class ApiClient {
         },
       ),
     );
+  }
+
+  /// Verbs the production host refuses outright.
+  static const _tunnelledMethods = {'PUT', 'PATCH', 'DELETE'};
+
+  /// Rewrites PUT/PATCH/DELETE as POST carrying `X-HTTP-Method-Override`.
+  ///
+  /// The host answers all three with a LiteSpeed 403 before PHP is reached, so
+  /// every edit and every delete in the console failed. Laravel reads the
+  /// header and routes the request as the original verb, so nothing downstream
+  /// — routes, form requests, policies, tests — has to know this happened.
+  ///
+  /// It sits here rather than in each repository so that a route added later
+  /// cannot forget it. Applied after the CSRF header, which reasons about the
+  /// caller's real intent rather than the verb actually put on the wire.
+  void _applyMethodOverride(RequestOptions options) {
+    if (!_config.useMethodOverride) return;
+
+    final method = options.method.toUpperCase();
+    if (!_tunnelledMethods.contains(method)) return;
+
+    options.method = 'POST';
+    options.headers['X-HTTP-Method-Override'] = method;
   }
 
   void _attachCsrfHeader(RequestOptions options) {

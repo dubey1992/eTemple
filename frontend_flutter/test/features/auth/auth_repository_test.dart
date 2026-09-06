@@ -15,6 +15,7 @@ const _config = AppConfig(
   connectTimeout: Duration(seconds: 5),
   receiveTimeout: Duration(seconds: 5),
   enableVerboseLogging: false,
+  useMethodOverride: true,
 );
 
 Map<String, Object?> _userPayload({

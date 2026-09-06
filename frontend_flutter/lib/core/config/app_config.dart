@@ -15,6 +15,7 @@ class AppConfig {
     required this.connectTimeout,
     required this.receiveTimeout,
     required this.enableVerboseLogging,
+    required this.useMethodOverride,
   });
 
   /// Reads the configuration handed to the build.
@@ -53,6 +54,23 @@ class AppConfig {
       defaultValue: 20000,
     );
 
+    // Send PUT/PATCH/DELETE as POST + X-HTTP-Method-Override.
+    //
+    // The production host answers those three verbs with a LiteSpeed 403 before
+    // the request ever reaches PHP — so every edit and every delete in the
+    // console failed, and because that 403 carries no CORS header the browser
+    // reported it as a CORS error rather than as the 403 it is.
+    //
+    // Defaults to true, including in development, on purpose. A flag that is
+    // off locally and on in production reproduces exactly the gap that let this
+    // ship: nothing but the live host would ever exercise the path the live
+    // host uses. Set API_METHOD_OVERRIDE=false only on a host that allows the
+    // real verbs and where you want them.
+    const useMethodOverride = bool.fromEnvironment(
+      'API_METHOD_OVERRIDE',
+      defaultValue: true,
+    );
+
     return AppConfig(
       environment: environment,
       apiBaseUrl: _normalizeBaseUrl(resolvedBaseUrl),
@@ -60,6 +78,7 @@ class AppConfig {
       receiveTimeout: Duration(milliseconds: receiveTimeoutMs),
       // Verbose request logging is never enabled in a production bundle.
       enableVerboseLogging: !environment.isProduction,
+      useMethodOverride: useMethodOverride,
     );
   }
 
@@ -68,6 +87,9 @@ class AppConfig {
   final Duration connectTimeout;
   final Duration receiveTimeout;
   final bool enableVerboseLogging;
+
+  /// Whether PUT/PATCH/DELETE are tunnelled through POST. See the factory.
+  final bool useMethodOverride;
 
   /// Origin of the API, without the `/api` path segment.
   ///

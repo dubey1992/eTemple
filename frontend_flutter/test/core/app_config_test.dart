@@ -34,6 +34,7 @@ void main() {
         connectTimeout: Duration(seconds: 15),
         receiveTimeout: Duration(seconds: 20),
         enableVerboseLogging: false,
+        useMethodOverride: true,
       );
       expect(production.enableVerboseLogging, isFalse);
     });
@@ -45,6 +46,7 @@ void main() {
         connectTimeout: Duration(seconds: 15),
         receiveTimeout: Duration(seconds: 20),
         enableVerboseLogging: false,
+        useMethodOverride: true,
       );
 
       expect(config.apiOrigin, 'https://api.thakurbari.example');
@@ -57,6 +59,7 @@ void main() {
         connectTimeout: Duration(seconds: 15),
         receiveTimeout: Duration(seconds: 20),
         enableVerboseLogging: true,
+        useMethodOverride: true,
       );
 
       expect(config.apiOrigin, 'http://localhost:8000');
