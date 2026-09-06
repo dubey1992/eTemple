@@ -37,9 +37,10 @@ The committee bought **radhakrishnathakurwadi.com** and will deploy through
   `intl`, `mbstring` are hard dependencies, and `deploy:check` names each one
   with the consequence of its absence.
 
-*The domain reads `thakurwadi` where the temple is `Thakurbari`. Nothing in the
-code cares — the name is CMS content throughout — but the URL and the mail `from`
-address will read differently from the temple's own name.*
+*The temple was written `Thakurbari` / ठाकुरबाड़ी through Phases 0–12; the
+committee chose `Thakurwadi` / ठाकुरवाड़ी to match the domain, and the project
+was renamed to follow. The name is CMS content everywhere, so this touched the
+written word and nothing structural.*
 
 ## 3. What "end-to-end" was made to mean
 

@@ -251,13 +251,13 @@ void main() {
       await tester.enterText(find.byKey(const Key('user-first-name')), 'सीता');
       await tester.enterText(
         find.byKey(const Key('user-email')),
-        '  Sita@Thakurbari.TEST ',
+        '  Sita@Thakurwadi.TEST ',
       );
       await tester.tap(find.byKey(const Key('user-save')));
       await tester.pumpAndSettle();
 
       expect(admin.createCalls, 1);
-      expect(admin.lastDraft!.toJson()['email'], 'sita@thakurbari.test');
+      expect(admin.lastDraft!.toJson()['email'], 'sita@thakurwadi.test');
       expect(admin.lastDraft!.toJson()['last_name'], isNull);
     });
 

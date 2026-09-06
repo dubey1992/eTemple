@@ -1,4 +1,4 @@
-# Radha Krishna Thakurbari — API
+# Radha Krishna Thakurwadi — API
 
 Laravel REST/JSON API for the Flutter Web public site and admin console.
 

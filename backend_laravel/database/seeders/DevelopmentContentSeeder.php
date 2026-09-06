@@ -60,19 +60,19 @@ class DevelopmentContentSeeder extends Seeder
             ?? TempleProfile::query()->create([]);
 
         $profile->forceFill([
-            'name_hi' => 'राधा कृष्ण ठाकुरबाड़ी',
-            'name_en' => 'Radha Krishna Thakurbari',
+            'name_hi' => 'राधा कृष्ण ठाकुरवाड़ी',
+            'name_en' => 'Radha Krishna Thakurwadi',
 
             // The hero paragraph.
-            'mission_hi' => 'अमरपुर पंखोरिया ग्राम स्थित यह ठाकुरबाड़ी ग्रामवासियों की आस्था, '
+            'mission_hi' => 'अमरपुर पंखोरिया ग्राम स्थित यह ठाकुरवाड़ी ग्रामवासियों की आस्था, '
                 .'सेवा, सहयोग और सांस्कृतिक एकता का केंद्र है।',
             'mission_en' => 'Located in Amarpur Pankhoriya, this temple is a center of faith, '
                 .'service, community participation and cultural unity.',
 
             // The "मंदिर परिचय" lead paragraph.
-            'history_hi' => 'राधा कृष्ण ठाकुरबाड़ी एक सामुदायिक एवं गैर-लाभकारी धार्मिक स्थल है, '
+            'history_hi' => 'राधा कृष्ण ठाकुरवाड़ी एक सामुदायिक एवं गैर-लाभकारी धार्मिक स्थल है, '
                 .'जिसका संचालन ग्रामवासियों के सहयोग से किया जाता है।',
-            'history_en' => 'Radha Krishna Thakurbari is a community-run, non-profit religious '
+            'history_en' => 'Radha Krishna Thakurwadi is a community-run, non-profit religious '
                 .'place managed with the support of villagers.',
 
             // Both scripts. The strip above the header used to show the Roman
@@ -114,17 +114,17 @@ class DevelopmentContentSeeder extends Seeder
     private function seedPages(): void
     {
         Page::query()->where('slug', Page::SLUG_HOME)->update([
-            'title_hi' => 'राधा कृष्ण ठाकुरबाड़ी',
-            'title_en' => 'Radha Krishna Thakurbari',
-            'content_hi' => 'अमरपुर पंखोरिया ग्राम स्थित यह ठाकुरबाड़ी ग्रामवासियों की आस्था, '
+            'title_hi' => 'राधा कृष्ण ठाकुरवाड़ी',
+            'title_en' => 'Radha Krishna Thakurwadi',
+            'content_hi' => 'अमरपुर पंखोरिया ग्राम स्थित यह ठाकुरवाड़ी ग्रामवासियों की आस्था, '
                 .'सेवा, सहयोग और सांस्कृतिक एकता का केंद्र है।',
             'content_en' => 'Located in Amarpur Pankhoriya, this temple is a center of faith, '
                 .'service, community participation and cultural unity.',
-            'meta_title_hi' => 'राधा कृष्ण ठाकुरबाड़ी | अमरपुर पंखोरिया',
-            'meta_title_en' => 'Radha Krishna Thakurbari | Amarpur Pankhoriya',
-            'meta_description_hi' => 'राधा कृष्ण ठाकुरबाड़ी, अमरपुर पंखोरिया — ग्रामवासियों '
+            'meta_title_hi' => 'राधा कृष्ण ठाकुरवाड़ी | अमरपुर पंखोरिया',
+            'meta_title_en' => 'Radha Krishna Thakurwadi | Amarpur Pankhoriya',
+            'meta_description_hi' => 'राधा कृष्ण ठाकुरवाड़ी, अमरपुर पंखोरिया — ग्रामवासियों '
                 .'द्वारा संचालित गैर-लाभकारी मंदिर।',
-            'meta_description_en' => 'Radha Krishna Thakurbari, Amarpur Pankhoriya — a '
+            'meta_description_en' => 'Radha Krishna Thakurwadi, Amarpur Pankhoriya — a '
                 .'non-profit temple managed by the villagers.',
             'status' => Page::STATUS_PUBLISHED,
             'published_at' => now(),
@@ -137,7 +137,7 @@ class DevelopmentContentSeeder extends Seeder
         Page::query()->where('slug', Page::SLUG_ABOUT)->update([
             'title_hi' => 'मंदिर परिचय',
             'title_en' => 'About the Temple',
-            'content_hi' => 'राधा कृष्ण ठाकुरबाड़ी एक सामुदायिक एवं गैर-लाभकारी धार्मिक स्थल है, '
+            'content_hi' => 'राधा कृष्ण ठाकुरवाड़ी एक सामुदायिक एवं गैर-लाभकारी धार्मिक स्थल है, '
                 ."जिसका संचालन ग्रामवासियों के सहयोग से किया जाता है।\n\n"
                 .'🛕 हमारी विरासत — मंदिर के इतिहास, स्थापना और स्थानीय परंपराओं को आने वाली '
                 ."पीढ़ियों के लिए संरक्षित करना।\n\n"
@@ -145,7 +145,7 @@ class DevelopmentContentSeeder extends Seeder
                 ."सहयोग से संचालित होते हैं।\n\n"
                 .'🪔 सेवा और भक्ति — नियमित पूजा, आरती, भजन-कीर्तन और धार्मिक आयोजनों के माध्यम से '
                 .'आध्यात्मिक वातावरण।',
-            'content_en' => 'Radha Krishna Thakurbari is a community-run, non-profit religious '
+            'content_en' => 'Radha Krishna Thakurwadi is a community-run, non-profit religious '
                 ."place managed with the support of villagers.\n\n"
                 ."🛕 Our Heritage — preserving the temple's history, foundation and local "
                 ."traditions for future generations.\n\n"

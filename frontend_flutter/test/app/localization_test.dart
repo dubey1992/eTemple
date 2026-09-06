@@ -65,7 +65,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // CMS-driven content, served in Hindi because that is the default.
-      expect(find.text('राधा कृष्ण ठाकुरबाड़ी'), findsWidgets);
+      expect(find.text('राधा कृष्ण ठाकुरवाड़ी'), findsWidgets);
       expect(find.byKey(const Key('hero-tagline')), findsOneWidget);
       // The strip carries the approved design's emblem in front of the
       // committee's tagline.

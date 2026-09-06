@@ -24,11 +24,11 @@ the last two lines.
 The committee has bought **https://radhakrishnathakurwadi.com/** and will deploy
 through **cPanel**. That is not a footnote; it decides most of this phase.
 
-*(The domain reads `thakurwadi` where the temple's name is `Thakurbari` /
-राधा कृष्ण ठाकुरबाड़ी. Nothing in the code cares — the name is CMS content
-everywhere, asserted by `temple_name_takeover_test.dart` — but the URL and the
-mail `from` address will read differently from the temple's own name, and the
-committee should know that before it is printed on anything.)*
+*(The temple was written `Thakurbari` / राधा कृष्ण ठाकुरबाड़ी up to this point;
+the committee chose `Thakurwadi` / ठाकुरवाड़ी to match the domain, and the
+project follows. Nothing structural moved — the name is CMS content everywhere,
+asserted by `temple_name_takeover_test.dart` — so this was a rename of the word
+alone.)*
 
 ### T1. Where the two halves live
 

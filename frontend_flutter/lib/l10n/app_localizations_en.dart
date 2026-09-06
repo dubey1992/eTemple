@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Radha Krishna Thakurbari';
+  String get appTitle => 'Radha Krishna Thakurwadi';
 
   @override
   String get invocation => '✨ Radhe Radhe • Jai Shri Krishna';

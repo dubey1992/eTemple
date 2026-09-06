@@ -48,7 +48,7 @@ class DeployCheck extends Command
     public function handle(): int
     {
         $this->line('');
-        $this->info('Radha Krishna Thakurbari — deployment check');
+        $this->info('Radha Krishna Thakurwadi — deployment check');
         $this->line('  environment: '.app()->environment());
         $this->line('  php:         '.PHP_VERSION.' ('.PHP_SAPI.')');
         $this->line('  php.ini:     '.(php_ini_loaded_file() ?: 'none loaded'));

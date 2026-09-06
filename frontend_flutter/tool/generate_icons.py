@@ -1,4 +1,4 @@
-"""Generate the favicon and PWA icons for Radha Krishna Thakurbari.
+"""Generate the favicon and PWA icons for Radha Krishna Thakurwadi.
 
 The mark is a temple shikhara (spire) with a kalash finial, drawn in the
 "Maroon & Gold" palette from lib/app/theme/app_colors.dart:

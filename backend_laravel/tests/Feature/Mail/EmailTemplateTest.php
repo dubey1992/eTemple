@@ -38,7 +38,7 @@ class EmailTemplateTest extends TestCase
         $this->seed(RoleSeeder::class);
 
         TempleProfile::factory()->create([
-            'name_hi' => 'राधा कृष्ण ठाकुरबाड़ी',
+            'name_hi' => 'राधा कृष्ण ठाकुरवाड़ी',
             'village_hi' => 'अमरपुर पंखोरिया',
             'district_hi' => 'भागलपुर',
             'state_hi' => 'बिहार',
@@ -94,8 +94,8 @@ class EmailTemplateTest extends TestCase
     {
         $mail = $this->make($kind);
 
-        $mail->assertSeeInHtml('राधा कृष्ण ठाकुरबाड़ी', false);
-        $mail->assertSeeInText('राधा कृष्ण ठाकुरबाड़ी', false);
+        $mail->assertSeeInHtml('राधा कृष्ण ठाकुरवाड़ी', false);
+        $mail->assertSeeInText('राधा कृष्ण ठाकुरवाड़ी', false);
     }
 
     /**

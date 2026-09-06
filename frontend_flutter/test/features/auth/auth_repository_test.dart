@@ -62,7 +62,7 @@ void main() {
       );
 
       final user = await harness.repository.signIn(
-        email: '  Committee@Thakurbari.in ',
+        email: '  Committee@Thakurwadi.in ',
         password: 'a-valid-password',
       );
 

@@ -1,4 +1,4 @@
-# Radha Krishna Thakurbari — Flutter Web
+# Radha Krishna Thakurwadi — Flutter Web
 
 Public website and admin console. Flutter Web is the primary target; the
 architecture stays Android-ready but no native app is in scope.

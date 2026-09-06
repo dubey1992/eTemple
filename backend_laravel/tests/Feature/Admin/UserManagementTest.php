@@ -75,17 +75,17 @@ class UserManagementTest extends TestCase
             ->postJson('/api/admin/users', [
                 'first_name' => 'सीता',
                 'last_name' => 'देवी',
-                'email' => 'Sita@Thakurbari.test',
+                'email' => 'Sita@Thakurwadi.test',
                 'role_id' => $this->roleId(Role::CONTENT_MANAGER),
             ])
             ->assertCreated()
-            ->assertJsonPath('data.email', 'sita@thakurbari.test')
+            ->assertJsonPath('data.email', 'sita@thakurwadi.test')
             ->assertJsonPath('data.role.slug', Role::CONTENT_MANAGER);
 
-        $created = User::query()->where('email', 'sita@thakurbari.test')->firstOrFail();
+        $created = User::query()->where('email', 'sita@thakurwadi.test')->firstOrFail();
 
         // The creator never chose a password, so none of the obvious guesses work.
-        foreach (['', 'password', 'sita@thakurbari.test'] as $guess) {
+        foreach (['', 'password', 'sita@thakurwadi.test'] as $guess) {
             $this->assertFalse(Hash::check($guess, $created->password));
         }
         $this->assertStringNotContainsString('password', $response->getContent() ?: '');

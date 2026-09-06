@@ -3,7 +3,7 @@ import 'package:rkt_web/core/seo/seo_metadata_service.dart';
 
 void main() {
   group('PageMetadata.compose', () {
-    const site = 'राधा कृष्ण ठाकुरबाड़ी';
+    const site = 'राधा कृष्ण ठाकुरवाड़ी';
 
     test('appends the site name to a page title', () {
       expect(
@@ -18,7 +18,7 @@ void main() {
 
     test('does not append when the page title already names the temple', () {
       // A real SEO title from the CMS, which already carries the temple name.
-      const seoTitle = 'राधा कृष्ण ठाकुरबाड़ी, अमरपुर पंखोरिया';
+      const seoTitle = 'राधा कृष्ण ठाकुरवाड़ी, अमरपुर पंखोरिया';
 
       expect(
         PageMetadata.compose(pageTitle: seoTitle, siteName: site),
@@ -69,7 +69,7 @@ void main() {
 
       service.apply(
         const PageMetadata(
-          title: 'हमारे बारे में | राधा कृष्ण ठाकुरबाड़ी',
+          title: 'हमारे बारे में | राधा कृष्ण ठाकुरवाड़ी',
           language: 'hi',
           description: 'मंदिर की जानकारी।',
           canonicalPath: '/about',

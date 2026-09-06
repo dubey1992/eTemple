@@ -1,10 +1,10 @@
 openapi: 3.1.0
 
 info:
-  title: Radha Krishna Thakurbari API
+  title: Radha Krishna Thakurwadi API
   version: 0.12.0
   description: |
-    REST/JSON API for the Radha Krishna Thakurbari Flutter Web public site and
+    REST/JSON API for the Radha Krishna Thakurwadi Flutter Web public site and
     admin console.
 
     **Scope: Phases 0-10.** Phases 11 and 12 add no new endpoints of their own;

@@ -169,7 +169,7 @@ truncation.
 
 | # | Defect | Fix |
 |---|---|---|
-| 1 | Pre-rendered titles read `राधा कृष्ण ठाकुरबाड़ी, अमरपुर पंखोरिया \| राधा कृष्ण ठाकुरबाड़ी \| …` — an SEO title that already names the temple was suffixed with it again | `PageMetadata.compose` and the pre-render tool now skip the suffix when the page title already contains the site name; covered by a test |
+| 1 | Pre-rendered titles read `राधा कृष्ण ठाकुरवाड़ी, अमरपुर पंखोरिया \| राधा कृष्ण ठाकुरवाड़ी \| …` — an SEO title that already names the temple was suffixed with it again | `PageMetadata.compose` and the pre-render tool now skip the suffix when the page title already contains the site name; covered by a test |
 | 2 | Admin screens crashed in tests with "No Material widget found" | They are shell children in the app; the test helper now wraps them as `AdminShell` does. Confirmed the screens legitimately depend on an ancestor Scaffold |
 | 3 | A localization test asserted the deleted Phase 0 placeholder copy | Rewritten to assert Hindi-first rendering of the real CMS content |
 

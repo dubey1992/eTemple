@@ -13,5 +13,5 @@ void main() {
   // index.html for this to work in production (see docs/DEPLOYMENT_CHECKLIST.md).
   usePathUrlStrategy();
 
-  runApp(const ProviderScope(child: RadhaKrishnaThakurbariApp()));
+  runApp(const ProviderScope(child: RadhaKrishnaThakurwadiApp()));
 }

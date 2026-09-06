@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// Application shell fallback for the temple name. Since Phase 3 the real name comes from temple_profile; this is shown only while that request is in flight or has failed.
   ///
   /// In hi, this message translates to:
-  /// **'राधा कृष्ण ठाकुरबाड़ी'**
+  /// **'राधा कृष्ण ठाकुरवाड़ी'**
   String get appTitle;
 
   /// Devotional invocation displayed above the temple name

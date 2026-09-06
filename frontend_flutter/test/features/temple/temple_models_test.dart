@@ -74,12 +74,12 @@ void main() {
           'postal_code': '813204',
         });
 
-        final destination = address.mapDestination('Radha Krishna Thakurbari')!;
+        final destination = address.mapDestination('Radha Krishna Thakurwadi')!;
 
         expect(destination, startsWith('https://www.google.com/maps/search/'));
         expect(
           Uri.parse(destination).queryParameters['query'],
-          'Radha Krishna Thakurbari, Amarpur Pankhoriya, Bhagalpur, Bihar, 813204',
+          'Radha Krishna Thakurwadi, Amarpur Pankhoriya, Bhagalpur, Bihar, 813204',
         );
       });
 
@@ -114,7 +114,7 @@ void main() {
       final profile = TempleProfile.fromJson({
         'requested_language': 'en',
         'name': {
-          'value': 'Radha Krishna Thakurbari',
+          'value': 'Radha Krishna Thakurwadi',
           'language': 'en',
           'fallback_used': false,
         },
@@ -129,7 +129,7 @@ void main() {
         'established_year': 1965,
       });
 
-      expect(profile.name.value, 'Radha Krishna Thakurbari');
+      expect(profile.name.value, 'Radha Krishna Thakurwadi');
       expect(profile.hasName, isTrue);
       expect(profile.history.value, 'A history.');
       expect(profile.mission.isEmpty, isTrue);
@@ -141,7 +141,7 @@ void main() {
     test('reports the Hindi fallback so the UI can say so', () {
       final profile = TempleProfile.fromJson({
         'name': {
-          'value': 'राधा कृष्ण ठाकुरबाड़ी',
+          'value': 'राधा कृष्ण ठाकुरवाड़ी',
           'language': 'hi',
           'fallback_used': true,
         },
@@ -168,12 +168,12 @@ void main() {
   group('EditableTempleProfile and its draft', () {
     test('reads every editable field, numbers included', () {
       final editable = EditableTempleProfile.fromJson({
-        'name_hi': 'राधा कृष्ण ठाकुरबाड़ी',
+        'name_hi': 'राधा कृष्ण ठाकुरवाड़ी',
         'name_en': null,
         'established_year': 1965,
       });
 
-      expect(editable['name_hi'], 'राधा कृष्ण ठाकुरबाड़ी');
+      expect(editable['name_hi'], 'राधा कृष्ण ठाकुरवाड़ी');
       expect(editable['name_en'], '');
       expect(editable['established_year'], '1965');
       // Every field is present so the form can build a controller for each.
@@ -184,12 +184,12 @@ void main() {
       // Absent is what the public empty states key on; an empty string would
       // render as a blank line instead.
       final json = const TempleProfileDraft({
-        'name_hi': ' राधा कृष्ण ठाकुरबाड़ी ',
+        'name_hi': ' राधा कृष्ण ठाकुरवाड़ी ',
         'name_en': '   ',
         'village': '',
       }).toJson();
 
-      expect(json['name_hi'], 'राधा कृष्ण ठाकुरबाड़ी');
+      expect(json['name_hi'], 'राधा कृष्ण ठाकुरवाड़ी');
       expect(json['name_en'], isNull);
       expect(json['village'], isNull);
     });

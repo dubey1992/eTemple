@@ -68,7 +68,7 @@ void main() {
       expect(find.text('ग्राम - Amarpur Pankhoriya'), findsOneWidget);
       expect(find.text('पंचायत - Kurma'), findsOneWidget);
       expect(
-        find.text('राधा कृष्ण ठाकुरबाड़ी'),
+        find.text('राधा कृष्ण ठाकुरवाड़ी'),
         findsWidgets,
         reason: 'the hero renders the temple name from the profile',
       );
@@ -105,7 +105,7 @@ void main() {
       expect(find.byKey(const Key('hero-title')), findsOneWidget);
       // With no temple name on record the hero falls back to the app's own
       // name rather than rendering blank.
-      expect(find.text('राधा कृष्ण ठाकुरबाड़ी'), findsWidgets);
+      expect(find.text('राधा कृष्ण ठाकुरवाड़ी'), findsWidgets);
       // Nothing written yet, so each block is simply absent or says so.
       expect(find.byKey(const Key('hero-tagline')), findsNothing);
       expect(find.byKey(const Key('hero-locality')), findsNothing);
@@ -339,7 +339,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('श्री राधा कृष्ण ठाकुरबाड़ी समिति'), findsOneWidget);
+      expect(find.text('श्री राधा कृष्ण ठाकुरवाड़ी समिति'), findsOneWidget);
     });
 
     testWidgets('falls back to the temple identity when settings fail', (

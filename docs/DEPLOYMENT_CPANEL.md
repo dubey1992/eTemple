@@ -16,8 +16,8 @@ offer — those constraints are what shaped the design (`PHASE_12_PLAN` §B).
 | | cPanel object | Document root | Holds |
 |---|---|---|---|
 | The public site | the main domain | `public_html` | the Flutter build |
-| The API | a **subdomain**, `api.` | `thakurbari/backend_laravel/public` | Laravel |
-| The code | — | `~/thakurbari/` | both projects, outside any document root |
+| The API | a **subdomain**, `api.` | `thakurwadi/backend_laravel/public` | Laravel |
+| The code | — | `~/thakurwadi/` | both projects, outside any document root |
 
 The API is a subdomain rather than a `/api` folder because the rewrite that
 makes `/gallery` work has to exclude every API path, and one mistake there
@@ -27,12 +27,6 @@ nowhere near its cause.
 Both are the same registrable domain, so a request from the site to the API is
 **same-site**: the session cookie works with `SameSite=lax` and no weakening is
 needed.
-
-> **A note on the name.** The domain reads *thakurwadi*; the temple is *Radha
-> Krishna Thakurbari* / राधा कृष्ण ठाकुरबाड़ी. Nothing in the software cares —
-> the name is CMS content and is never compiled in — but the URL and the mail
-> `from` address will read differently from the temple's own name. Worth knowing
-> before it is printed on a receipt or a banner.
 
 ---
 
@@ -91,7 +85,7 @@ restore rehearsal needs a credential the application itself does not have
 **cPanel → Git Version Control**, or upload a zip and extract it.
 
 ```
-~/thakurbari/
+~/thakurwadi/
    backend_laravel/
    frontend_flutter/      (source only; the build is made on your machine)
    docs/
@@ -100,7 +94,7 @@ restore rehearsal needs a credential the application itself does not have
 Then, in **cPanel → Terminal**:
 
 ```bash
-cd ~/thakurbari/backend_laravel
+cd ~/thakurwadi/backend_laravel
 composer install --no-dev --optimize-autoloader
 ```
 
@@ -115,7 +109,7 @@ Application**, or upload a `vendor/` built locally with the same PHP version.
 
 * Domain: `api.radhakrishnathakurwadi.com`
 * Uncheck *"Share document root"*
-* Document root: `thakurbari/backend_laravel/public`
+* Document root: `thakurwadi/backend_laravel/public`
 
 The document root is `public`, never the project root. Pointing it one level up
 publishes `.env` — the database password and the application key — as a file
@@ -126,7 +120,7 @@ anybody can fetch.
 ## 5. The environment file
 
 ```bash
-cd ~/thakurbari/backend_laravel
+cd ~/thakurwadi/backend_laravel
 cp .env.production.example .env
 php artisan key:generate
 ```
@@ -154,7 +148,7 @@ chmod 600 .env
 ## 6. Migrate, seed and link
 
 ```bash
-cd ~/thakurbari/backend_laravel
+cd ~/thakurwadi/backend_laravel
 php artisan migrate --force
 php artisan db:seed --class=RoleSeeder --force
 php artisan storage:link
@@ -186,7 +180,7 @@ and change it from inside the console on the first sign-in.
 **cPanel → Cron Jobs.** Every minute:
 
 ```
-* * * * * cd ~/thakurbari/backend_laravel && /usr/local/bin/php artisan queue:work --stop-when-empty --max-time=50 >> ~/queue.log 2>&1
+* * * * * cd ~/thakurwadi/backend_laravel && /usr/local/bin/php artisan queue:work --stop-when-empty --max-time=50 >> ~/queue.log 2>&1
 ```
 
 `--stop-when-empty` and `--max-time=50` are what make this safe on shared
@@ -206,17 +200,17 @@ inline is slower, but a failure then *says* it failed.
 
 ## 8. The nightly backup
 
-Upload `deploy/cpanel/backup.sh` to `~/bin/thakurbari-backup.sh`, then:
+Upload `deploy/cpanel/backup.sh` to `~/bin/thakurwadi-backup.sh`, then:
 
 ```bash
-chmod 700 ~/bin/thakurbari-backup.sh
+chmod 700 ~/bin/thakurwadi-backup.sh
 mkdir -p ~/backups
 ```
 
 **cPanel → Cron Jobs**, once a night, out of hours:
 
 ```
-30 2 * * * /home/<account>/bin/thakurbari-backup.sh >> /home/<account>/backups/cron.log 2>&1
+30 2 * * * /home/<account>/bin/thakurwadi-backup.sh >> /home/<account>/backups/cron.log 2>&1
 ```
 
 Read `docs/BACKUP_AND_RESTORE.md` before trusting it. The important parts: the
@@ -261,8 +255,8 @@ alone once the certificate is issued.
 Then install the uploads rules:
 
 ```bash
-cp ~/thakurbari/deploy/cpanel/storage.htaccess \
-   ~/thakurbari/backend_laravel/public/storage/.htaccess
+cp ~/thakurwadi/deploy/cpanel/storage.htaccess \
+   ~/thakurwadi/backend_laravel/public/storage/.htaccess
 ```
 
 Uploaded photographs are static files: the web server answers them without ever
@@ -274,7 +268,7 @@ than in `config/cors.php`.
 ## 11. Check it, then look at it
 
 ```bash
-cd ~/thakurbari/backend_laravel
+cd ~/thakurwadi/backend_laravel
 php artisan deploy:check
 ```
 
@@ -306,14 +300,14 @@ cd frontend_flutter && flutter analyze && flutter test && flutter build web --re
 cd ../backend_laravel && ./vendor/bin/pint --test && php artisan test
 
 # 2. On the host: take a backup FIRST, before any migration runs.
-~/bin/thakurbari-backup.sh
+~/bin/thakurwadi-backup.sh
 
 # 3. Keep the current site, then replace it.
 mv ~/public_html ~/public_html-$(date +%Y-%m-%d) && mkdir ~/public_html
 #    ... upload the new build/web contents into public_html ...
 
 # 4. The API.
-cd ~/thakurbari && git pull
+cd ~/thakurwadi && git pull
 cd backend_laravel
 composer install --no-dev --optimize-autoloader
 php artisan migrate --force

@@ -1,6 +1,6 @@
 {
   "@@locale": "hi",
-  "appTitle": "राधा कृष्ण ठाकुरबाड़ी",
+  "appTitle": "राधा कृष्ण ठाकुरवाड़ी",
   "@appTitle": {
     "description": "Application shell fallback for the temple name. Since Phase 3 the real name comes from temple_profile; this is shown only while that request is in flight or has failed."
   },

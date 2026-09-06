@@ -172,7 +172,7 @@ What was actually done and seen, on 2026-09-16:
   (`2026_09_16_000000_create_audit_logs_table`).
 * `SUM(amount_paise)` over confirmed donations was `10390000` — ₹1,03,900, the
   figure the public transparency page shows.
-* Devanagari survived intact: `रामप्रसाद यादव`, `राधा कृष्ण ठाकुरबाड़ी`,
+* Devanagari survived intact: `रामप्रसाद यादव`, `राधा कृष्ण ठाकुरवाड़ी`,
   `अमरपुर पंखोरिया`. This is the check the character-set flag exists for.
 * The media archive (27 entries, 99,373 bytes) extracted cleanly, with
   `public/` and `private/accounts/attachments/` in place.

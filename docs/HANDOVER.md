@@ -1,6 +1,6 @@
 # Handover
 
-**Radha Krishna Thakurbari** · https://radhakrishnathakurwadi.com/
+**Radha Krishna Thakurwadi** · https://radhakrishnathakurwadi.com/
 **Written:** 2026-09-16 · Phase 12
 
 What the committee now owns, what it has to keep doing, and what it must never
@@ -33,7 +33,7 @@ backups:
 
 1. **The registrar login** — the domain. Losing it loses the address.
 2. **The cPanel login** — the host. Everything else can be rebuilt from it.
-3. **The database password** — in `~/thakurbari/backend_laravel/.env`, and
+3. **The database password** — in `~/thakurwadi/backend_laravel/.env`, and
    nowhere else. It is **not** in the backup, on purpose: a backup that carries
    the password to the database it contains is one file away from a breach.
 4. **The Super Admin account** — the site itself.

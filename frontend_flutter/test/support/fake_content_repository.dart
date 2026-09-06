@@ -153,7 +153,7 @@ PageContent testPage({
 /// Site settings with a tagline, an address and a two-item menu.
 SiteSettings testSettings({
   String? tagline = 'भक्ति और सेवा का केंद्र',
-  String? footer = 'श्री राधा कृष्ण ठाकुरबाड़ी समिति',
+  String? footer = 'श्री राधा कृष्ण ठाकुरवाड़ी समिति',
   List<NavigationEntry>? navigation,
   ContactInfo? contact,
 }) {

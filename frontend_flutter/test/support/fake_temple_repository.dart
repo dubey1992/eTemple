@@ -205,7 +205,7 @@ AdminCommitteeMember testAdminMember({
 
 /// A configured temple profile for widget tests.
 TempleProfile testProfile({
-  String? name = 'राधा कृष्ण ठाकुरबाड़ी',
+  String? name = 'राधा कृष्ण ठाकुरवाड़ी',
   String? village = 'Amarpur Pankhoriya',
   String? panchayat = 'Kurma',
   String? history,

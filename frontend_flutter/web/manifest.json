@@ -1,12 +1,12 @@
 {
-    "name": "राधा कृष्ण ठाकुरबाड़ी | Radha Krishna Thakurbari",
-    "short_name": "ठाकुरबाड़ी",
+    "name": "राधा कृष्ण ठाकुरवाड़ी | Radha Krishna Thakurwadi",
+    "short_name": "ठाकुरवाड़ी",
     "lang": "hi",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FFF8EC",
     "theme_color": "#8B1E3F",
-    "description": "राधा कृष्ण ठाकुरबाड़ी, अमरपुर पंखोरिया, कुर्मा पंचायत, भागलपुर, बिहार।",
+    "description": "राधा कृष्ण ठाकुरवाड़ी, अमरपुर पंखोरिया, कुर्मा पंचायत, भागलपुर, बिहार।",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

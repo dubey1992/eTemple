@@ -2,7 +2,7 @@
     "$schema": "https://getcomposer.org/schema.json",
     "name": "thakurbari/backend-laravel",
     "type": "project",
-    "description": "Radha Krishna Thakurbari — Laravel REST/JSON API",
+    "description": "Radha Krishna Thakurwadi — Laravel REST/JSON API",
     "keywords": ["laravel", "api", "temple"],
     "license": "MIT",
     "require": {

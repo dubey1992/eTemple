@@ -322,7 +322,7 @@ class MediaManagementTest extends TestCase
     {
         $media = Media::factory()->published()->create();
         TempleProfile::query()->create([
-            'name_hi' => 'ठाकुरबाड़ी',
+            'name_hi' => 'ठाकुरवाड़ी',
             'logo_url' => $media->fileUrl(),
         ]);
 

@@ -1,8 +1,8 @@
 #!/bin/sh
 # Nightly backup of the database and the uploads, together.
 #
-# Install as: ~/bin/thakurbari-backup.sh  (chmod 700)
-# Cron:       30 2 * * * /home/<account>/bin/thakurbari-backup.sh >> /home/<account>/backups/cron.log 2>&1
+# Install as: ~/bin/thakurwadi-backup.sh  (chmod 700)
+# Cron:       30 2 * * * /home/<account>/bin/thakurwadi-backup.sh >> /home/<account>/backups/cron.log 2>&1
 #
 # The two halves must be taken in ONE run. A database restored beside a
 # different night's uploads gives a gallery of broken images and a ledger entry
@@ -12,7 +12,7 @@
 # docs/BACKUP_AND_RESTORE.md. A backup nobody has restored from is a hope.
 set -eu
 
-APP=${APP:-$HOME/thakurbari/backend_laravel}
+APP=${APP:-$HOME/thakurwadi/backend_laravel}
 OUT=${OUT:-$HOME/backups/$(date +%Y-%m-%d)}
 KEEP_DAYS=${KEEP_DAYS:-31}
 

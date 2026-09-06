@@ -1,4 +1,4 @@
-# Radha Krishna Thakurbari — Implementation Plan (Phases 0–12)
+# Radha Krishna Thakurwadi — Implementation Plan (Phases 0–12)
 
 Source of truth: *Phase-wise Flutter Web & Backend Development Specification v1.1* (September 2026).
 

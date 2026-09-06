@@ -81,7 +81,7 @@ void main() {
       );
 
       expect(find.text('कोई और मंदिर'), findsWidgets);
-      expect(find.text('राधा कृष्ण ठाकुरबाड़ी'), findsNothing);
+      expect(find.text('राधा कृष्ण ठाकुरवाड़ी'), findsNothing);
     });
 
     testWidgets('falls back to the app name when the profile is unwritten', (
@@ -89,7 +89,7 @@ void main() {
     ) async {
       await pumpShell(tester, FakeTempleRepository());
 
-      expect(find.text('राधा कृष्ण ठाकुरबाड़ी'), findsWidgets);
+      expect(find.text('राधा कृष्ण ठाकुरवाड़ी'), findsWidgets);
     });
 
     testWidgets('falls back to the app name when the profile request fails', (
@@ -103,7 +103,7 @@ void main() {
         ),
       );
 
-      expect(find.text('राधा कृष्ण ठाकुरबाड़ी'), findsWidgets);
+      expect(find.text('राधा कृष्ण ठाकुरवाड़ी'), findsWidgets);
     });
 
     testWidgets('no village name is left compiled into the app', (
@@ -179,7 +179,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('राधा कृष्ण ठाकुरबाड़ी'), findsOneWidget);
+      expect(find.text('राधा कृष्ण ठाकुरवाड़ी'), findsOneWidget);
     });
   });
 

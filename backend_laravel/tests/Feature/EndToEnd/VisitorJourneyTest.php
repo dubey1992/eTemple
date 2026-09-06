@@ -72,21 +72,21 @@ class VisitorJourneyTest extends TestCase
     public function test_a_visitor_reads_the_temple_in_either_language_and_never_sees_a_blank(): void
     {
         TempleProfile::query()->create([
-            'name_hi' => 'राधा कृष्ण ठाकुरबाड़ी',
+            'name_hi' => 'राधा कृष्ण ठाकुरवाड़ी',
             'name_en' => null,                       // deliberately not translated yet
             'village_hi' => 'अमरपुर पंखोरिया',
             'village_en' => 'Amarpur Pankhoriya',
         ]);
 
         $hindi = $this->getJson('/api/public/temple-profile')->assertOk();
-        $hindi->assertJsonPath('data.name.value', 'राधा कृष्ण ठाकुरबाड़ी')
+        $hindi->assertJsonPath('data.name.value', 'राधा कृष्ण ठाकुरवाड़ी')
             ->assertJsonPath('data.name.fallback_used', false);
 
         $english = $this->getJson('/api/public/temple-profile?lang=en')->assertOk();
 
         // The English reader gets the Hindi name rather than an empty heading,
         // and the response says so, so the client can mark it.
-        $english->assertJsonPath('data.name.value', 'राधा कृष्ण ठाकुरबाड़ी')
+        $english->assertJsonPath('data.name.value', 'राधा कृष्ण ठाकुरवाड़ी')
             ->assertJsonPath('data.name.language', 'hi')
             ->assertJsonPath('data.name.fallback_used', true);
 

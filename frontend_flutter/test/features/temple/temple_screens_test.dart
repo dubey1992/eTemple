@@ -148,13 +148,13 @@ void main() {
     testWidgets('loads the profile into the form', (tester) async {
       final temple = FakeTempleRepository()
         ..editableProfile = EditableTempleProfile.fromJson({
-          'name_hi': 'राधा कृष्ण ठाकुरबाड़ी',
+          'name_hi': 'राधा कृष्ण ठाकुरवाड़ी',
           'village_hi': 'अमरपुर पंखोरिया',
         });
 
       await pumpTemple(tester, const AdminTempleProfileScreen(), temple);
 
-      expect(find.text('राधा कृष्ण ठाकुरबाड़ी'), findsOneWidget);
+      expect(find.text('राधा कृष्ण ठाकुरवाड़ी'), findsOneWidget);
       expect(find.text('अमरपुर पंखोरिया'), findsOneWidget);
     });
 
@@ -163,7 +163,7 @@ void main() {
     ) async {
       final temple = FakeTempleRepository()
         ..editableProfile = EditableTempleProfile.fromJson({
-          'name_hi': 'राधा कृष्ण ठाकुरबाड़ी',
+          'name_hi': 'राधा कृष्ण ठाकुरवाड़ी',
         });
 
       await pumpTemple(tester, const AdminTempleProfileScreen(), temple);

@@ -1,6 +1,6 @@
-# राधा कृष्ण ठाकुरबाड़ी | Radha Krishna Thakurbari
+# राधा कृष्ण ठाकुरवाड़ी | Radha Krishna Thakurwadi
 
-Website and administration system for the Radha Krishna Thakurbari temple in
+Website and administration system for the Radha Krishna Thakurwadi temple in
 Amarpur Pankhoriya (Kurma Panchayat, Rasulpur Ekchari, Bhagalpur, Bihar — 813204).
 
 A non-profit village temple project. Hindi is the default language; English is

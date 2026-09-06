@@ -34,6 +34,6 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'no-reply@thakurbari.local'),
-        'name' => env('MAIL_FROM_NAME', 'Radha Krishna Thakurbari'),
+        'name' => env('MAIL_FROM_NAME', 'Radha Krishna Thakurwadi'),
     ],
 ];

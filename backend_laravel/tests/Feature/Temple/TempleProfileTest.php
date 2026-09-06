@@ -123,15 +123,15 @@ class TempleProfileTest extends TestCase
     {
         $this->actingAs($this->editor, 'web')
             ->putJson('/api/admin/temple-profile', [
-                'name_hi' => 'राधा कृष्ण ठाकुरबाड़ी',
-                'name_en' => 'Radha Krishna Thakurbari',
+                'name_hi' => 'राधा कृष्ण ठाकुरवाड़ी',
+                'name_en' => 'Radha Krishna Thakurwadi',
                 'village_hi' => 'अमरपुर पंखोरिया',
                 'village_en' => 'Amarpur Pankhoriya',
                 'district_hi' => 'भागलपुर',
                 'established_year' => 1965,
             ])
             ->assertOk()
-            ->assertJsonPath('data.name_hi', 'राधा कृष्ण ठाकुरबाड़ी')
+            ->assertJsonPath('data.name_hi', 'राधा कृष्ण ठाकुरवाड़ी')
             ->assertJsonPath('data.village_hi', 'अमरपुर पंखोरिया')
             ->assertJsonPath('data.village_en', 'Amarpur Pankhoriya')
             ->assertJsonPath('data.established_year', 1965);

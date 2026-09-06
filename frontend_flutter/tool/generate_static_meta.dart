@@ -28,7 +28,7 @@ const _defaultSlugs = ['home', 'about'];
 
 /// Used only when the committee has not written the temple's name yet, which
 /// mirrors what the running app shows in the same situation.
-const _fallbackSiteName = 'राधा कृष्ण ठाकुरबाड़ी';
+const _fallbackSiteName = 'राधा कृष्ण ठाकुरवाड़ी';
 
 Future<void> main(List<String> args) async {
   final options = _Options.parse(args);

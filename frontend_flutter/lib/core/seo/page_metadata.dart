@@ -25,8 +25,8 @@ class PageMetadata {
   /// Composes the browser/tab title from a page title and the site name.
   ///
   /// Skips the suffix when the page title already carries the site name — an
-  /// SEO title such as "राधा कृष्ण ठाकुरबाड़ी, अमरपुर पंखोरिया" must not become
-  /// "... | राधा कृष्ण ठाकुरबाड़ी".
+  /// SEO title such as "राधा कृष्ण ठाकुरवाड़ी, अमरपुर पंखोरिया" must not become
+  /// "... | राधा कृष्ण ठाकुरवाड़ी".
   static String compose({
     required String? pageTitle,
     required String siteName,

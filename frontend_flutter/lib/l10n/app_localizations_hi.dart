@@ -10,7 +10,7 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
-  String get appTitle => 'राधा कृष्ण ठाकुरबाड़ी';
+  String get appTitle => 'राधा कृष्ण ठाकुरवाड़ी';
 
   @override
   String get invocation => '✨ राधे राधे • जय श्री कृष्ण';

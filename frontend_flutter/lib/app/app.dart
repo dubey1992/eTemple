@@ -8,8 +8,8 @@ import 'routing/app_router.dart';
 import 'theme/app_theme.dart';
 
 /// Root widget: theme, localization and routing.
-class RadhaKrishnaThakurbariApp extends ConsumerWidget {
-  const RadhaKrishnaThakurbariApp({super.key});
+class RadhaKrishnaThakurwadiApp extends ConsumerWidget {
+  const RadhaKrishnaThakurwadiApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
