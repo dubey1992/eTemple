@@ -26,7 +26,15 @@ return [
     'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     'allowed_origins' => $origins,
     'allowed_origins_patterns' => [],
-    'allowed_headers' => ['Accept', 'Authorization', 'Content-Type', 'X-Requested-With', 'X-XSRF-TOKEN', 'X-Request-Id'],
+    /*
+    | X-HTTP-Method-Override is load-bearing, not a convenience. The production
+    | host answers PUT, PATCH and DELETE with a 403 raised before PHP, so the
+    | client tunnels all three through POST with that header. Leave it out and
+    | the preflight still succeeds — it is the *actual* request the browser then
+    | refuses to send, which surfaces as a bare net::ERR_FAILED with no status
+    | to read. curl never reproduces it, because curl does not enforce CORS.
+    */
+    'allowed_headers' => ['Accept', 'Authorization', 'Content-Type', 'X-Requested-With', 'X-XSRF-TOKEN', 'X-Request-Id', 'X-HTTP-Method-Override'],
     'exposed_headers' => [],
     'max_age' => 0,
     'supports_credentials' => true,
