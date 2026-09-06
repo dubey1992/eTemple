@@ -2,15 +2,15 @@
 
 **Target:** https://radhakrishnathakurwadi.com/ · cPanel shared hosting
 **Written:** 2026-09-16 · Phase 12
-**Performed:** 2026-09-06 — see *What is already deployed* below
+**Performed:** 2026-09-06 · **Live:** 2026-09-06 — see *What is already deployed* below
 
 ---
 
 ## What is already deployed
 
-Steps 1–11 below were **carried out on 2026-09-06**. The site is installed,
-configured and verified on the hosting account; the only thing left is the DNS
-change in *Going live*, which is at the registrar and not in cPanel.
+Steps 1–11 below were **carried out on 2026-09-06**, and the domain was
+repointed the same day. The site is installed, configured and **live**. What is
+left is content and housekeeping, not deployment — see *Going live*.
 
 | | |
 |---|---|
@@ -26,29 +26,55 @@ change in *Going live*, which is at the registrar and not in cPanel.
 | Queue worker | cron, every minute, `queue:work --stop-when-empty --max-time=50` |
 | Backup | cron, 02:30 nightly, `deploy/cpanel/backup.sh` |
 | First account | one Super Admin, `super.admin@thakurwadi.com`, with a temporary password to be changed at first sign-in |
+| DNS | `@`, `www`, `api` → `103.191.209.38` at the registrar |
+| TLS | AutoSSL issued one Let's Encrypt certificate covering all three names |
 
 **`php artisan deploy:check`: 37 passed, 0 failed.**
 
-Verified against the hosting IP (`103.191.209.38`) with the domain resolved to
-it by hand, since DNS still points elsewhere:
+Verified over the real DNS, from outside the hosting account:
 
 | Check | Result |
 |---|---|
 | The site loads and is named correctly | ✅ `राधा कृष्ण ठाकुरवाड़ी \| Radha Krishna Thakurwadi` |
 | A deep link works on a cold load | ✅ `/gallery` → 200, so the SPA rewrite is in force |
 | The API answers | ✅ `/api/health` → `database: connected`, `environment: production` |
-| The whole public surface answers on an empty database | ✅ all ten endpoints → 200 |
+| The whole public surface answers on an empty database | ✅ all ten `/api/public/*` endpoints → 200 |
+| The certificate is trusted for all three names | ✅ Let's Encrypt, `radhakrishnathakurwadi.com` + `www.` + `api.`, chain verifies |
+| Plain HTTP is redirected | ✅ 301 to HTTPS, on the apex, on `www` and on a deep path — **after the fix below** |
+| The session survives the subdomain hop | ✅ CSRF cookie → login → authenticated admin call → logout, cookie scoped `.radhakrishnathakurwadi.com`, Secure + HttpOnly |
+| CORS from the site origin | ✅ preflight 204, credentials allowed, origin echoed exactly |
 | `.env` is not served | ✅ 444, and the same for a traversal attempt |
 | The private uploads path is not served | ✅ 404 — bills are on a disk outside every document root |
 | An admin endpoint without a session | ✅ 401 |
 | Signing in | ✅ 200, `super-admin`, 20 permissions — and the address it replaced is refused with 401 |
 | Reading the audit trail as Super Admin | ✅ 200 |
-| Security headers | ✅ nosniff, DENY, Referrer-Policy, Permissions-Policy, CSP, HSTS |
+| Security headers | ✅ API: nosniff, DENY, Referrer-Policy, Permissions-Policy, CSP, HSTS · site: nosniff, SAMEORIGIN, Referrer-Policy, Permissions-Policy, HSTS |
+
+### One defect the DNS change exposed
+
+Pointing the domain here was the first time anything reached the site over
+**plain HTTP**, and the redirect to HTTPS did not fire: `http://` answered 200
+on the apex and on every deep path.
+
+The rule was correct but unreachable. It sat *after* the single-page rewrite
+block, and that block ends every request with `[L]` — an existing file matches
+`^ - [L]`, everything else matches `^ index.html [L]` — so nothing placed after
+it ever runs. No test could have caught this: `flutter test` does not read
+`.htaccess`, and every pre-DNS check was made over HTTPS with `--resolve`,
+because there was no other way to reach the host.
+
+Fixed by moving the HTTPS block to the top of the file, and by adding
+`Strict-Transport-Security` to the static site — which had none. Only the API
+sent it, and the API is not the host a visitor types. A redirect alone still
+leaves one interceptable plain-HTTP request per cold browser; the header removes
+even that. `includeSubDomains`, so `api.` is covered too; not `preload`, which
+ships inside browsers and is slow to undo.
 
 ### Going live
 
-The domain still serves a **GoDaddy Website Builder** page. To point it here, at
-the registrar's DNS:
+The DNS and the certificate are **done** — recorded here because they are the
+part of the procedure that is not in cPanel, and because they will have to be
+repeated if the site ever moves.
 
 | Record | Name | Value |
 |---|---|---|
@@ -62,7 +88,8 @@ without touching mail. (Changing the nameservers to the host's would move
 
 Then, once it has propagated: **cPanel → SSL/TLS Status → Run AutoSSL** for both
 the domain and `api.`. Until the certificate is issued, browsers will warn —
-AutoSSL cannot validate a domain that does not resolve to the server.
+AutoSSL cannot validate a domain that does not resolve to the server. On this
+account AutoSSL noticed the change by itself and issued within the hour.
 
 **The Super Admin's address is on a domain this account does not host.**
 `super.admin@thakurwadi.com` is fine as a name to sign in with, but nothing on
@@ -71,8 +98,8 @@ Either create a mailbox for it wherever that domain's mail lives, or move the
 account to an address on `radhakrishnathakurwadi.com` once the DNS is here.
 Until then, the password is the only way in — keep it somewhere safe.
 
-Two things to do after the certificate is in place, both named by
-`deploy:check` because PHP cannot see them from inside:
+Two things still to do, both named by `deploy:check` because PHP cannot see them
+from inside:
 
 1. Open `https://api.radhakrishnathakurwadi.com/storage/accounts/attachments/`
    in a browser and confirm it is **not** served.
@@ -119,12 +146,14 @@ in this guide is written so it can be pasted into *Cron Jobs* as a one-off,
 run once, and then deleted. Set such a one-off to a minute a few minutes ahead,
 wait for it, read the log, remove the entry.
 
-**The domain does not point here yet.** `radhakrishnathakurwadi.com` currently
-serves a **GoDaddy Website Builder** page, so nothing deployed to this account is
-publicly visible until the DNS is repointed at this hosting. That is a good
-order to work in — the site can be built and checked in private — but it means
-the last step of going live is a DNS change at the registrar, not anything in
-this guide.
+**The domain did not point here while the site was being built.**
+`radhakrishnathakurwadi.com` served a **GoDaddy Website Builder** page until
+2026-09-06, so everything below was deployed and checked in private and only
+then made visible. That is a good order to work in, but be aware of what it
+hides: nothing is exercised over plain HTTP, or through a real resolver, until
+the moment you repoint the DNS — which is how the redirect defect above
+survived to go-live. Re-run the outside-in checks *after* the change, not only
+before it.
 
 ---
 
