@@ -11,6 +11,46 @@ offer — those constraints are what shaped the design (`PHASE_12_PLAN` §B).
 
 ---
 
+## This account, as it actually is
+
+Inspected on 2026-09-06 through the cPanel API. Everything below is a fact about
+*this* hosting account, not a general assumption, and several of them change the
+steps that follow.
+
+| | |
+|---|---|
+| cPanel | `https://eternal.herosite.pro:2083/` · user `radhakrishn` |
+| Home directory | `/home/radhakrishn` |
+| Document root | `/home/radhakrishn/public_html` |
+| Disk | 5 GB, **1 MB used** — the account is empty |
+| PHP now | `ea-php82` (meets the `^8.2` minimum) |
+| PHP available | up to `ea-php85` / `alt-php85`; **use `ea-php83`** |
+| Subdomains | none yet |
+| Databases | none yet |
+| Cron | ✅ available |
+| MySQL, File Manager | ✅ available |
+| **Git Version Control** | ✅ available — and the repository is public, so it can be cloned straight onto the host |
+| **SSH** | ❌ no port answers (22, 2222, 2200, 22222) |
+| **cPanel Terminal** | ❌ `api_shell` is disabled on this plan |
+
+### Two consequences worth reading before you start
+
+**There is no shell.** Composer and `php artisan` cannot be typed anywhere. The
+way to run a command on this account is to schedule it as a **cron job**, send
+its output to a file, and then read that file in the File Manager. Every command
+in this guide is written so it can be pasted into *Cron Jobs* as a one-off,
+run once, and then deleted. Set such a one-off to a minute a few minutes ahead,
+wait for it, read the log, remove the entry.
+
+**The domain does not point here yet.** `radhakrishnathakurwadi.com` currently
+serves a **GoDaddy Website Builder** page, so nothing deployed to this account is
+publicly visible until the DNS is repointed at this hosting. That is a good
+order to work in — the site can be built and checked in private — but it means
+the last step of going live is a DNS change at the registrar, not anything in
+this guide.
+
+---
+
 ## What goes where
 
 | | cPanel object | Document root | Holds |
@@ -32,9 +72,12 @@ needed.
 
 ## 1. PHP
 
-**cPanel → Select PHP Version.**
+**cPanel → MultiPHP Manager** (to switch the version), then **Select PHP
+Version** (for the extensions).
 
-Choose **PHP 8.3** (8.2 is the minimum). Then, on the *Extensions* tab, make
+This account is on `ea-php82` today. Set `ea-php83` for
+`radhakrishnathakurwadi.com` — 8.2 satisfies the minimum, but 8.3 is what the
+application is developed and tested against. Then, on the *Extensions* tab, make
 sure these are ticked:
 
 | Extension | Without it |
@@ -82,7 +125,15 @@ restore rehearsal needs a credential the application itself does not have
 
 ## 3. The code
 
-**cPanel → Git Version Control**, or upload a zip and extract it.
+**cPanel → Git™ Version Control → Create.**
+
+* Leave *Clone a Repository* **on**
+* Clone URL: `https://github.com/dubey1992/eTemple.git`
+* Repository Path: `thakurwadi`
+* Repository Name: `thakurwadi`
+
+The repository is public, so no key or password is needed. cPanel clones it into
+`/home/radhakrishn/thakurwadi/`, giving:
 
 ```
 ~/thakurwadi/
@@ -91,15 +142,38 @@ restore rehearsal needs a credential the application itself does not have
    docs/
 ```
 
-Then, in **cPanel → Terminal**:
+`vendor/` is not in the repository, so Composer has to run on the host. With no
+shell, that means a cron job.
 
-```bash
-cd ~/thakurwadi/backend_laravel
-composer install --no-dev --optimize-autoloader
+### How to run a one-off command on this account
+
+This is the pattern for every command in the rest of this guide, so it is worth
+doing once slowly:
+
+1. **cPanel → Cron Jobs**
+2. *Common Settings*: **Once Per Minute** (`* * * * *`)
+3. Command: the thing you want to run, ending with `>> ~/deploy.log 2>&1`
+4. **Add New Cron Job**, wait two minutes
+5. **cPanel → File Manager**, open `deploy.log`, read what happened
+6. **Delete the cron job.** A one-off left in place runs every minute for ever
+
+### Composer
+
+```
+cd ~/thakurwadi/backend_laravel && /usr/local/bin/ea-php83 -d memory_limit=-1 /usr/local/bin/composer install --no-dev --optimize-autoloader >> ~/deploy.log 2>&1
 ```
 
-If the plan has no Terminal, run Composer through **cPanel → Setup PHP
-Application**, or upload a `vendor/` built locally with the same PHP version.
+If `/usr/local/bin/composer` does not exist on this host, fetch it first with a
+one-off cron of its own, and then use `~/composer.phar` in place of
+`/usr/local/bin/composer`:
+
+```
+cd ~ && curl -sS https://getcomposer.org/installer | /usr/local/bin/ea-php83 -- --install-dir=/home/radhakrishn --filename=composer.phar >> ~/deploy.log 2>&1
+```
+
+`memory_limit=-1` matters: Composer resolving a Laravel dependency tree inside a
+shared host's default limit is the most common way this step fails, and it fails
+with an out-of-memory message rather than anything about packages.
 
 ---
 
@@ -119,15 +193,17 @@ anybody can fetch.
 
 ## 5. The environment file
 
-```bash
-cd ~/thakurwadi/backend_laravel
-cp .env.production.example .env
-php artisan key:generate
-```
+**cPanel → File Manager**, in `thakurwadi/backend_laravel`. Turn on *Settings →
+Show Hidden Files (dotfiles)* first, or none of this will be visible.
 
-Then edit `.env` and fill in the four values marked **FILL IN**: `APP_KEY` (done
-by the command above), `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, and
-`MAIL_PASSWORD`.
+Copy `.env.production.example` to `.env` (right-click → Copy), then open `.env`
+with **Edit**.
+
+`APP_KEY` is generated by the cron in §6, so leave it empty here.
+
+Then fill in the values marked **FILL IN**: `DB_DATABASE`, `DB_USERNAME`,
+`DB_PASSWORD` (from §2) and `MAIL_PASSWORD` (from the mailbox you create in
+cPanel → Email Accounts).
 
 Everything else in that file is already set for this domain — including the two
 that are easy to get wrong:
@@ -137,22 +213,20 @@ SESSION_DOMAIN=.radhakrishnathakurwadi.com     # the leading dot is what makes t
 CORS_ALLOWED_ORIGINS=https://radhakrishnathakurwadi.com,https://www.radhakrishnathakurwadi.com
 ```
 
-Set permissions so the file is not world-readable:
-
-```bash
-chmod 600 .env
-```
+Then set its permissions to **0600** — right-click → *Change Permissions*, and
+untick everything except the two owner boxes. `.env` holds the database password
+and the application key, and on shared hosting "readable by anyone on the
+machine" is not a theoretical concern.
 
 ---
 
 ## 6. Migrate, seed and link
 
-```bash
-cd ~/thakurwadi/backend_laravel
-php artisan migrate --force
-php artisan db:seed --class=RoleSeeder --force
-php artisan storage:link
-php artisan config:cache && php artisan route:cache
+One one-off cron, using the pattern from §3. All of it in a single line so it
+either all runs or stops at the first failure:
+
+```
+cd ~/thakurwadi/backend_laravel && /usr/local/bin/ea-php83 artisan key:generate --force && /usr/local/bin/ea-php83 artisan migrate --force && /usr/local/bin/ea-php83 artisan db:seed --class=RoleSeeder --force && /usr/local/bin/ea-php83 artisan storage:link && /usr/local/bin/ea-php83 artisan config:cache && /usr/local/bin/ea-php83 artisan route:cache >> ~/deploy.log 2>&1
 ```
 
 **Only `RoleSeeder`.** `DevelopmentContentSeeder` invents donations, ledger
@@ -160,18 +234,48 @@ entries and example villagers; it refuses to run when `APP_ENV=production`, and
 that refusal is deliberate. The temple's real content is entered through the
 console.
 
-Then create the first account — there is no way in from outside without it:
+### The first account
 
-```bash
-php artisan tinker
->>> $role = App\Models\Role::where('slug', 'super-admin')->first();
->>> $u = App\Models\User::create(['first_name'=>'…','last_name'=>'…','email'=>'…','role_id'=>$role->id,'status'=>'active','password'=>Str::random(64)]);
->>> Password::broker()->sendResetLink(['email' => $u->email]);
+There is no way in from outside until one exists. Put this in
+`~/thakurwadi/backend_laravel/first-account.php`, with the committee chair's
+real name and address in it:
+
+```php
+<?php
+// Run once through a cron job, then DELETE this file.
+require __DIR__.'/vendor/autoload.php';
+$app = require __DIR__.'/bootstrap/app.php';
+$app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
+
+$role = App\Models\Role::where('slug', App\Models\Role::SUPER_ADMIN)->firstOrFail();
+
+$user = App\Models\User::create([
+    'first_name' => 'नाम',
+    'last_name'  => 'उपनाम',
+    'email'      => 'chair@radhakrishnathakurwadi.com',
+    'role_id'    => $role->id,
+    'status'     => 'active',
+    // Random and never disclosed: nothing can authenticate with it. The member
+    // sets their own password from the link below.
+    'password'   => Illuminate\Support\Str::random(64),
+]);
+
+Illuminate\Support\Facades\Password::broker()->sendResetLink(['email' => $user->email]);
+
+echo "created {$user->email}\n";
 ```
 
-The password is random and never disclosed; the member sets their own from the
-mail. If mail is not working yet, use `php artisan tinker` to set one directly —
-and change it from inside the console on the first sign-in.
+```
+cd ~/thakurwadi/backend_laravel && /usr/local/bin/ea-php83 first-account.php >> ~/deploy.log 2>&1
+```
+
+Then **delete `first-account.php`**. It is inside the project directory, not the
+document root, so it was never web-reachable — but a script that creates a Super
+Admin should not be left lying about.
+
+If the mail is not arriving yet (step 1 of §11 will tell you), the same file can
+set a password directly with `$user->password = 'chosen password';` before the
+save — change it from inside the console at the first sign-in.
 
 ---
 
@@ -180,7 +284,7 @@ and change it from inside the console on the first sign-in.
 **cPanel → Cron Jobs.** Every minute:
 
 ```
-* * * * * cd ~/thakurwadi/backend_laravel && /usr/local/bin/php artisan queue:work --stop-when-empty --max-time=50 >> ~/queue.log 2>&1
+* * * * * cd ~/thakurwadi/backend_laravel && /usr/local/bin/ea-php83 artisan queue:work --stop-when-empty --max-time=50 >> ~/queue.log 2>&1
 ```
 
 `--stop-when-empty` and `--max-time=50` are what make this safe on shared
@@ -210,7 +314,7 @@ mkdir -p ~/backups
 **cPanel → Cron Jobs**, once a night, out of hours:
 
 ```
-30 2 * * * /home/<account>/bin/thakurwadi-backup.sh >> /home/<account>/backups/cron.log 2>&1
+30 2 * * * /home/radhakrishn/bin/thakurwadi-backup.sh >> /home/radhakrishn/backups/cron.log 2>&1
 ```
 
 Read `docs/BACKUP_AND_RESTORE.md` before trusting it. The important parts: the
@@ -267,10 +371,12 @@ than in `config/cors.php`.
 
 ## 11. Check it, then look at it
 
-```bash
-cd ~/thakurwadi/backend_laravel
-php artisan deploy:check
 ```
+cd ~/thakurwadi/backend_laravel && /usr/local/bin/ea-php83 artisan deploy:check >> ~/deploy.log 2>&1
+```
+
+(A one-off cron again, then read `deploy.log` in the File Manager. It is the
+same command a host with a shell would type.)
 
 Fix everything it marks `XX` and run it again. It ends by naming the two things
 PHP cannot see from inside itself — do both by hand:
