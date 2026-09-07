@@ -14,6 +14,20 @@ class ContentRepositoryImpl implements ContentRepository {
   final ApiClient _api;
 
   @override
+  Future<List<String>> publishedPageSlugs({required String language}) async {
+    final envelope = await _api.get<List<String>>(
+      ApiEndpoints.publicPages,
+      queryParameters: {'lang': language},
+      decode: (data) => (data as List<dynamic>? ?? const [])
+          .whereType<Map<String, dynamic>>()
+          .map((row) => row['slug'])
+          .whereType<String>()
+          .toList(growable: false),
+    );
+    return envelope.data;
+  }
+
+  @override
   Future<PageContent> page(String slug, {required String language}) async {
     final envelope = await _api.get<PageContent>(
       ApiEndpoints.publicPage(slug),

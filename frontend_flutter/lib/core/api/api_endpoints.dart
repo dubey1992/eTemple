@@ -17,6 +17,9 @@ class ApiEndpoints {
   // Public website content (Phase 1)
   static const String publicSiteSettings = '/public/site-settings';
 
+  /// Which pages exist, so the client never guesses a slug and takes a 404.
+  static const String publicPages = '/public/pages';
+
   static String publicPage(String slug) => '/public/pages/$slug';
 
   // Temple identity and committee (Phase 3)

@@ -12,6 +12,7 @@ import '../../../core/widgets/page_container.dart';
 import '../../auth/presentation/auth_controller.dart';
 import '../../content/data/content_providers.dart';
 import '../../content/domain/site_settings.dart';
+import '../domain/default_navigation.dart';
 import '../../temple/data/temple_providers.dart';
 
 /// Chrome shared by every public page: an information strip, the header with
@@ -34,7 +35,10 @@ class PublicShell extends ConsumerWidget {
     final formFactor = Breakpoints.of(context);
     final isCompact = formFactor.isCompact;
     final isSignedIn = ref.watch(isAuthenticatedProvider);
-    final navigation = ref.watch(navigationProvider);
+    // The committee's menu, or the app's own sections until they write one.
+    // Before this, an unconfigured site had no menu and therefore no
+    // hamburger, so a phone could reach nothing but the home page.
+    final navigation = effectiveNavigation(l10n, ref.watch(navigationProvider));
     // The temple's own name, authoritative from the profile since Phase 3. The
     // ARB string is the shell fallback shown only until the profile resolves.
     final templeName = ref.watch(templeNameProvider) ?? l10n.appTitle;
@@ -89,11 +93,28 @@ class PublicShell extends ConsumerWidget {
           ),
         ),
         actions: [
-          // The configured menu only fits beside the title on wide screens; on
+          // The configured menu only sits beside the title on wide screens; on
           // anything narrower it moves into the drawer.
+          //
+          // Flexible, and scrollable inside that, because the number of entries
+          // is not ours to decide: the committee may configure up to twenty,
+          // and seven already overflow a 1400px bar. Overflowing an AppBar
+          // costs the last item silently — it is simply not drawn — so a menu
+          // that is one entry too long loses a page rather than showing it.
           if (formFactor.isDesktop)
-            for (final item in navigation)
-              _NavButton(key: Key('nav-${item.id}'), item: item),
+            Flexible(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                reverse: true,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (final item in navigation)
+                      _NavButton(key: Key('nav-${item.id}'), item: item),
+                  ],
+                ),
+              ),
+            ),
 
           LanguageSwitch(compact: isCompact),
           if (isCompact)
@@ -303,7 +324,7 @@ class _PublicFooter extends ConsumerWidget {
     final isDesktop = Breakpoints.of(context).isDesktop;
     final settings = ref.watch(siteSettingsProvider).value;
     final templeName = ref.watch(templeNameProvider);
-    final navigation = ref.watch(navigationProvider);
+    final navigation = effectiveNavigation(l10n, ref.watch(navigationProvider));
     final address = ref.watch(templeProfileProvider).value?.address;
     final village = address?.village;
 

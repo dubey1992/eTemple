@@ -7,6 +7,7 @@ namespace App\Services\Content;
 use App\Models\Page;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -28,6 +29,28 @@ class PageService
             ->published()
             ->where('slug', $slug)
             ->firstOrFail();
+    }
+
+    /**
+     * Every published page, for the public index.
+     *
+     * The home page asks for the `about` page on every visit. On a site where
+     * nobody has written one yet that is a 404 per page load — harmless to the
+     * visitor, who sees a correct empty state, but a real error in the browser
+     * console and a request made on a guess. With this the client can ask what
+     * exists before asking for it.
+     *
+     * Drafts are excluded by the query itself, exactly as in publishedBySlug:
+     * an unpublished page must not be discoverable by listing either.
+     *
+     * @return Collection<int, Page>
+     */
+    public function publishedIndex(): Collection
+    {
+        return Page::query()
+            ->published()
+            ->orderBy('slug')
+            ->get(['id', 'slug', 'title_hi', 'title_en', 'published_at', 'updated_at']);
     }
 
     /** @return LengthAwarePaginator<int, Page> */

@@ -43,6 +43,20 @@ class FakeContentRepository implements ContentRepository {
   String? lastLanguage;
   EditablePageDraft? lastDraft;
 
+  int pageIndexCalls = 0;
+
+  /// Mirrors the server: the index lists exactly the slugs a fetch would serve.
+  /// Keeping the two in step here is what lets a test assert that nothing is
+  /// requested for a page that does not exist.
+  @override
+  Future<List<String>> publishedPageSlugs({required String language}) async {
+    pageIndexCalls++;
+    lastLanguage = language;
+    if (delay > Duration.zero) await Future<void>.delayed(delay);
+    if (pageError != null) throw pageError!;
+    return pages.keys.toList(growable: false);
+  }
+
   @override
   Future<PageContent> page(String slug, {required String language}) async {
     pageCalls++;

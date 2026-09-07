@@ -133,6 +133,28 @@ class _AboutSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
+
+    // Ask what exists before asking for it by name. The slug is the app's
+    // choice, not the committee's, so on a site where nobody has written that
+    // page the request is a guess — and it used to be made on every visit, for
+    // a 404 the visitor could not see and the browser console reported every
+    // time. While the index is still loading, nothing is requested.
+    final slugs = ref.watch(publishedPageSlugsProvider);
+    final exists = slugs.value?.contains(HomeScreen.aboutSlug) ?? false;
+
+    if (!exists) {
+      return ContentSection(
+        title: l10n.sectionAbout,
+        child: slugs.isLoading
+            ? const Padding(
+                padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                child: LoadingView(),
+              )
+            // The same card the 404 used to produce, reached without the 404.
+            : const _AboutComingSoon(),
+      );
+    }
+
     final about = ref.watch(pageProvider(HomeScreen.aboutSlug));
 
     return ContentSection(
@@ -421,19 +443,40 @@ class _AboutUnavailable extends StatelessWidget {
         ? error as AppException
         : const AppException.unknown();
 
+    return exception.isNotFound
+        ? const _AboutComingSoon()
+        : Card(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: ErrorView(error: exception),
+            ),
+          );
+  }
+}
+
+/// "This will be added soon" — an About page nobody has written yet.
+///
+/// Reached two ways: the page is absent from the published index (the usual
+/// case now), or it vanished between the index and the fetch. Both are the same
+/// thing to a visitor, so both render the same card.
+class _AboutComingSoon extends StatelessWidget {
+  const _AboutComingSoon();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.lg),
-        child: exception.isNotFound
-            ? Text(
-                context.l10n.contentComingSoon,
-                key: const Key('about-coming-soon'),
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontStyle: FontStyle.italic,
-                ),
-              )
-            : ErrorView(error: exception),
+        child: Text(
+          context.l10n.contentComingSoon,
+          key: const Key('about-coming-soon'),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
       ),
     );
   }

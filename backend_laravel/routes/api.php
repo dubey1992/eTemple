@@ -156,6 +156,9 @@ Route::prefix('public')
             ->middleware('throttle:enquiry-submit')
             ->name('enquiries.store');
 
+        Route::get('/pages', [PublicPageController::class, 'index'])
+            ->name('pages.index');
+
         Route::get('/pages/{slug}', [PublicPageController::class, 'show'])
             ->where('slug', '[a-z0-9]+(?:-[a-z0-9]+)*')
             ->name('pages.show');

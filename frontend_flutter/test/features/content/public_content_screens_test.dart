@@ -114,6 +114,47 @@ void main() {
       expect(find.byKey(const Key('address-empty')), findsOneWidget);
     });
 
+    testWidgets('no About page is never requested by name', (tester) async {
+      // The section used to fetch the `about` slug unconditionally, so every
+      // visit to a site whose committee had not written that page produced a
+      // 404. The visitor saw a correct "coming soon" card either way, which is
+      // precisely why it went unnoticed: the only symptom was a failed request
+      // in the browser console, on every page load.
+      final content = FakeContentRepository();
+
+      await pumpContent(
+        tester,
+        const HomeScreen(),
+        content,
+        temple: FakeTempleRepository(),
+      );
+      await tester.pumpAndSettle();
+
+      expect(content.pageIndexCalls, greaterThan(0), reason: 'index not read');
+      expect(content.pageCalls, 0, reason: 'a missing page was fetched anyway');
+      expect(find.byKey(const Key('about-coming-soon')), findsOneWidget);
+    });
+
+    testWidgets('an About page that exists is fetched and shown', (
+      tester,
+    ) async {
+      final content = FakeContentRepository(pages: {'about': testPage()});
+
+      await pumpContent(
+        tester,
+        const HomeScreen(),
+        content,
+        temple: FakeTempleRepository(),
+      );
+      await tester.pumpAndSettle();
+
+      // The control for the test above: the index says it exists, so it is
+      // asked for. Without this, "never fetched" would pass by never fetching.
+      expect(content.pageCalls, greaterThan(0));
+      expect(find.byKey(const Key('about-coming-soon')), findsNothing);
+      expect(find.byKey(const Key('about-read-more')), findsOneWidget);
+    });
+
     testWidgets('a settings outage shows a retry, not a blank page', (
       tester,
     ) async {
@@ -328,6 +369,64 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('drawer-nav-2')), findsOneWidget);
+    });
+
+    testWidgets('an unconfigured site still gets a menu on desktop', (
+      tester,
+    ) async {
+      // Site settings start empty, so this is what every new site looks like.
+      // It used to render no menu at all.
+      await pumpContent(
+        tester,
+        const PublicShell(child: SizedBox.shrink()),
+        FakeContentRepository(),
+        surfaceSize: const Size(1400, 900),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('पूजा एवं कार्यक्रम'), findsWidgets);
+      expect(find.text('गैलरी'), findsWidgets);
+    });
+
+    testWidgets('an unconfigured site still has a hamburger on a phone', (
+      tester,
+    ) async {
+      // The drawer is only built when there is something to put in it, so an
+      // empty menu meant no hamburger button — and a phone could reach nothing
+      // but the home page, because the footer's quick links were empty too.
+      await pumpContent(
+        tester,
+        const PublicShell(child: SizedBox.shrink()),
+        FakeContentRepository(),
+        surfaceSize: const Size(390, 844),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.menu), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.menu));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(Drawer), findsOneWidget);
+      expect(find.text('प्रबंध समिति'), findsWidgets);
+    });
+
+    testWidgets("a configured menu replaces the default entirely", (
+      tester,
+    ) async {
+      // All-or-nothing on purpose: a committee that wrote two entries meant
+      // those two, and appending five more would be the app overruling them.
+      await pumpContent(
+        tester,
+        const PublicShell(child: SizedBox.shrink()),
+        FakeContentRepository(settings: testSettings()),
+        surfaceSize: const Size(1400, 900),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('nav-1')), findsOneWidget);
+      // 'दान' belongs to the built-in list, which must now be absent.
+      expect(find.text('दान'), findsNothing);
     });
 
     testWidgets('renders the CMS footer text', (tester) async {

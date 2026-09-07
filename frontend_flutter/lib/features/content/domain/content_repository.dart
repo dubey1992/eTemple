@@ -9,6 +9,12 @@ abstract interface class ContentRepository {
   ///
   /// Throws `AppException(ErrorCode.notFound)` for an unknown slug or a page
   /// that is still a draft — the server deliberately makes those identical.
+  /// Slugs of every published page.
+  ///
+  /// Asked before a page is fetched by name, so a site with nothing written
+  /// yet answers with an empty list instead of a 404 per visit.
+  Future<List<String>> publishedPageSlugs({required String language});
+
   Future<PageContent> page(String slug, {required String language});
 
   /// Site-wide settings and the visible navigation menu, resolved for [language].

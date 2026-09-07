@@ -41,6 +41,20 @@ final navigationProvider = Provider<List<NavigationEntry>>((ref) {
   return ref.watch(siteSettingsProvider).value?.navigation ?? const [];
 });
 
+/// Slugs of every published page.
+///
+/// The home page's About section reads this before asking for the `about`
+/// page. Without it, a site whose committee has not written that page yet takes
+/// a 404 on every single visit: harmless to the visitor, who sees a correct
+/// empty state, but a failed request in the browser console every time and a
+/// request made on a guess.
+final publishedPageSlugsProvider = FutureProvider<List<String>>((ref) {
+  final language = ref.watch(contentLanguageProvider);
+  return ref
+      .watch(contentRepositoryProvider)
+      .publishedPageSlugs(language: language);
+});
+
 /// A published page by slug, for the current language.
 final pageProvider = FutureProvider.family<PageContent, String>((ref, slug) {
   final language = ref.watch(contentLanguageProvider);
