@@ -158,16 +158,48 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: AppSpacing.sm),
 
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Checkbox(
-                        value: _remember,
-                        onChanged: _submitting
-                            ? null
-                            : (value) =>
-                                  setState(() => _remember = value ?? false),
+                      // The label is part of the control, not decoration next
+                      // to it. It used to be a bare Text, so only the 18-pixel
+                      // box responded: anyone who tapped the words — which is
+                      // what people do, and on a phone the only comfortable
+                      // target — signed in with "remember me" silently off and
+                      // was asked for their password again the next day.
+                      //
+                      // Nothing was wrong with the feature. It could not be
+                      // switched on, which is indistinguishable from broken and
+                      // was reported as exactly that.
+                      Flexible(
+                        child: MergeSemantics(
+                          child: InkWell(
+                            key: const Key('login-remember'),
+                            onTap: _submitting
+                                ? null
+                                : () => setState(() => _remember = !_remember),
+                            borderRadius: BorderRadius.circular(AppSpacing.sm),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                right: AppSpacing.sm,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Checkbox(
+                                    value: _remember,
+                                    onChanged: _submitting
+                                        ? null
+                                        : (value) => setState(
+                                            () => _remember = value ?? false,
+                                          ),
+                                  ),
+                                  Flexible(child: Text(l10n.rememberMe)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                      Flexible(child: Text(l10n.rememberMe)),
-                      const Spacer(),
                       TextButton(
                         onPressed: _submitting
                             ? null

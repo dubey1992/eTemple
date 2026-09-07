@@ -258,4 +258,73 @@ void main() {
       }
     },
   );
+
+  group('remember me', () {
+    // Reported as "Remember Me is not working". The feature worked perfectly —
+    // the cookie was issued, and it re-authenticated a visitor whose session
+    // had lapsed. What did not work was switching it on: the label was a bare
+    // Text beside the box, so tapping the words did nothing at all. On a phone
+    // those words are the only comfortable target, so the box stayed off, the
+    // login went out with remember=false, and the visitor was asked for their
+    // password again the next day. Indistinguishable from broken.
+
+    testWidgets('tapping the label turns it on', (tester) async {
+      final repository = FakeAuthRepository();
+      await pumpLogin(tester, repository);
+
+      // The words, not the box.
+      await tester.tap(find.text('मुझे याद रखें'));
+      await tester.pump();
+
+      await fillCredentials(tester);
+      await tester.tap(find.byKey(const Key('login-submit')));
+      await tester.pumpAndSettle();
+
+      expect(repository.lastRemember, isTrue);
+    });
+
+    testWidgets('tapping the box still works', (tester) async {
+      final repository = FakeAuthRepository();
+      await pumpLogin(tester, repository);
+
+      await tester.tap(find.byType(Checkbox));
+      await tester.pump();
+
+      await fillCredentials(tester);
+      await tester.tap(find.byKey(const Key('login-submit')));
+      await tester.pumpAndSettle();
+
+      expect(repository.lastRemember, isTrue);
+    });
+
+    testWidgets('it is off unless asked for', (tester) async {
+      final repository = FakeAuthRepository();
+      await pumpLogin(tester, repository);
+
+      await fillCredentials(tester);
+      await tester.tap(find.byKey(const Key('login-submit')));
+      await tester.pumpAndSettle();
+
+      // The control for the two above: proves they pass because the tap turned
+      // it on, not because the flag is true whatever anyone does. A 400-day
+      // cookie nobody asked for is its own defect.
+      expect(repository.lastRemember, isFalse);
+    });
+
+    testWidgets('tapping the label twice turns it back off', (tester) async {
+      final repository = FakeAuthRepository();
+      await pumpLogin(tester, repository);
+
+      await tester.tap(find.text('मुझे याद रखें'));
+      await tester.pump();
+      await tester.tap(find.text('मुझे याद रखें'));
+      await tester.pump();
+
+      await fillCredentials(tester);
+      await tester.tap(find.byKey(const Key('login-submit')));
+      await tester.pumpAndSettle();
+
+      expect(repository.lastRemember, isFalse);
+    });
+  });
 }
