@@ -137,6 +137,39 @@ steps that follow.
 | **SSH** | ❌ no port answers (22, 2222, 2200, 22222) |
 | **cPanel Terminal** | ❌ `api_shell` is disabled on this plan |
 
+### main.dart.js is not content-addressed — do not cache it hard
+
+Fixed 2026-09-07. The site's `.htaccess` gave every `.js` file
+`max-age=31536000, immutable`, on the stated assumption that "everything in
+build/web carries a content hash in its name". For Flutter web that is false:
+`main.dart.js` **is** the application and its name never changes, and
+`flutter_bootstrap.js` — the only thing `index.html` loads — never changes name
+either.
+
+`immutable` is a promise that the file at that URL will never change. A
+returning visitor's browser therefore would not even revalidate, and **every
+deployment was invisible to anyone who had visited before**, for up to a year.
+It cost real time here: a verification run reported the old behaviour from a
+browser holding a cached bundle, and the fix looked like it had failed.
+
+Six files must revalidate: `index.html`, `flutter_bootstrap.js`,
+`main.dart.js`, `flutter_service_worker.js`, `version.json`, `manifest.json`.
+Everything under `assets/` and `canvaskit/` lives at a hashed path and stays
+cached hard.
+
+Two things that are easy to get wrong:
+
+* The rule must be a **second `<FilesMatch>` placed after** the long-cache one.
+  A plain `Header set … env=…` will not win: Apache merges every `<Files>`
+  section *after* the directives outside them, whatever the textual order.
+* `no-cache` does not mean "do not store". The browser keeps its copy and
+  revalidates; LiteSpeed answers with `Last-Modified`, so an unchanged 4 MB
+  bundle costs a **304 with an empty body**, not a download. Verified.
+
+When a deployment seems not to have taken effect, check `Cache-Control` on
+`main.dart.js` before looking anywhere else, and verify in a browser started
+from a fresh profile.
+
 ### The host refuses PUT, PATCH and DELETE
 
 Found on 2026-09-06, after go-live, when saving the temple profile failed.

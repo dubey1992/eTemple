@@ -62,17 +62,31 @@
   # published in the browsers themselves and is slow and awkward to undo.
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
 
-  # index.html must never be cached: a stale one points at a bundle that has
-  # been replaced, and the app fails to boot after a deployment with no error a
-  # visitor could act on.
-  <FilesMatch "\.(html)$">
-    Header set Cache-Control "no-cache, must-revalidate"
-  </FilesMatch>
-
-  # Everything else in build/web carries a content hash in its name, so it can
-  # be cached hard.
+  # Long caching for the files whose names really do change between releases:
+  # everything under assets/ and the canvaskit build, which live at hashed
+  # paths.
   <FilesMatch "\.(js|css|png|jpg|jpeg|webp|svg|woff2|json|wasm)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # The entry points keep the SAME names in every release, so none of them may
+  # be cached that way. This block must come after the one above: Apache merges
+  # <FilesMatch> sections in the order they appear, and the last `Header set`
+  # for a header is the one that survives. (A plain `Header set ... env=` will
+  # NOT do — every section is merged after the directives outside them, so the
+  # rule above would win no matter where it was written.)
+  #
+  # This was wrong until 2026-09-07. `main.dart.js` is the whole application and
+  # its name never changes; served `immutable` for a year, a returning visitor's
+  # browser would not so much as revalidate it, and every deployment was
+  # invisible to everyone who had been to the site before. `immutable` is a
+  # promise that the file at this URL will never change, and for these six it is
+  # simply false.
+  #
+  # `no-cache` does not mean "do not store": the browser keeps its copy and
+  # revalidates, so an unchanged 4 MB bundle costs a 304, not a download.
+  <FilesMatch "^(index\.html|flutter_bootstrap\.js|main\.dart\.js|flutter_service_worker\.js|version\.json|manifest\.json)$">
+    Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
 
