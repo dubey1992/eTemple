@@ -4,21 +4,28 @@ import 'package:rkt_web/app/localization/locale_controller.dart';
 import 'package:rkt_web/core/errors/app_exception.dart';
 import 'package:rkt_web/core/errors/error_code.dart';
 import 'package:rkt_web/features/auth/data/auth_providers.dart';
+import 'package:rkt_web/core/storage/credential_store_provider.dart';
+import 'package:rkt_web/core/storage/saved_credentials.dart';
 import 'package:rkt_web/features/auth/presentation/login_screen.dart';
 
 import '../../support/fake_auth_repository.dart';
+import '../../support/fake_credential_store.dart';
 import '../../support/pump_app.dart';
 
 Future<void> pumpLogin(
   WidgetTester tester,
   FakeAuthRepository repository, {
   Locale locale = AppLocales.hindi,
+  FakeCredentialStore? store,
 }) {
   return pumpScreen(
     tester,
     const LoginScreen(),
     locale: locale,
-    overrides: [authRepositoryProvider.overrideWithValue(repository)],
+    overrides: [
+      authRepositoryProvider.overrideWithValue(repository),
+      if (store != null) credentialStoreProvider.overrideWithValue(store),
+    ],
   );
 }
 
@@ -325,6 +332,100 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(repository.lastRemember, isFalse);
+    });
+  });
+
+  group('remembering the sign-in details', () {
+    // Asked for on 2026-09-07, and a deliberate departure from the rule that
+    // this client persists nothing: the committee wants both fields filled in
+    // on the next visit, including after signing out. The cost is written down
+    // in lib/core/storage/credential_store.dart and in the storage guard test.
+
+    testWidgets('a remembered sign-in pre-fills both fields', (tester) async {
+      final store = FakeCredentialStore(
+        stored: const SavedCredentials(
+          email: 'committee@thakurbari.in',
+          password: 'a-valid-password',
+        ),
+      );
+
+      await pumpLogin(tester, FakeAuthRepository(), store: store);
+
+      expect(find.text('committee@thakurbari.in'), findsOneWidget);
+      expect(find.text('a-valid-password'), findsOneWidget);
+      // Shown as already ticked, or the next sign-in would silently forget.
+      expect(tester.widget<Checkbox>(find.byType(Checkbox)).value, isTrue);
+    });
+
+    testWidgets('nothing remembered leaves the form empty', (tester) async {
+      final store = FakeCredentialStore();
+
+      await pumpLogin(tester, FakeAuthRepository(), store: store);
+
+      expect(
+        tester.widget<Checkbox>(find.byType(Checkbox)).value,
+        isFalse,
+        reason: 'the control for the test above',
+      );
+    });
+
+    testWidgets('ticking it stores the details after a successful sign-in', (
+      tester,
+    ) async {
+      final store = FakeCredentialStore();
+      await pumpLogin(tester, FakeAuthRepository(), store: store);
+
+      await tester.tap(find.text('मुझे याद रखें'));
+      await tester.pump();
+      await fillCredentials(tester);
+      await tester.tap(find.byKey(const Key('login-submit')));
+      await tester.pumpAndSettle();
+
+      expect(store.stored?.email, 'committee@thakurbari.in');
+      expect(store.stored?.password, 'a-valid-password');
+    });
+
+    testWidgets('a refused sign-in stores nothing', (tester) async {
+      final store = FakeCredentialStore();
+      await pumpLogin(
+        tester,
+        FakeAuthRepository(
+          signInError: const AppException(code: ErrorCode.invalidCredentials),
+        ),
+        store: store,
+      );
+
+      await tester.tap(find.text('मुझे याद रखें'));
+      await tester.pump();
+      await fillCredentials(tester);
+      await tester.tap(find.byKey(const Key('login-submit')));
+      await tester.pumpAndSettle();
+
+      // Storing a rejected password would pre-fill the form with something
+      // that cannot work, and the visitor would have no way to see why.
+      expect(store.stored, isNull);
+      expect(store.saves, 0);
+    });
+
+    testWidgets('unticking erases what was stored', (tester) async {
+      final store = FakeCredentialStore(
+        stored: const SavedCredentials(
+          email: 'committee@thakurbari.in',
+          password: 'a-valid-password',
+        ),
+      );
+      await pumpLogin(tester, FakeAuthRepository(), store: store);
+
+      // Arrives ticked because something was stored; untick it.
+      await tester.tap(find.text('मुझे याद रखें'));
+      await tester.pump();
+      await tester.tap(find.byKey(const Key('login-submit')));
+      await tester.pumpAndSettle();
+
+      // Unticking is how a password comes off a shared machine, so it has to
+      // erase rather than merely stop writing.
+      expect(store.stored, isNull);
+      expect(store.clears, greaterThan(0));
     });
   });
 }

@@ -8,6 +8,8 @@ import '../../../app/routing/route_paths.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../../core/errors/error_code.dart';
+import '../../../core/storage/credential_store_provider.dart';
+import '../../../core/storage/saved_credentials.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/language_switch.dart';
 import '../../../core/widgets/page_container.dart';
@@ -37,6 +39,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   AppException? _error;
 
   @override
+  void initState() {
+    super.initState();
+
+    // Pre-fill from the last sign-in that asked to be remembered. Deliberately
+    // survives signing out — that is exactly what was asked for — so the only
+    // things that clear it are unticking the box and signing in, or a browser
+    // that has had its site data cleared.
+    final saved = ref.read(credentialStoreProvider).read();
+    if (saved != null) {
+      _emailController.text = saved.email;
+      _passwordController.text = saved.password;
+      _remember = true;
+    }
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -60,6 +78,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             password: _passwordController.text,
             remember: _remember,
           );
+
+      // Only after the server accepted them: storing a rejected password would
+      // pre-fill the form with something that cannot work, and the visitor
+      // would have no way to tell why signing in kept failing.
+      final store = ref.read(credentialStoreProvider);
+      if (_remember) {
+        store.save(
+          SavedCredentials(
+            email: _emailController.text,
+            password: _passwordController.text,
+          ),
+        );
+      } else {
+        // Unticking is the way to take a saved password off a machine, so it
+        // has to erase, not merely stop writing.
+        store.clear();
+      }
 
       if (mounted) context.go(RoutePaths.admin);
     } on AppException catch (error) {
