@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rkt_web/app/theme/app_colors.dart';
@@ -86,6 +88,80 @@ void main() {
 
       expect(dark.colorScheme.brightness, Brightness.dark);
       expect(dark.cardTheme.elevation, 0);
+    });
+  });
+
+  group('typography', () {
+    // Poppins is bundled rather than linked from a font CDN, so the two halves
+    // that make that work — the pubspec declaration and the theme naming the
+    // family — have to stay in step. Drop either and the site silently renders
+    // in whatever face the reader's device happens to have, which looks fine
+    // on the laptop of whoever made the change.
+
+    test('the theme asks for Poppins', () {
+      final theme = AppTheme.light();
+
+      expect(theme.textTheme.bodyMedium?.fontFamily, 'Poppins');
+      expect(theme.textTheme.headlineMedium?.fontFamily, 'Poppins');
+      // Widgets that build their own TextStyle read this one, not the
+      // text theme.
+      expect(theme.textTheme.titleLarge?.fontFamily, 'Poppins');
+    });
+
+    test('dark and light agree', () {
+      expect(
+        AppTheme.dark().textTheme.bodyMedium?.fontFamily,
+        AppTheme.light().textTheme.bodyMedium?.fontFamily,
+      );
+    });
+
+    test('a fallback remains for glyphs Poppins does not draw', () {
+      // The pages carry emoji, which no text face has. Without a fallback list
+      // those become empty boxes.
+      final fallback =
+          AppTheme.light().textTheme.bodyMedium?.fontFamilyFallback;
+
+      expect(fallback, isNotNull);
+      expect(fallback, contains('Noto Sans Devanagari'));
+    });
+
+    test('every weight the app uses is declared in the pubspec', () {
+      // Flutter does not fail a build for a weight that was never bundled: it
+      // silently draws the nearest one it has. A heading meant to be w800 then
+      // arrives lighter than designed, on production, with nothing to see in
+      // the logs.
+      final pubspec = File('pubspec.yaml').readAsStringSync();
+      final declared = RegExp(r'weight:\s*(\d+)')
+          .allMatches(pubspec)
+          .map((m) => int.parse(m.group(1)!))
+          .toSet();
+
+      final used = <int>{};
+      for (final file in Directory('lib').listSync(recursive: true)) {
+        if (file is! File || !file.path.endsWith('.dart')) continue;
+        for (final m in RegExp(
+          r'FontWeight\.w(\d00)',
+        ).allMatches(file.readAsStringSync())) {
+          used.add(int.parse(m.group(1)!));
+        }
+      }
+
+      expect(
+        used.difference(declared),
+        isEmpty,
+        reason:
+            'These weights are used in lib/ but no font file is bundled for '
+            'them, so Flutter will quietly substitute the nearest.',
+      );
+    });
+
+    test('the font licence travels with the font', () {
+      // The SIL OFL requires it, and a compiled bundle is still distribution.
+      expect(File('assets/fonts/Poppins-OFL.txt').existsSync(), isTrue);
+      expect(
+        File('pubspec.yaml').readAsStringSync(),
+        contains('assets/fonts/Poppins-OFL.txt'),
+      );
     });
   });
 }

@@ -31,6 +31,13 @@ class AppTheme {
       colorScheme: scheme,
       scaffoldBackgroundColor: scheme.surface,
       textTheme: textTheme,
+
+      // Named here as well as on the text theme. Not redundant: a widget that
+      // builds its own TextStyle rather than reading one from textTheme — and
+      // several Material widgets do — would otherwise be drawn in the default
+      // face, leaving a handful of controls in a font nobody chose.
+      fontFamily: AppTypography.fontFamily,
+      fontFamilyFallback: AppTypography.fontFallback,
       visualDensity: VisualDensity.standard,
 
       appBarTheme: AppBarTheme(

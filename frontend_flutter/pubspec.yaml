@@ -37,3 +37,32 @@ flutter:
   uses-material-design: true
   # Generates the localization delegates from lib/l10n/*.arb (see l10n.yaml).
   generate: true
+
+  # Poppins, self-hosted. Not from a font CDN: the handover promises the
+  # committee depends on no third-party service it does not control, and a
+  # webfont link would quietly make Google a dependency of the temple's site
+  # being readable.
+  #
+  # Weights are the ones actually asked for. 400 and 500 are Material's own
+  # defaults (body text, and every button label); 600, 700 and 800 are this
+  # design's headings. 500 earns its place even though no screen names it:
+  # without it every button falls back a step and the whole console shifts.
+  #
+  # The licence sits beside the files because the SIL OFL requires it to travel
+  # with them, including in a compiled bundle.
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Poppins-ExtraBold.ttf
+          weight: 800
+
+  assets:
+    - assets/fonts/Poppins-OFL.txt
