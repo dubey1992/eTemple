@@ -11,14 +11,17 @@ final eventRepositoryProvider = Provider<EventRepository>(
   (ref) => EventRepositoryImpl(ref.watch(apiClientProvider)),
 );
 
-/// Which half of the calendar the public events page is showing.
+/// Which slice of the calendar the public events page is showing.
 ///
 /// Held in a provider rather than in the screen's state so the choice survives
-/// a rebuild — switching language must not throw the visitor back to
-/// "upcoming" while they are reading the past events.
+/// a rebuild — switching language must not throw the visitor back to the first
+/// tab while they are reading the past events.
 class EventViewController extends Notifier<EventView> {
+  /// Opens on today. Most people arriving at a temple calendar are asking what
+  /// is on *now*; the aarti runs daily, so this is rarely an empty page, and
+  /// when it is the screen offers a way forward.
   @override
-  EventView build() => EventView.upcoming;
+  EventView build() => EventView.today;
 
   void select(EventView view) => state = view;
 }
@@ -35,7 +38,11 @@ final eventsProvider = FutureProvider.family<List<EventOccurrence>, EventQuery>(
   },
 );
 
-/// The featured upcoming events shown on the home page.
+/// The upcoming events shown on the home page.
+///
+/// Asks for [EventView.upcoming] — the overlapping view that keeps today's
+/// remaining events — and not the events page's [EventView.afterToday], which
+/// would empty this block of the evening aarti every morning.
 final featuredEventsProvider = FutureProvider<List<EventOccurrence>>((ref) {
   final language = ref.watch(contentLanguageProvider);
   return ref

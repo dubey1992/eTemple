@@ -704,6 +704,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get sectionEvents => 'आगामी कार्यक्रम';
 
   @override
+  String get viewToday => 'आज';
+
+  @override
   String get viewUpcoming => 'आगामी';
 
   @override
@@ -714,6 +717,12 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get noPastEvents => 'अभी कोई पूर्व कार्यक्रम दर्ज नहीं है।';
+
+  @override
+  String get noEventsToday => 'आज मंदिर में कोई कार्यक्रम निर्धारित नहीं है।';
+
+  @override
+  String get seeUpcomingEvents => 'आगामी कार्यक्रम देखें';
 
   @override
   String get viewAllEvents => 'सभी कार्यक्रम देखें';

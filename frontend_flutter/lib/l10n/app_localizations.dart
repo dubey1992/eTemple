@@ -1400,6 +1400,12 @@ abstract class AppLocalizations {
   /// **'आगामी कार्यक्रम'**
   String get sectionEvents;
 
+  /// No description provided for @viewToday.
+  ///
+  /// In hi, this message translates to:
+  /// **'आज'**
+  String get viewToday;
+
   /// No description provided for @viewUpcoming.
   ///
   /// In hi, this message translates to:
@@ -1423,6 +1429,18 @@ abstract class AppLocalizations {
   /// In hi, this message translates to:
   /// **'अभी कोई पूर्व कार्यक्रम दर्ज नहीं है।'**
   String get noPastEvents;
+
+  /// No description provided for @noEventsToday.
+  ///
+  /// In hi, this message translates to:
+  /// **'आज मंदिर में कोई कार्यक्रम निर्धारित नहीं है।'**
+  String get noEventsToday;
+
+  /// No description provided for @seeUpcomingEvents.
+  ///
+  /// In hi, this message translates to:
+  /// **'आगामी कार्यक्रम देखें'**
+  String get seeUpcomingEvents;
 
   /// No description provided for @viewAllEvents.
   ///

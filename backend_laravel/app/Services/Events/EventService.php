@@ -24,6 +24,26 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class EventService
 {
+    /**
+     * The slices of the calendar a visitor can ask for.
+     *
+     * `today`, `after_today` and `past` partition it by day: every occurrence
+     * falls in exactly one of them, so the events page can show three tabs
+     * without listing the same aarti under two of them. `upcoming` deliberately
+     * overlaps the first two — it means "still to come, today included", which
+     * is what the home page's "coming up" block wants, and what the endpoint
+     * has always returned when no view was asked for.
+     */
+    public const VIEW_UPCOMING = 'upcoming';
+
+    public const VIEW_TODAY = 'today';
+
+    public const VIEW_AFTER_TODAY = 'after_today';
+
+    public const VIEW_PAST = 'past';
+
+    public const VIEWS = [self::VIEW_UPCOMING, self::VIEW_TODAY, self::VIEW_AFTER_TODAY, self::VIEW_PAST];
+
     /** Never expand one event beyond this many occurrences in a single window. */
     public const MAX_OCCURRENCES_PER_EVENT = 366;
 
@@ -43,12 +63,32 @@ class EventService
     public function publicOccurrences(array $filters = [], ?CarbonImmutable $now = null): array
     {
         $now ??= CarbonImmutable::now();
-        $past = ($filters['view'] ?? 'upcoming') === 'past';
+        $view = $filters['view'] ?? self::VIEW_UPCOMING;
+        $past = $view === self::VIEW_PAST;
+
+        // The day boundaries, not the instant: "today" has to mean the whole of
+        // today, so the 05:30 aarti is still listed under it at nine at night.
+        $dayStart = $now->startOfDay();
+        $dayEnd = $now->endOfDay();
 
         $days = max(1, min($filters['days'] ?? self::DEFAULT_WINDOW_DAYS, self::MAX_WINDOW_DAYS));
-        [$from, $to] = $past
-            ? [$now->subDays($days), $now]
-            : [$now, $now->addDays($days)];
+        [$from, $to] = match ($view) {
+            self::VIEW_PAST => [$now->subDays($days), $dayStart],
+            self::VIEW_TODAY => [$dayStart, $dayEnd],
+            self::VIEW_AFTER_TODAY => [$dayEnd, $dayEnd->addDays($days)],
+            default => [$now, $now->addDays($days)],
+        };
+
+        // Expansion only promises occurrences that *overlap* the window, which
+        // is not the same question as which slice they belong to: a festival
+        // running from yesterday to tomorrow overlaps all three.
+        $keep = match ($view) {
+            self::VIEW_PAST => static fn (EventOccurrence $o) => $o->finishesAt()->lt($dayStart),
+            self::VIEW_TODAY => static fn (EventOccurrence $o) => $o->startAt->lte($dayEnd)
+                && ! $o->finishesAt()->lt($dayStart),
+            self::VIEW_AFTER_TODAY => static fn (EventOccurrence $o) => $o->startAt->gt($dayEnd),
+            default => static fn (EventOccurrence $o) => ! $o->hasFinished($now),
+        };
 
         $query = Event::query()->publiclyVisible();
 
@@ -67,9 +107,7 @@ class EventService
         $occurrences = [];
         foreach ($events as $event) {
             foreach ($this->occurrences($event, $from, $to) as $occurrence) {
-                // "Upcoming" keeps anything still running; a festival that
-                // started yesterday and ends tomorrow has not been missed.
-                if ($past ? $occurrence->hasFinished($now) : ! $occurrence->hasFinished($now)) {
+                if ($keep($occurrence)) {
                     $occurrences[] = $occurrence;
                 }
             }

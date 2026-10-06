@@ -139,6 +139,156 @@ class EventPublicTest extends TestCase
         $this->assertSame(['हाल का', 'बहुत पुराना'], $response->json('data.*.title.value'));
     }
 
+    public function test_today_lists_only_what_is_happening_today(): void
+    {
+        // The clock is 09:00 on the 1st.
+        Event::factory()->published()->create([
+            'title_hi' => 'कल था',
+            'start_at' => CarbonImmutable::parse('2026-09-30 18:00'),
+            'end_at' => CarbonImmutable::parse('2026-09-30 20:00'),
+        ]);
+        Event::factory()->published()->create([
+            'title_hi' => 'सुबह की आरती',
+            'start_at' => CarbonImmutable::parse('2026-10-01 05:30'),
+            'end_at' => CarbonImmutable::parse('2026-10-01 06:30'),
+        ]);
+        Event::factory()->published()->create([
+            'title_hi' => 'संध्या आरती',
+            'start_at' => CarbonImmutable::parse('2026-10-01 18:30'),
+            'end_at' => CarbonImmutable::parse('2026-10-01 19:30'),
+        ]);
+        Event::factory()->published()->create([
+            'title_hi' => 'कल होगा',
+            'start_at' => CarbonImmutable::parse('2026-10-02 18:00'),
+            'end_at' => null,
+        ]);
+
+        $response = $this->getJson('/api/public/events?view=today')->assertOk();
+
+        $this->assertSame('today', $response->json('meta.view'));
+        $this->assertSame(
+            ['सुबह की आरती', 'संध्या आरती'],
+            $response->json('data.*.title.value'),
+        );
+    }
+
+    public function test_an_event_that_already_finished_today_is_still_today(): void
+    {
+        // The morning aarti is over by nine, but it is still what the temple
+        // did today, and a visitor asking "what is on today" should see it
+        // rather than find it filed under the past.
+        Event::factory()->published()->create([
+            'title_hi' => 'सुबह की आरती',
+            'start_at' => CarbonImmutable::parse('2026-10-01 05:30'),
+            'end_at' => CarbonImmutable::parse('2026-10-01 06:30'),
+        ]);
+
+        $this->getJson('/api/public/events?view=today')
+            ->assertOk()
+            ->assertJsonPath('data.0.title.value', 'सुबह की आरती');
+
+        $this->getJson('/api/public/events?view=past')
+            ->assertOk()
+            ->assertJsonPath('data', []);
+    }
+
+    public function test_a_festival_running_through_today_is_listed_under_today(): void
+    {
+        Event::factory()->published()->create([
+            'title_hi' => 'तीन दिन का उत्सव',
+            'start_at' => CarbonImmutable::parse('2026-09-30 10:00'),
+            'end_at' => CarbonImmutable::parse('2026-10-02 21:00'),
+        ]);
+
+        $this->getJson('/api/public/events?view=today')
+            ->assertOk()
+            ->assertJsonPath('data.0.title.value', 'तीन दिन का उत्सव');
+    }
+
+    public function test_the_upcoming_tab_does_not_repeat_what_today_already_shows(): void
+    {
+        // The events page shows Today and Upcoming side by side. An aarti
+        // listed under both would read as a duplicate, not as a convenience.
+        Event::factory()->published()->create([
+            'title_hi' => 'आज',
+            'start_at' => CarbonImmutable::parse('2026-10-01 18:30'),
+            'end_at' => null,
+        ]);
+        Event::factory()->published()->create([
+            'title_hi' => 'कल',
+            'start_at' => CarbonImmutable::parse('2026-10-02 18:30'),
+            'end_at' => null,
+        ]);
+
+        $response = $this->getJson('/api/public/events?view=after_today')->assertOk();
+
+        $this->assertSame('after_today', $response->json('meta.view'));
+        $this->assertSame(['कल'], $response->json('data.*.title.value'));
+    }
+
+    public function test_the_three_tabs_divide_the_calendar_with_no_gap_and_no_overlap(): void
+    {
+        // The daily aarti is the hard case: one record, an occurrence every day,
+        // spread across all three tabs at once.
+        Event::factory()->dailyAarti()->create();
+        Event::factory()->published()->create([
+            'start_at' => CarbonImmutable::parse('2026-09-20 18:00'),
+            'end_at' => CarbonImmutable::parse('2026-09-20 20:00'),
+        ]);
+        Event::factory()->published()->create([
+            'start_at' => CarbonImmutable::parse('2026-10-01 18:00'),
+            'end_at' => CarbonImmutable::parse('2026-10-01 20:00'),
+        ]);
+
+        $keys = [];
+        foreach (['today', 'after_today', 'past'] as $view) {
+            $keys[$view] = $this->getJson("/api/public/events?view={$view}&days=30")
+                ->assertOk()
+                ->json('data.*.occurrence_key');
+        }
+
+        $all = array_merge(...array_values($keys));
+
+        $this->assertNotEmpty($keys['today']);
+        $this->assertNotEmpty($keys['after_today']);
+        $this->assertNotEmpty($keys['past']);
+        $this->assertSame(count($all), count(array_unique($all)), 'An occurrence appears under two tabs.');
+
+        // Nothing fell between the buckets: everything the unfiltered forward
+        // window returns is accounted for by today plus after_today.
+        $forward = $this->getJson('/api/public/events?days=30')->assertOk()->json('data.*.occurrence_key');
+        $this->assertEmpty(array_diff($forward, $keys['today'], $keys['after_today']));
+    }
+
+    public function test_the_home_pages_coming_up_block_still_includes_today(): void
+    {
+        // `upcoming` is the view the home page relies on and the one callers get
+        // when they ask for nothing. Narrowing it to exclude today would quietly
+        // empty that block on the busiest days.
+        Event::factory()->published()->create([
+            'title_hi' => 'आज शाम',
+            'start_at' => CarbonImmutable::parse('2026-10-01 18:30'),
+            'end_at' => null,
+        ]);
+
+        $this->getJson('/api/public/events')
+            ->assertOk()
+            ->assertJsonPath('meta.view', 'upcoming')
+            ->assertJsonPath('data.0.title.value', 'आज शाम');
+    }
+
+    public function test_an_unknown_view_shows_the_calendar_rather_than_failing(): void
+    {
+        Event::factory()->published()->create([
+            'start_at' => CarbonImmutable::parse('2026-10-05 18:00'),
+        ]);
+
+        $this->getJson('/api/public/events?view=yesterdayish')
+            ->assertOk()
+            ->assertJsonPath('meta.view', 'upcoming')
+            ->assertJsonCount(1, 'data');
+    }
+
     public function test_a_past_event_does_not_appear_in_upcoming(): void
     {
         Event::factory()->past()->create(['title_hi' => 'बीत गया']);

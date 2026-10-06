@@ -21,19 +21,27 @@ class EventController extends Controller
     public function __construct(private readonly EventService $events) {}
 
     /**
-     * GET /api/public/events?lang=&view=upcoming|past&days=&featured=1&type=
+     * GET /api/public/events?lang=&view=upcoming|today|after_today|past&days=&featured=1&type=
      *
      * Returns dated occurrences, not stored rows: the daily aarti is one record
      * and many occurrences. Drafts are excluded in the query; cancelled events
      * are included and flagged.
+     *
+     * An unrecognised view falls back to `upcoming` rather than failing: this is
+     * a public page reached by shared links, and a mistyped parameter should
+     * show the calendar, not an error.
      */
     public function index(Request $request): JsonResponse
     {
         $language = Language::fromRequest($request->query('lang'));
         $type = $request->query('type');
+        $view = $request->query('view');
+        $view = is_string($view) && in_array($view, EventService::VIEWS, true)
+            ? $view
+            : EventService::VIEW_UPCOMING;
 
         $occurrences = $this->events->publicOccurrences([
-            'view' => $request->query('view') === 'past' ? 'past' : 'upcoming',
+            'view' => $view,
             'days' => (int) $request->integer('days', EventService::DEFAULT_WINDOW_DAYS),
             'featured' => $request->boolean('featured'),
             ...(is_string($type) && EventType::exists($type) ? ['type' => $type] : []),
@@ -46,7 +54,7 @@ class EventController extends Controller
                 $occurrences,
             ),
             [
-                'view' => $request->query('view') === 'past' ? 'past' : 'upcoming',
+                'view' => $view,
                 'timezone' => config('app.timezone'),
                 'count' => count($occurrences),
             ],

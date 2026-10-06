@@ -708,6 +708,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sectionEvents => 'Coming up';
 
   @override
+  String get viewToday => 'Today';
+
+  @override
   String get viewUpcoming => 'Upcoming';
 
   @override
@@ -718,6 +721,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noPastEvents => 'No past events are recorded yet.';
+
+  @override
+  String get noEventsToday => 'Nothing is scheduled at the temple today.';
+
+  @override
+  String get seeUpcomingEvents => 'See upcoming events';
 
   @override
   String get viewAllEvents => 'See all events';

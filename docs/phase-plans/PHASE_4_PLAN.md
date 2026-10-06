@@ -75,6 +75,14 @@ first. `?view=past` returns occurrences that have ended, most recent first,
 within a bounded look-back. One endpoint, one filter, per the project's
 "define pagination/filter conventions once" rule.
 
+**Amended 2026-10-06**, on the committee's request for a Today list. The
+parameter now takes four values. `today`, `after_today` and `past` divide the
+calendar by day and never overlap, so the events page can offer three tabs
+without listing the same aarti under two of them — `past` therefore means
+"finished before today began", not "finished before now". `upcoming` is
+unchanged and still overlaps the first two: it is what the home page's "coming
+up" block asks for, and what any caller that names no view still gets.
+
 ### E6 — `is_featured` is a filter, not a second endpoint
 
 `?featured=1`. The home page asks for featured upcoming occurrences; the events

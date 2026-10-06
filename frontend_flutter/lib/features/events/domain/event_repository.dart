@@ -36,8 +36,17 @@ class EventQuery {
   int get hashCode => Object.hash(view, days, featured, type);
 }
 
+/// Which slice of the calendar is being asked for.
+///
+/// [today], [afterToday] and [past] divide it by day and never overlap, so the
+/// events page can show three tabs without listing the same aarti under two of
+/// them. [upcoming] is the odd one out and deliberately so: it means "still to
+/// come, today included", which is what the home page's "coming up" block
+/// wants, and it is what the API returns when no view is named.
 enum EventView {
   upcoming('upcoming'),
+  today('today'),
+  afterToday('after_today'),
   past('past');
 
   const EventView(this.wireValue);

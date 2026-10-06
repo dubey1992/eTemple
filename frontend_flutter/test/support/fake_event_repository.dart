@@ -13,6 +13,7 @@ class FakeEventRepository implements EventRepository {
   FakeEventRepository({
     List<EventOccurrence>? upcoming,
     List<EventOccurrence>? past,
+    this.today,
     this.listError,
     this.detailError,
     this.adminError,
@@ -23,6 +24,11 @@ class FakeEventRepository implements EventRepository {
 
   List<EventOccurrence> upcoming;
   List<EventOccurrence> past;
+
+  /// What the "today" tab is served. Left null, today and upcoming return the
+  /// same list: most tests are about how a list is drawn, not about which tab
+  /// asked for it, and the ones that do care set this and compare.
+  List<EventOccurrence>? today;
   List<AdminEvent> adminList = [];
   EventDetail? detail;
 
@@ -59,7 +65,11 @@ class FakeEventRepository implements EventRepository {
     await _pause();
     if (listError != null) throw listError!;
 
-    return query.view == EventView.past ? past : upcoming;
+    return switch (query.view) {
+      EventView.past => past,
+      EventView.today => today ?? upcoming,
+      _ => upcoming,
+    };
   }
 
   @override

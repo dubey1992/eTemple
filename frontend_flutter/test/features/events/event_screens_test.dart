@@ -56,12 +56,97 @@ void main() {
       expect(find.byKey(const Key('event-card-1@2026-10-05')), findsOneWidget);
     });
 
-    testWidgets('starts on the upcoming view', (tester) async {
+    testWidgets('opens on today', (tester) async {
       final events = FakeEventRepository(upcoming: [testOccurrence()]);
 
       await pumpEvents(tester, const EventsScreen(), events);
 
-      expect(events.lastQuery?.view, EventView.upcoming);
+      expect(events.lastQuery?.view, EventView.today);
+    });
+
+    testWidgets('today asks the server, it does not filter a list here', (
+      tester,
+    ) async {
+      // Which occurrences count as today's depends on the temple's timezone and
+      // on the server's clock. A browser in another timezone filtering the list
+      // itself would quietly disagree about when today ends.
+      final events = FakeEventRepository(
+        today: [
+          testOccurrence(id: 3, key: '3@2026-10-06', title: 'संध्या आरती'),
+        ],
+        upcoming: [
+          testOccurrence(id: 1, key: '1@2026-10-08', title: 'जन्माष्टमी'),
+        ],
+      );
+
+      await pumpEvents(tester, const EventsScreen(), events);
+
+      expect(events.lastQuery?.view, EventView.today);
+      expect(find.text('संध्या आरती'), findsOneWidget);
+      expect(find.text('जन्माष्टमी'), findsNothing);
+    });
+
+    testWidgets('upcoming is a separate tab that excludes today', (
+      tester,
+    ) async {
+      final events = FakeEventRepository(
+        today: [
+          testOccurrence(id: 3, key: '3@2026-10-06', title: 'संध्या आरती'),
+        ],
+        upcoming: [
+          testOccurrence(id: 1, key: '1@2026-10-08', title: 'जन्माष्टमी'),
+        ],
+      );
+
+      await pumpEvents(tester, const EventsScreen(), events);
+
+      // Tapped by icon rather than by its Hindi label: a text finder is only as
+      // wide as the glyphs render, which is almost nothing without a
+      // Devanagari font on the test machine.
+      await tester.tap(find.byIcon(Icons.upcoming_outlined));
+      await tester.pumpAndSettle();
+
+      expect(events.lastQuery?.view, EventView.afterToday);
+      expect(find.text('जन्माष्टमी'), findsOneWidget);
+      expect(find.text('संध्या आरती'), findsNothing);
+    });
+
+    testWidgets('a quiet day is not a dead end', (tester) async {
+      // Today is where the page opens, and a village temple has days with
+      // nothing on. The visitor must still be able to reach the calendar.
+      final events = FakeEventRepository(
+        today: const [],
+        upcoming: [testOccurrence(title: 'जन्माष्टमी')],
+      );
+
+      await pumpEvents(tester, const EventsScreen(), events);
+
+      expect(
+        find.text('आज मंदिर में कोई कार्यक्रम निर्धारित नहीं है।'),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.byKey(const Key('events-see-upcoming')));
+      await tester.pumpAndSettle();
+
+      expect(events.lastQuery?.view, EventView.afterToday);
+      expect(find.text('जन्माष्टमी'), findsOneWidget);
+    });
+
+    testWidgets('all three tabs fit a phone without overflowing', (
+      tester,
+    ) async {
+      final events = FakeEventRepository(upcoming: [testOccurrence()]);
+
+      await pumpEvents(
+        tester,
+        const EventsScreen(),
+        events,
+        surfaceSize: const Size(360, 1200),
+      );
+
+      expect(find.byKey(const Key('events-view-switch')), findsOneWidget);
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('switching to past asks the server for past events', (
@@ -96,7 +181,7 @@ void main() {
 
       expect(find.byKey(const Key('events-empty')), findsOneWidget);
       expect(
-        find.text('अभी कोई आगामी कार्यक्रम निर्धारित नहीं है।'),
+        find.text('आज मंदिर में कोई कार्यक्रम निर्धारित नहीं है।'),
         findsOneWidget,
       );
     });
