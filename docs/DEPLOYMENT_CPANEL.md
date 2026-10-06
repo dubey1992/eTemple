@@ -323,6 +323,27 @@ The repository is public, so no key or password is needed. cPanel clones it into
 `vendor/` is not in the repository, so Composer has to run on the host. With no
 shell, that means a cron job.
 
+### The API will not take HTTP Basic auth
+
+Found 2026-10-06. `curl -u user:pass https://eternal.herosite.pro:2083/execute/...`
+answers **401 Access Denied** and returns the HTML login page, whatever the
+password. The password itself is fine — it is the Basic auth path that is shut.
+
+Log in the way a browser does and carry the token it hands back:
+
+```
+POST /login/?login_only=1   user=<user>&pass=<pass>
+  -> {"status":1,"security_token":"/cpsessNNNNNNNN", ...}
+```
+
+Then prefix every later call with that token and keep the session cookie:
+`https://eternal.herosite.pro:2083/cpsessNNNNNNNN/execute/Fileman/upload_files`.
+
+Worth knowing *before* you start retrying: a wrong-password loop trips the
+host's brute-force protection and locks the account out for a while, so a 401
+here is not a reason to try the password again. Check with the login POST
+above, which says plainly whether the credentials were accepted.
+
 ### How to run a one-off command on this account
 
 This is the pattern for every command in the rest of this guide, so it is worth
