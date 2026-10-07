@@ -1,4 +1,5 @@
 import '../../../core/api/api_envelope.dart';
+import 'markup.dart';
 
 /// One piece of CMS text as the API resolved it for the requested language.
 ///
@@ -52,15 +53,26 @@ class LocalizedValue {
   /// The text, or [placeholder] when there is nothing to show.
   String orElse(String placeholder) => value ?? placeholder;
 
-  /// The same value reduced to its first paragraph, for previews.
+  /// The same value reduced to its first paragraph of prose, for previews.
+  ///
+  /// Headings are skipped. A body that opens with its own title — which is how
+  /// the About page is written — would otherwise preview as that heading alone,
+  /// a card with a name in it and nothing to read.
   ///
   /// Keeps the language and fallback flags, so an excerpt still reports that it
   /// was served as a Hindi fallback.
   LocalizedValue get firstParagraphOnly {
     final all = paragraphs;
     if (all.isEmpty) return this;
+
+    final lead = all.firstWhere(
+      (p) => !Markup.isHeadingOnly(p),
+      // All headings and nothing else: show the first rather than nothing.
+      orElse: () => all.first,
+    );
+
     return LocalizedValue(
-      value: all.first,
+      value: lead,
       language: language,
       fallbackUsed: fallbackUsed,
     );

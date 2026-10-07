@@ -270,6 +270,75 @@ void main() {
       expect(find.text('दूसरा अनुच्छेद।'), findsOneWidget);
     });
 
+    testWidgets('a page written in Markdown is read, not shown raw', (
+      tester,
+    ) async {
+      // What the committee published to the live site, and what every visitor
+      // saw until this was fixed: the hashes and asterisks on the page.
+      await pumpContent(
+        tester,
+        const PageScreen(slug: 'about'),
+        FakeContentRepository(
+          pages: {
+            'about': testPage(
+              content: '''
+## राधाकृष्ण ठाकुरबाड़ी
+
+स्थापना वर्ष **1975** में हुई।
+
+### प्रथम मूर्ति स्थापना
+
+- पहला
+- दूसरा
+''',
+            ),
+          },
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('##'), findsNothing);
+      expect(find.textContaining('**'), findsNothing);
+
+      // And every word is still on the page.
+      expect(find.textContaining('राधाकृष्ण ठाकुरबाड़ी'), findsWidgets);
+      expect(find.textContaining('1975'), findsOneWidget);
+      expect(find.textContaining('प्रथम मूर्ति स्थापना'), findsOneWidget);
+      expect(find.textContaining('पहला'), findsOneWidget);
+    });
+
+    testWidgets('a heading is drawn as a heading, not as body text', (
+      tester,
+    ) async {
+      // Stripping the hashes alone would leave a flat wall of text, which is
+      // not what the author asked for by typing them.
+      await pumpContent(
+        tester,
+        const PageScreen(slug: 'about'),
+        FakeContentRepository(
+          pages: {
+            'about': testPage(
+              content: '''
+## शीर्षक
+
+साधारण अनुच्छेद।
+''',
+            ),
+          },
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final theme = Theme.of(tester.element(find.byType(PageScreen)));
+      final heading = tester.widget<Text>(find.textContaining('शीर्षक'));
+      final paragraph = tester.widget<Text>(
+        find.textContaining('साधारण अनुच्छेद।'),
+      );
+
+      expect(heading.style?.fontSize, theme.textTheme.titleLarge?.fontSize);
+      expect(heading.style?.fontSize, isNot(paragraph.style?.fontSize));
+    });
+
     testWidgets('an unknown or draft slug renders the not-found screen', (
       tester,
     ) async {
@@ -313,8 +382,10 @@ void main() {
       expect(find.byKey(const Key('content-empty')), findsOneWidget);
     });
 
-    testWidgets('never renders raw markup from content', (tester) async {
-      // Content is plain text by design, so an editor cannot inject markup.
+    testWidgets('never renders HTML from content', (tester) async {
+      // Markdown is read; HTML is not, and that line does not move. A body is
+      // written by whoever holds a CMS login, so a tag it contains has to reach
+      // the reader as the characters that were typed.
       await pumpContent(
         tester,
         const PageScreen(slug: 'about'),

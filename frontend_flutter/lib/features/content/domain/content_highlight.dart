@@ -1,3 +1,5 @@
+import 'markup.dart';
+
 /// One card in a CMS body.
 ///
 /// The approved design opens the About section with three cards — `हमारी
@@ -37,8 +39,14 @@ class ContentHighlight {
     final index = paragraph.indexOf(_separator);
     if (index <= 0) return null;
 
-    final heading = paragraph.substring(0, index).trim();
-    final body = paragraph.substring(index + _separator.length).trim();
+    // A card is drawn, not typed: its heading and body are plain `Text`, so any
+    // Markdown the author used around them is read off here rather than shown.
+    // The About page's `### प्रथम मूर्ति स्थापना — 1975 : ...` is exactly this
+    // shape, and used to render with its hashes intact.
+    final heading = Markup.plainText(paragraph.substring(0, index));
+    final body = Markup.plainText(
+      paragraph.substring(index + _separator.length),
+    );
     if (heading.isEmpty || body.isEmpty || heading.length > 40) return null;
 
     final emblem = _leadingEmblem(heading);

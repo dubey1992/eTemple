@@ -11,6 +11,7 @@ import '../../../core/widgets/state_views.dart';
 import '../../shell/presentation/not_found_screen.dart';
 import '../../temple/data/temple_providers.dart';
 import '../data/content_providers.dart';
+import '../domain/markup.dart';
 import 'seo_scope.dart';
 import 'widgets/content_widgets.dart';
 
@@ -56,7 +57,12 @@ class PageScreen extends ConsumerWidget {
             pageTitle: data.metaTitle.value ?? data.title.value,
             siteName: siteName,
           ),
-          description: data.metaDescription.value ?? data.content.value,
+          // Stripped: a search result showing `## राधाकृष्ण` is the same
+          // defect as the page showing it, one step further from anyone who
+          // could notice.
+          description:
+              data.metaDescription.value ??
+              Markup.plainText(data.content.value),
           canonicalPath: RoutePaths.page(slug),
           child: SingleChildScrollView(
             child: PageContainer(
